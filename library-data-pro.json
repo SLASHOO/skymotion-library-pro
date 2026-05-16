@@ -172,25 +172,37 @@
   ],
   "packs": [
     {
-      "kind": "pack",
-      "id": "journey_pack",
-      "title": "Journey Pack",
-      "badge": "PRO PACK",
-      "description": "A ready-to-use pack for travel-style drone shots.",
-      "cover": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
-      "bestFor": ["Mountains", "City", "Travel"],
-      "movesCount": 12,
-      "plansCount": 3,
-      "tipsCount": 6,
-      "moveIds": ["m001", "m002", "m003", "m004"],
-      "planIds": ["p001", "p002"],
-      "checklist": [
-        "Check weather and wind",
-        "Choose your main subject",
-        "Shoot one wide establishing shot",
-        "Record 3 main moves",
-        "Save your best clips"
-      ]
-    }
+  "kind": "pack",
+  "id": "journey_pack",
+  "title": "Journey Pack",
+  "badge": "PRO PACK",
+  "description": "A ready-to-use pack for travel-style drone shots.",
+  "introTitle": "Shoot better travel footage without overthinking",
+  "introText": "A practical pack for travel-style drone shots in mountains, cities and open landscapes. Use it when you want a ready structure instead of randomly choosing moves.",
+  "ctaTitle": "Ready to build a travel shoot?",
+  "ctaText": "Use this pack as your starting point and let SkyMotion suggest the best moves and plans for your location.",
+  "cover": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
+  "bestFor": ["Mountains", "City", "Travel"],
+  "movesCount": 12,
+  "plansCount": 3,
+  "tipsCount": 6,
+  "moveIds": ["m001", "m002", "m003", "m004"],
+  "planIds": ["p001", "p002"],
+  "checklist": [
+    "Check weather and wind",
+    "Choose your main subject",
+    "Shoot one wide establishing shot",
+    "Record 3 main moves",
+    "Save your best clips"
+  ],
+  "tips": [
+    "Check wind before flying.",
+    "Start with a wide establishing shot.",
+    "Keep your main subject clear in the frame.",
+    "Use simple moves first, then add one advanced shot.",
+    "Record 2–3 safety takes for each important move.",
+    "Use ND filters in bright daylight."
+  ]
+}
   ]
 }

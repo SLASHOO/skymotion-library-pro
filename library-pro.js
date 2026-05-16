@@ -633,6 +633,7 @@
     const bestFor = Array.isArray(pack.bestFor) ? pack.bestFor.join(", ") : "";
     const checklist = Array.isArray(pack.checklist) ? pack.checklist : [];
     const saved = isSaved("pack", pack.id);
+    const tips = Array.isArray(pack.tips) ? pack.tips : [];
 
     return `
       <div class="sm-pro-app">
@@ -663,7 +664,28 @@
               </div>
             </article>
           </section>
+            <section class="sm-pro-section">
+  <div class="sm-pack-intro">
+    <span>Pack guide</span>
+    <h2>${escapeHtml(pack.introTitle || "Shoot with a ready plan")}</h2>
+    <p>${escapeHtml(pack.introText || "Use this pack as a ready-to-use shooting structure.")}</p>
 
+    <div class="sm-pack-structure">
+      <div>
+        <strong>${Number(pack.movesCount || moves.length || 0)}</strong>
+        <span>Moves</span>
+      </div>
+      <div>
+        <strong>${Number(pack.plansCount || plans.length || 0)}</strong>
+        <span>Plans</span>
+      </div>
+      <div>
+        <strong>${Number(pack.tipsCount || tips.length || 0)}</strong>
+        <span>Pro tips</span>
+      </div>
+    </div>
+  </div>
+</section>
           <section class="sm-pro-section">
             ${renderSectionHeader("Creator checklist", "")}
             <div class="sm-checklist">
@@ -675,9 +697,31 @@
               `).join("")}
             </div>
           </section>
+          ${tips.length ? `
+  <section class="sm-pro-section">
+    ${renderSectionHeader("Pro tips", "")}
+    <div class="sm-pro-tips">
+      ${tips.map((tip) => `
+        <div class="sm-pro-tip">
+          <span>✦</span>
+          <p>${escapeHtml(tip)}</p>
+        </div>
+      `).join("")}
+    </div>
+  </section>
+` : ""}
 
           ${moves.length ? renderPopularMoves(moves) : ""}
           ${plans.length ? renderPlans(plans) : ""}
+          <section class="sm-pro-section">
+  <div class="sm-pack-cta">
+    <h2>${escapeHtml(pack.ctaTitle || "Ready to start?")}</h2>
+    <p>${escapeHtml(pack.ctaText || "Use this pack to build your next shoot.")}</p>
+    <button class="sm-primary-button" type="button" data-action="open-filters">
+      Build shoot from this pack
+    </button>
+  </div>
+</section>
         </main>
       </div>
 
