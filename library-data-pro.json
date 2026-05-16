@@ -1,5 +1,127 @@
 {
-  "moves": [],
-  "plans": [],
-  "packs": []
+  "moves": [
+    {
+      "kind": "move",
+      "id": "m001",
+      "title": "Orbit",
+      "duration_s": 15,
+      "difficulty": "intermediate",
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+      "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+      "packIds": ["journey_pack"],
+      "env": ["open", "mountains", "urban", "near_objects"],
+      "subject": ["person", "building", "car_bike", "landscape"],
+      "risk": ["calm", "some_risks"],
+      "pilot": ["safe", "normal"],
+      "mood": ["smooth", "epic", "wow"],
+      "time": ["5min", "10min", "20min"],
+      "moveType": ["mixed"]
+    },
+    {
+      "kind": "move",
+      "id": "m002",
+      "title": "Raise Up",
+      "duration_s": 21,
+      "difficulty": "basic",
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+      "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+      "packIds": ["journey_pack"],
+      "env": ["open", "mountains", "forest"],
+      "subject": ["person", "landscape", "atmosphere"],
+      "risk": ["calm", "some_risks", "no_aggressive_moves"],
+      "pilot": ["safe", "normal"],
+      "mood": ["smooth", "epic", "wow"],
+      "time": ["5min", "10min", "20min"],
+      "moveType": ["simple"]
+    },
+    {
+      "kind": "move",
+      "id": "m003",
+      "title": "Take Off",
+      "duration_s": 11,
+      "difficulty": "basic",
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+      "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+      "packIds": ["journey_pack"],
+      "env": ["open", "forest", "mountains"],
+      "subject": ["person", "landscape", "atmosphere"],
+      "risk": ["calm", "no_aggressive_moves"],
+      "pilot": ["safe", "normal"],
+      "mood": ["smooth", "epic"],
+      "time": ["5min", "10min"],
+      "moveType": ["simple"]
+    },
+    {
+      "kind": "move",
+      "id": "m004",
+      "title": "Top Down",
+      "duration_s": 21,
+      "difficulty": "intermediate",
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+      "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+      "packIds": ["journey_pack"],
+      "env": ["open", "urban", "beach"],
+      "subject": ["person", "car_bike", "building", "landscape"],
+      "risk": ["calm", "some_risks"],
+      "pilot": ["normal"],
+      "mood": ["smooth", "epic", "tense", "wow"],
+      "time": ["10min", "20min"],
+      "moveType": ["mixed"]
+    }
+  ],
+  "plans": [
+    {
+      "kind": "plan",
+      "id": "p001",
+      "title": "Coastline Plan",
+      "description": "3 shots. Cinematic coastline drone sequence.",
+      "difficulty": "intermediate",
+      "final_clip_duration_s": 17,
+      "shoot_time_min": 15,
+      "shots_count": 3,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg",
+      "packIds": ["journey_pack"],
+      "env": ["open", "beach"],
+      "subject": ["landscape", "atmosphere", "water"],
+      "mood": ["epic", "dynamic", "wow"]
+    },
+    {
+      "kind": "plan",
+      "id": "p002",
+      "title": "Hike With Friends",
+      "description": "4 shots. Cinematic hiking sequence with a person and mountain reveal.",
+      "difficulty": "basic",
+      "final_clip_duration_s": 23,
+      "shoot_time_min": 17,
+      "shots_count": 4,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
+      "packIds": ["journey_pack"],
+      "env": ["open", "forest", "mountains"],
+      "subject": ["person", "landscape", "atmosphere"],
+      "mood": ["smooth", "epic", "wow"]
+    }
+  ],
+  "packs": [
+    {
+      "kind": "pack",
+      "id": "journey_pack",
+      "title": "Journey Pack",
+      "badge": "PRO PACK",
+      "description": "A ready-to-use pack for travel-style drone shots.",
+      "cover": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
+      "bestFor": ["Mountains", "City", "Travel"],
+      "movesCount": 12,
+      "plansCount": 3,
+      "tipsCount": 6,
+      "moveIds": ["m001", "m002", "m003", "m004"],
+      "planIds": ["p001", "p002"],
+      "checklist": [
+        "Check weather and wind",
+        "Choose your main subject",
+        "Shoot one wide establishing shot",
+        "Record 3 main moves",
+        "Save your best clips"
+      ]
+    }
+  ]
 }
