@@ -867,38 +867,132 @@
 }
 
     if (type === "plan") {
-      const plan = getPlanById(id);
-      if (!plan) return "";
+  const plan = getPlanById(id);
+  if (!plan) return "";
 
-      const saved = isSaved("plan", plan.id);
+  const saved = isSaved("plan", plan.id);
+  const steps = Array.isArray(plan.steps) ? plan.steps : [];
+  const resultVideo = String(plan.result_video || plan.resultVideo || "").trim();
+  const duration = formatSeconds(plan.final_clip_duration_s);
+  const difficulty = getDifficultyLabel(plan.difficulty);
 
-      return `
-        <div class="sm-pro-modal" data-action="close-modal">
-          <div class="sm-pro-modal__dialog" data-modal-dialog>
-            <button class="sm-pro-modal__close" type="button" data-action="close-modal">×</button>
+  return `
+    <div class="sm-pro-modal sm-pro-plan-modal" data-action="close-modal">
+      <div class="sm-pro-plan-viewer" data-modal-dialog>
+        <div class="sm-pro-plan-viewer__hero">
+          ${
+            resultVideo
+              ? `
+                <video
+                  class="sm-pro-plan-viewer__video"
+                  id="smProPlanVideo"
+                  src="${escapeHtml(resultVideo)}"
+                  poster="${getImageUrl(plan.thumb)}"
+                  playsinline
+                  preload="metadata"
+                  controls
+                ></video>
+              `
+              : `
+                <img
+                  class="sm-pro-plan-viewer__video"
+                  src="${getImageUrl(plan.thumb)}"
+                  alt="${escapeHtml(plan.title)}"
+                />
+              `
+          }
 
-            <img class="sm-pro-modal__image" src="${getImageUrl(plan.thumb)}" alt="${escapeHtml(plan.title)}" />
+          <div class="sm-pro-plan-viewer__shade"></div>
 
-            <div class="sm-pro-modal__body">
-              <div class="sm-pro-modal__topline">
-                <span class="sm-duration">${escapeHtml(formatSeconds(plan.final_clip_duration_s))}</span>
-                <span class="sm-pill sm-pill--purple">Plan</span>
-              </div>
+          <button class="sm-pro-modal__close" type="button" data-action="close-modal">×</button>
 
-              <h2>${escapeHtml(plan.title)}</h2>
-              <p>${escapeHtml(plan.description || "Cinematic plan preview is ready.")}</p>
-
-              <div class="sm-pro-modal__actions">
-                <button type="button" class="sm-primary-button">Open plan</button>
-                <button type="button" class="sm-secondary-button ${saved ? "is-saved" : ""}" data-save-type="plan" data-save-id="${escapeHtml(plan.id)}">
-                  ${saved ? "Saved" : "Save"}
-                </button>
-              </div>
+          <div class="sm-pro-plan-viewer__hero-content">
+            <div class="sm-pro-modal__topline">
+              ${duration ? `<span class="sm-duration">${escapeHtml(duration)}</span>` : ""}
+              <span class="sm-pill sm-pill--soft">${Number(plan.shots_count || steps.length || 0)} shots</span>
+              <span class="sm-pill sm-pill--purple">Plan</span>
             </div>
+
+            <h2>${escapeHtml(plan.title)}</h2>
+            <p>${escapeHtml(plan.description || "")}</p>
           </div>
         </div>
-      `;
-    }
+
+        <div class="sm-pro-plan-viewer__body">
+          <div class="sm-pro-plan-viewer__stats">
+            <div>
+              <span>Shoot time</span>
+              <strong>${Number(plan.shoot_time_min || 0)} min</strong>
+            </div>
+            <div>
+              <span>Difficulty</span>
+              <strong>${escapeHtml(difficulty)}</strong>
+            </div>
+            <div>
+              <span>Shots</span>
+              <strong>${Number(plan.shots_count || steps.length || 0)}</strong>
+            </div>
+          </div>
+
+          <div class="sm-pro-plan-viewer__actions">
+            <button type="button" class="sm-primary-button" data-action="play-plan-result">
+              Play result
+            </button>
+
+            <button
+              type="button"
+              class="sm-secondary-button ${saved ? "is-saved" : ""}"
+              data-save-type="plan"
+              data-save-id="${escapeHtml(plan.id)}"
+            >
+              ${saved ? "Saved" : "Save"}
+            </button>
+          </div>
+
+          <section class="sm-pro-plan-steps">
+            <div class="sm-pro-section-head">
+              <h2>Plan steps</h2>
+            </div>
+
+            ${steps.map((step, index) => {
+              const move = getMoveById(step.move_ref);
+              const moveId = move?.id || step.move_ref || "";
+              const stepDuration = formatSeconds(step.duration_s);
+
+              return `
+                <article class="sm-pro-plan-step">
+                  <img src="${getImageUrl(step.thumb || move?.thumb)}" alt="${escapeHtml(step.title)}" loading="lazy" />
+
+                  <div class="sm-pro-plan-step__content">
+                    <span>Shot ${index + 1}${stepDuration ? ` · ${escapeHtml(stepDuration)}` : ""}</span>
+                    <h3>${escapeHtml(step.title || move?.title || `Shot ${index + 1}`)}</h3>
+                    <p>${escapeHtml(step.tip || "Open the related move to see how to shoot it.")}</p>
+                  </div>
+
+                  ${
+                    moveId
+                      ? `
+                        <button
+                          type="button"
+                          class="sm-pro-plan-step__play"
+                          data-action="open-step-move"
+                          data-move-id="${escapeHtml(moveId)}"
+                          aria-label="Open move"
+                        >
+                          ›
+                        </button>
+                      `
+                      : ""
+                  }
+                </article>
+              `;
+            }).join("")}
+          </section>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
     return "";
   }
@@ -1067,6 +1161,32 @@
     if (!video) return;
 
     video.play().catch(() => {});
+  });
+});
+
+    root.querySelectorAll("[data-action='play-plan-result']").forEach((button) => {
+  button.addEventListener("click", () => {
+    const video = root.querySelector("#smProPlanVideo");
+    if (!video || typeof video.play !== "function") return;
+
+    video.play().catch(() => {});
+  });
+});
+
+root.querySelectorAll("[data-action='open-step-move']").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const moveId = button.dataset.moveId;
+    if (!moveId) return;
+
+    state.modal = {
+      type: "move",
+      id: moveId
+    };
+
+    renderApp();
   });
 });
 

@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9be9b76a-d86f-4fb0-828b-8f4b6ff8016d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/library-pro.css" beforeDir="false" afterPath="$PROJECT_DIR$/library-pro.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/library-data-pro.json" beforeDir="false" afterPath="$PROJECT_DIR$/library-data-pro.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/library-pro.js" beforeDir="false" afterPath="$PROJECT_DIR$/library-pro.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,7 +70,7 @@
       <option name="presentableId" value="Default" />
       <updated>1778848137296</updated>
       <workItem from="1778848138347" duration="2854000" />
-      <workItem from="1778959392207" duration="2556000" />
+      <workItem from="1778959392207" duration="2860000" />
     </task>
     <servers />
   </component>

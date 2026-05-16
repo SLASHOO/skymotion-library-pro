@@ -71,35 +71,104 @@
   ],
   "plans": [
     {
-      "kind": "plan",
-      "id": "p001",
-      "title": "Coastline Plan",
-      "description": "3 shots. Cinematic coastline drone sequence.",
-      "difficulty": "intermediate",
-      "final_clip_duration_s": 17,
-      "shoot_time_min": 15,
-      "shots_count": 3,
-      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg",
-      "packIds": ["journey_pack"],
-      "env": ["open", "beach"],
-      "subject": ["landscape", "atmosphere", "water"],
-      "mood": ["epic", "dynamic", "wow"]
+  "kind": "plan",
+  "id": "p001",
+  "title": "Coastline Plan",
+  "description": "3 shots. Cinematic coastline drone sequence.",
+  "difficulty": "intermediate",
+  "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov",
+  "final_clip_duration_s": 17,
+  "shoot_time_min": 15,
+  "shots_count": 3,
+  "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg",
+  "packIds": ["journey_pack"],
+  "env": ["open", "beach"],
+  "subject": ["landscape", "atmosphere", "water"],
+  "mood": ["epic", "dynamic", "wow"],
+  "steps": [
+    {
+      "id": "p001_s1",
+      "title": "Top Down Follow",
+      "shot_ref": 1,
+      "duration_s": 8,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+      "move_ref": "m004",
+      "tip": "Start with a top-down view to establish the coastline."
     },
     {
-      "kind": "plan",
-      "id": "p002",
-      "title": "Hike With Friends",
-      "description": "4 shots. Cinematic hiking sequence with a person and mountain reveal.",
-      "difficulty": "basic",
-      "final_clip_duration_s": 23,
-      "shoot_time_min": 17,
-      "shots_count": 4,
-      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
-      "packIds": ["journey_pack"],
-      "env": ["open", "forest", "mountains"],
-      "subject": ["person", "landscape", "atmosphere"],
-      "mood": ["smooth", "epic", "wow"]
+      "id": "p001_s2",
+      "title": "Orbit Around Subject",
+      "shot_ref": 2,
+      "duration_s": 5,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+      "move_ref": "m001",
+      "tip": "Add movement around the main subject."
+    },
+    {
+      "id": "p001_s3",
+      "title": "Raise Up Reveal",
+      "shot_ref": 3,
+      "duration_s": 4,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+      "move_ref": "m002",
+      "tip": "Finish with a reveal to show the wider scene."
     }
+  ]
+},
+{
+  "kind": "plan",
+  "id": "p002",
+  "title": "Hike With Friends",
+  "description": "4 shots. Cinematic hiking sequence with a person and mountain reveal.",
+  "difficulty": "basic",
+  "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4",
+  "final_clip_duration_s": 23,
+  "shoot_time_min": 17,
+  "shots_count": 4,
+  "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg",
+  "packIds": ["journey_pack"],
+  "env": ["open", "forest", "mountains"],
+  "subject": ["person", "landscape", "atmosphere"],
+  "mood": ["smooth", "epic", "wow"],
+  "steps": [
+    {
+      "id": "p002_s1",
+      "title": "Orbit Around Subject",
+      "shot_ref": 1,
+      "duration_s": 5,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+      "move_ref": "m001",
+      "tip": "Orbit around your subject while keeping distance."
+    },
+    {
+      "id": "p002_s2",
+      "title": "Raise Above Ridge",
+      "shot_ref": 2,
+      "duration_s": 5,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+      "move_ref": "m002",
+      "tip": "Rise slowly to reveal the mountains."
+    },
+    {
+      "id": "p002_s3",
+      "title": "Take Off Reveal",
+      "shot_ref": 3,
+      "duration_s": 5,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+      "move_ref": "m003",
+      "tip": "Use a simple take off move for a clean transition."
+    },
+    {
+      "id": "p002_s4",
+      "title": "Top Down Ending",
+      "shot_ref": 4,
+      "duration_s": 8,
+      "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+      "move_ref": "m004",
+      "tip": "End with a top-down perspective."
+    }
+  ]
+}
   ],
   "packs": [
     {
