@@ -802,40 +802,69 @@
     const { type, id } = state.modal;
 
     if (type === "move") {
-      const move = getMoveById(id);
-      if (!move) return "";
+  const move = getMoveById(id);
+  if (!move) return "";
 
-      const duration = formatSeconds(move.duration_s);
-      const difficulty = getDifficultyLabel(move.difficulty);
-      const saved = isSaved("move", move.id);
+  const duration = formatSeconds(move.duration_s);
+  const difficulty = getDifficultyLabel(move.difficulty);
+  const saved = isSaved("move", move.id);
+  const videoUrl = String(move.videoUrl || move.video_url || "").trim();
 
-      return `
-        <div class="sm-pro-modal" data-action="close-modal">
-          <div class="sm-pro-modal__dialog" data-modal-dialog>
-            <button class="sm-pro-modal__close" type="button" data-action="close-modal">×</button>
-
-            <img class="sm-pro-modal__image" src="${getImageUrl(move.thumb)}" alt="${escapeHtml(move.title)}" />
-
-            <div class="sm-pro-modal__body">
-              <div class="sm-pro-modal__topline">
-                ${duration ? `<span class="sm-duration">${escapeHtml(duration)}</span>` : ""}
-                <span class="sm-difficulty ${getDifficultyClass(move.difficulty)}">${escapeHtml(difficulty)}</span>
-              </div>
-
-              <h2>${escapeHtml(move.title)}</h2>
-              <p>This move preview is ready. Full video player will be connected in the next step.</p>
-
-              <div class="sm-pro-modal__actions">
-                <button type="button" class="sm-primary-button">Play move</button>
-                <button type="button" class="sm-secondary-button ${saved ? "is-saved" : ""}" data-save-type="move" data-save-id="${escapeHtml(move.id)}">
-                  ${saved ? "Saved" : "Save"}
-                </button>
-              </div>
+  return `
+    <div class="sm-pro-modal sm-pro-player-modal" data-action="close-modal">
+      <div class="sm-pro-player" data-modal-dialog>
+        <div class="sm-pro-player__top">
+          <div>
+            <h2>${escapeHtml(move.title)}</h2>
+            <div class="sm-pro-player__meta">
+              ${duration ? `<span>${escapeHtml(duration)}</span>` : ""}
+              <span>${escapeHtml(difficulty)}</span>
             </div>
           </div>
+
+          <button class="sm-pro-modal__close" type="button" data-action="close-modal">×</button>
         </div>
-      `;
-    }
+
+        <div class="sm-pro-player__video-wrap">
+          ${
+            videoUrl
+              ? `
+                <video
+                  class="sm-pro-player__video"
+                  id="smProPlayerVideo"
+                  src="${escapeHtml(videoUrl)}"
+                  poster="${getImageUrl(move.thumb)}"
+                  controls
+                  playsinline
+                  preload="metadata"
+                ></video>
+              `
+              : `
+                <div class="sm-pro-player__missing">
+                  <p>No video URL found for this move.</p>
+                </div>
+              `
+          }
+        </div>
+
+        <div class="sm-pro-player__bottom">
+          <button type="button" class="sm-primary-button" data-action="play-current-video">
+            Play
+          </button>
+
+          <button
+            type="button"
+            class="sm-secondary-button ${saved ? "is-saved" : ""}"
+            data-save-type="move"
+            data-save-id="${escapeHtml(move.id)}"
+          >
+            ${saved ? "Saved" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
     if (type === "plan") {
       const plan = getPlanById(id);
@@ -1031,6 +1060,15 @@
         renderApp();
       });
     });
+
+    root.querySelectorAll("[data-action='play-current-video']").forEach((button) => {
+  button.addEventListener("click", () => {
+    const video = root.querySelector("#smProPlayerVideo");
+    if (!video) return;
+
+    video.play().catch(() => {});
+  });
+});
 
     root.querySelectorAll("[data-save-type][data-save-id]").forEach((button) => {
       button.addEventListener("click", (event) => {
