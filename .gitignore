@@ -1,0 +1,9 @@
+.venv/
+.idea/workspace.xml
+.idea/shelf/
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+__pycache__/
+*.pyc
+.DS_Store
