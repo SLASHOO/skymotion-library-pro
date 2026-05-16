@@ -625,3 +625,233 @@ body {
     aspect-ratio: 2.05 / 1;
   }
 }
+
+.sm-pack-row__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sm-pack-detail-hero {
+  position: relative;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: #111;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.42);
+}
+
+.sm-pack-detail-hero > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sm-pack-detail-hero__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.26) 38%, rgba(0, 0, 0, 0.92)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.10));
+}
+
+.sm-pack-detail-hero__top {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  right: 14px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sm-pack-detail-hero__content {
+  position: absolute;
+  z-index: 2;
+  left: 16px;
+  right: 16px;
+  bottom: 18px;
+}
+
+.sm-pack-detail-hero__content h2 {
+  margin: 0 0 8px;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.sm-pack-detail-hero__content p {
+  max-width: 620px;
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+.sm-pack-best {
+  color: #b58cff !important;
+  font-weight: 850 !important;
+}
+
+.sm-checklist {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.sm-checklist-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.sm-checklist-item span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(153, 90, 255, 0.28);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.sm-checklist-item p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.sm-pro-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.sm-pro-modal__dialog {
+  position: relative;
+  width: min(430px, 100%);
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    radial-gradient(500px 240px at 80% 0%, rgba(153, 90, 255, 0.14), transparent 60%),
+    #101115;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.64);
+}
+
+.sm-pro-modal__close {
+  position: absolute;
+  z-index: 4;
+  right: 12px;
+  top: 12px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.48);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sm-pro-modal__image {
+  display: block;
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.sm-pro-modal__body {
+  padding: 18px;
+}
+
+.sm-pro-modal__topline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sm-pro-modal__body h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.sm-pro-modal__body p {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sm-pro-modal__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sm-primary-button,
+.sm-secondary-button {
+  min-height: 44px;
+  border-radius: 14px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.sm-primary-button {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(90deg, rgba(120, 59, 226, 0.95), rgba(163, 98, 255, 0.95));
+}
+
+.sm-secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.sm-secondary-button.is-saved {
+  color: #fff;
+  border-color: rgba(153, 90, 255, 0.5);
+  background: rgba(153, 90, 255, 0.18);
+}
+
+@media (min-width: 760px) {
+  .sm-checklist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm-pack-detail-hero {
+    min-height: 340px;
+  }
+
+  .sm-pro-modal__dialog {
+    width: min(520px, 100%);
+  }
+}
