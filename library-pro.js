@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  if (window.__SM_LIBRARY_PRO_V02__) return;
-  window.__SM_LIBRARY_PRO_V02__ = true;
+  if (window.__SM_LIBRARY_PRO_V03__) return;
+  window.__SM_LIBRARY_PRO_V03__ = true;
 
   const DATA_URL = window.SM_LIBRARY_DATA_URL || "./library-data-pro.json";
   const FALLBACK_THUMB = "https://skymotion-cdn.b-cdn.net/thumb.jpg";
@@ -14,6 +14,84 @@
     return;
   }
 
+  const proSteps = [
+    {
+      key: "env",
+      text: "Where are you flying?",
+      help: "Choose the place that feels closest to your real location.",
+      type: "visual",
+      options: [
+        { label: "Mountains", value: "mountains", image: "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" },
+        { label: "City / Urban", value: "urban", image: "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png" },
+        { label: "Forest", value: "forest", image: "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png" },
+        { label: "Open landscape", value: "open", image: "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" },
+        { label: "Beach / Coast", value: "beach", image: "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" },
+        { label: "Near objects", value: "near_objects", image: "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png" }
+      ]
+    },
+    {
+      key: "time",
+      text: "How much time do you have on location?",
+      help: "This helps SkyMotion avoid showing shoots that are too long.",
+      type: "buttons",
+      options: [
+        { label: "5 min", value: "5min" },
+        { label: "10 min", value: "10min" },
+        { label: "20 min", value: "20min" },
+        { label: "Full shoot", value: "full_shoot" }
+      ]
+    },
+    {
+      key: "subject",
+      text: "What are you filming?",
+      help: "Pick the main thing you want to make look cinematic.",
+      type: "visual",
+      options: [
+        { label: "Person", value: "person", image: "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png" },
+        { label: "Car / Bike", value: "car_bike", image: "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png" },
+        { label: "Building", value: "building", image: "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png" },
+        { label: "Landscape", value: "landscape", image: "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" },
+        { label: "Atmosphere", value: "atmosphere", image: "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png" },
+        { label: "Water / Coast", value: "water", image: "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }
+      ]
+    },
+    {
+      key: "moveType",
+      text: "What type of moves do you want?",
+      help: "Choose simple moves if you need safe and fast ideas.",
+      type: "buttons",
+      options: [
+        { label: "Simple moves", value: "simple" },
+        { label: "Advanced moves", value: "advanced" },
+        { label: "Mixed difficulty", value: "mixed" }
+      ]
+    },
+    {
+      key: "pilot",
+      text: "How confident are you right now?",
+      help: "This is about today's location, not your general skill level.",
+      type: "buttons",
+      options: [
+        { label: "Playing safe", value: "safe" },
+        { label: "Normal", value: "normal" },
+        { label: "Ready to experiment", value: "experiment" }
+      ]
+    },
+    {
+      key: "mood",
+      text: "What vibe do you want?",
+      help: "This changes the style of the recommended moves and plans.",
+      type: "buttons",
+      options: [
+        { label: "Smooth", value: "smooth" },
+        { label: "Epic", value: "epic" },
+        { label: "Dynamic", value: "dynamic" },
+        { label: "Tense", value: "tense" },
+        { label: "Wow", value: "wow" }
+      ]
+    }
+  ];
+
   const state = {
     data: {
       moves: [],
@@ -24,7 +102,10 @@
     view: "library",
     activePackId: null,
     modal: null,
-    saved: loadLocalSaved()
+    saved: loadLocalSaved(),
+    filters: {},
+    filterStepIndex: 0,
+    filterHistory: []
   };
 
   function loadLocalSaved() {
@@ -118,6 +199,86 @@
     return state.data.packs.find((pack) => String(pack.id) === String(id));
   }
 
+  function arrayHas(value, selected) {
+    if (!selected) return true;
+    if (selected === "full_shoot") return true;
+
+    const arr = Array.isArray(value) ? value : [];
+    return arr.map(String).includes(String(selected));
+  }
+
+  function itemMatchesFilters(item) {
+    const f = state.filters;
+
+    return (
+      arrayHas(item.env, f.env) &&
+      arrayHas(item.time, f.time) &&
+      arrayHas(item.subject, f.subject) &&
+      arrayHas(item.moveType, f.moveType) &&
+      arrayHas(item.pilot, f.pilot) &&
+      arrayHas(item.mood, f.mood)
+    );
+  }
+
+  function planMatchesFilters(plan) {
+    const f = state.filters;
+
+    return (
+      arrayHas(plan.env, f.env) &&
+      arrayHas(plan.subject, f.subject) &&
+      arrayHas(plan.mood, f.mood)
+    );
+  }
+
+  function getFilteredMoves() {
+    return state.data.moves.filter(itemMatchesFilters);
+  }
+
+  function getFilteredPlans() {
+    return state.data.plans.filter(planMatchesFilters);
+  }
+
+  function getFilteredPacks() {
+    const moves = getFilteredMoves();
+    const plans = getFilteredPlans();
+
+    const moveIds = new Set(moves.map((move) => move.id));
+    const planIds = new Set(plans.map((plan) => plan.id));
+
+    return state.data.packs.filter((pack) => {
+      const packMoveIds = Array.isArray(pack.moveIds) ? pack.moveIds : [];
+      const packPlanIds = Array.isArray(pack.planIds) ? pack.planIds : [];
+
+      return (
+        packMoveIds.some((id) => moveIds.has(id)) ||
+        packPlanIds.some((id) => planIds.has(id)) ||
+        Object.keys(state.filters).length === 0
+      );
+    });
+  }
+
+  function getMatchSummary() {
+    return {
+      moves: getFilteredMoves().length,
+      plans: getFilteredPlans().length,
+      packs: getFilteredPacks().length
+    };
+  }
+
+  function hasActiveFilters() {
+    return Object.keys(state.filters).some((key) => state.filters[key]);
+  }
+
+  function getStepByKey(key) {
+    return proSteps.find((step) => step.key === key);
+  }
+
+  function getOptionLabel(stepKey, value) {
+    const step = getStepByKey(stepKey);
+    const option = step?.options?.find((item) => item.value === value);
+    return option?.label || value;
+  }
+
   function getSavedItems() {
     return state.saved
       .map((key) => {
@@ -145,20 +306,21 @@
 
   function renderHeader() {
     const isPackView = state.view === "pack";
+    const isFiltersView = state.view === "filters";
 
     return `
       <header class="sm-pro-header">
         <div class="sm-pro-header__left">
-          <button class="sm-pro-back" type="button" aria-label="Back" data-action="${isPackView ? "back-to-library" : "back"}">
+          <button class="sm-pro-back" type="button" aria-label="Back" data-action="${isPackView || isFiltersView ? "back-to-library" : "back"}">
             <span>‹</span>
           </button>
 
           <div>
             <div class="sm-pro-title-row">
-              <h1>${isPackView ? "Journey Pack" : "Pro Library"}</h1>
+              <h1>${isPackView ? "Journey Pack" : isFiltersView ? "Shoot Builder" : "Pro Library"}</h1>
               <span class="sm-pro-badge">PRO</span>
             </div>
-            <p>${isPackView ? "A ready-to-use shooting workflow." : "Moves, plans and packs for your shoot."}</p>
+            <p>${isPackView ? "A ready-to-use shooting workflow." : isFiltersView ? "Build a shoot based on your location." : "Moves, plans and packs for your shoot."}</p>
           </div>
         </div>
 
@@ -170,10 +332,12 @@
   }
 
   function renderFiltersButton() {
+    const summary = getMatchSummary();
+
     return `
       <button class="sm-pro-filter-button" type="button" data-action="open-filters">
         <span class="sm-pro-filter-icon">⌘</span>
-        <span>Filters</span>
+        <span>${hasActiveFilters() ? `${summary.moves} moves · ${summary.plans} plans · ${summary.packs} pack` : "Filters"}</span>
         <span class="sm-pro-filter-arrow">›</span>
       </button>
     `;
@@ -207,13 +371,33 @@
     return `
       <div class="sm-pro-section-head">
         <h2>${escapeHtml(title)}</h2>
-        <button type="button">${escapeHtml(action)}</button>
+        ${action ? `<button type="button">${escapeHtml(action)}</button>` : ""}
+      </div>
+    `;
+  }
+
+  function renderActiveFilters() {
+    if (!hasActiveFilters()) return "";
+
+    const entries = Object.entries(state.filters).filter(([, value]) => value);
+
+    return `
+      <div class="sm-active-filters">
+        ${entries.map(([key, value]) => `
+          <button type="button" data-remove-filter="${escapeHtml(key)}">
+            ${escapeHtml(getOptionLabel(key, value))} <span>×</span>
+          </button>
+        `).join("")}
+
+        <button type="button" class="sm-active-filters__clear" data-action="clear-filters">
+          Clear all
+        </button>
       </div>
     `;
   }
 
   function renderFeaturedPack() {
-    const pack = state.data.packs[0];
+    const pack = getFilteredPacks()[0];
 
     if (!pack) return "";
 
@@ -307,7 +491,7 @@
     `;
   }
 
-  function renderPopularMoves(moves = state.data.moves.slice(0, 4)) {
+  function renderPopularMoves(moves = getFilteredMoves().slice(0, 4)) {
     if (!moves.length) return "";
 
     return `
@@ -320,7 +504,7 @@
     `;
   }
 
-  function renderPlans(plans = state.data.plans.slice(0, 2)) {
+  function renderPlans(plans = getFilteredPlans().slice(0, 2)) {
     if (!plans.length) return "";
 
     return `
@@ -336,7 +520,7 @@
   function renderPacksList(always = false) {
     if (!always && state.activeTab !== "packs") return "";
 
-    const packs = state.data.packs;
+    const packs = getFilteredPacks();
 
     if (!packs.length) return "";
 
@@ -361,6 +545,25 @@
               </article>
             `;
           }).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderNoFilteredResults() {
+    if (!hasActiveFilters()) return "";
+
+    const summary = getMatchSummary();
+    const total = summary.moves + summary.plans + summary.packs;
+
+    if (total > 0) return "";
+
+    return `
+      <section class="sm-pro-section">
+        <div class="sm-empty-state">
+          <h2>No matching results</h2>
+          <p>Try removing one filter or choosing mixed difficulty.</p>
+          <button class="sm-primary-button" type="button" data-action="clear-filters">Reset filters</button>
         </div>
       </section>
     `;
@@ -487,9 +690,11 @@
       <div class="sm-pro-app">
         ${renderHeader()}
         ${renderFiltersButton()}
+        ${renderActiveFilters()}
         ${renderTabs()}
 
         <main class="sm-pro-main">
+          ${renderNoFilteredResults()}
           ${state.activeTab === "all" || state.activeTab === "packs" ? renderFeaturedPack() : ""}
           ${state.activeTab === "all" || state.activeTab === "moves" ? renderPopularMoves() : ""}
           ${state.activeTab === "all" || state.activeTab === "plans" ? renderPlans() : ""}
@@ -499,6 +704,95 @@
       </div>
 
       ${renderModal()}
+    `;
+  }
+
+  function renderFilterProgress() {
+    const progress = Math.max(5, ((state.filterStepIndex) / proSteps.length) * 100);
+
+    return `
+      <div class="sm-filter-progress">
+        <div style="width:${progress}%"></div>
+      </div>
+    `;
+  }
+
+  function renderFilterSummary() {
+    const summary = getMatchSummary();
+
+    return `
+      <div class="sm-filter-summary">
+        <span>${summary.moves} moves</span>
+        <span>${summary.plans} plans</span>
+        <span>${summary.packs} pack</span>
+      </div>
+    `;
+  }
+
+  function renderFilterOptions(step) {
+    if (step.type === "visual") {
+      return `
+        <div class="sm-filter-visual-grid">
+          ${step.options.map((option) => `
+            <button
+              type="button"
+              class="sm-filter-visual-card ${state.filters[step.key] === option.value ? "is-selected" : ""}"
+              data-filter-key="${escapeHtml(step.key)}"
+              data-filter-value="${escapeHtml(option.value)}"
+            >
+              <img src="${getImageUrl(option.image)}" alt="${escapeHtml(option.label)}" loading="lazy" />
+              <span>${escapeHtml(option.label)}</span>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="sm-filter-button-grid">
+        ${step.options.map((option) => `
+          <button
+            type="button"
+            class="sm-filter-choice ${state.filters[step.key] === option.value ? "is-selected" : ""}"
+            data-filter-key="${escapeHtml(step.key)}"
+            data-filter-value="${escapeHtml(option.value)}"
+          >
+            ${escapeHtml(option.label)}
+          </button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderFilterView() {
+    const step = proSteps[state.filterStepIndex] || proSteps[0];
+
+    return `
+      <div class="sm-pro-app">
+        ${renderHeader()}
+
+        <main class="sm-pro-filter-view">
+          ${renderFilterProgress()}
+
+          <section class="sm-filter-card">
+            <div class="sm-filter-card__top">
+              <span>Step ${state.filterStepIndex + 1} of ${proSteps.length}</span>
+              ${renderFilterSummary()}
+            </div>
+
+            <h2>${escapeHtml(step.text)}</h2>
+            <p>${escapeHtml(step.help || "")}</p>
+
+            ${renderFilterOptions(step)}
+          </section>
+
+          <div class="sm-filter-footer">
+            <button class="sm-secondary-button" type="button" data-action="filter-reset">Reset</button>
+            <button class="sm-secondary-button" type="button" data-action="filter-prev" ${state.filterHistory.length ? "" : "disabled"}>Previous</button>
+            <button class="sm-primary-button" type="button" data-action="filter-show-results">Show results</button>
+          </div>
+        </main>
+      </div>
     `;
   }
 
@@ -581,8 +875,45 @@
   }
 
   function renderApp() {
-    root.innerHTML = state.view === "pack" ? renderPackDetail() : renderLibraryView();
+    if (state.view === "filters") {
+      root.innerHTML = renderFilterView();
+    } else if (state.view === "pack") {
+      root.innerHTML = renderPackDetail();
+    } else {
+      root.innerHTML = renderLibraryView();
+    }
+
     bindEvents();
+  }
+
+  function chooseFilter(key, value) {
+    state.filterHistory.push({
+      stepIndex: state.filterStepIndex,
+      filters: { ...state.filters }
+    });
+
+    state.filters[key] = value;
+
+    if (state.filterStepIndex < proSteps.length - 1) {
+      state.filterStepIndex += 1;
+    }
+
+    renderApp();
+  }
+
+  function resetFilters() {
+    state.filters = {};
+    state.filterStepIndex = 0;
+    state.filterHistory = [];
+    renderApp();
+  }
+
+  function showResults() {
+    state.view = "library";
+    state.activeTab = "all";
+    state.modal = null;
+    renderApp();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function bindEvents() {
@@ -615,7 +946,51 @@
 
     root.querySelectorAll("[data-action='open-filters']").forEach((button) => {
       button.addEventListener("click", () => {
-        console.log("[SM PRO] Filters clicked — Shoot Builder will be added in v0.3");
+        state.view = "filters";
+        state.modal = null;
+        renderApp();
+      });
+    });
+
+    root.querySelectorAll("[data-filter-key][data-filter-value]").forEach((button) => {
+      button.addEventListener("click", () => {
+        chooseFilter(button.dataset.filterKey, button.dataset.filterValue);
+      });
+    });
+
+    root.querySelectorAll("[data-action='filter-prev']").forEach((button) => {
+      button.addEventListener("click", () => {
+        const last = state.filterHistory.pop();
+        if (!last) return;
+
+        state.filterStepIndex = last.stepIndex;
+        state.filters = { ...last.filters };
+        renderApp();
+      });
+    });
+
+    root.querySelectorAll("[data-action='filter-reset']").forEach((button) => {
+      button.addEventListener("click", resetFilters);
+    });
+
+    root.querySelectorAll("[data-action='filter-show-results']").forEach((button) => {
+      button.addEventListener("click", showResults);
+    });
+
+    root.querySelectorAll("[data-action='clear-filters']").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.filters = {};
+        state.filterStepIndex = 0;
+        state.filterHistory = [];
+        renderApp();
+      });
+    });
+
+    root.querySelectorAll("[data-remove-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.removeFilter;
+        delete state.filters[key];
+        renderApp();
       });
     });
 
