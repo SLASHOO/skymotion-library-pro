@@ -6,6 +6,8 @@
 
   const DATA_URL = window.SM_LIBRARY_DATA_URL || "./library-data-pro.json";
   const FALLBACK_THUMB = "https://skymotion-cdn.b-cdn.net/thumb.jpg";
+  const API_BASE = String(window.SM_API_BASE || "http://127.0.0.1:8000").replace(/\/$/, "");
+  const DEV_MEMBERSTACK_ID = "test_user_123";
 
   const root = document.getElementById("sm-library-pro");
 
@@ -102,7 +104,12 @@
     view: "library",
     activePackId: null,
     modal: null,
-    saved: loadLocalSaved(),
+    saved: [],
+    access: {
+      isPro: false,
+      ownedPacks: []
+    },
+    isBackendReady: false,
     filters: {},
     filterStepIndex: 0,
     filterHistory: []
@@ -123,7 +130,76 @@
       localStorage.setItem("sm_pro_saved_items", JSON.stringify(state.saved));
     } catch (_) {}
   }
+  async function getMemberstackId() {
+  try {
+    const memberstack = window.$memberstackDom;
 
+    if (memberstack && typeof memberstack.getCurrentMember === "function") {
+      const result = await memberstack.getCurrentMember();
+      const member = result?.data || result;
+
+      if (member?.id) return member.id;
+    }
+  } catch (error) {
+    console.warn("[SM PRO] Memberstack user not available:", error);
+  }
+
+  return DEV_MEMBERSTACK_ID;
+}
+
+async function apiRequest(path, options = {}) {
+  const memberstackId = await getMemberstackId();
+
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "x-ms-id": memberstackId,
+      ...(options.headers || {})
+    }
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(`API ${response.status}: ${text || response.statusText}`);
+  }
+
+  if (response.status === 204) return null;
+
+  return response.json();
+}
+
+async function hydrateAccess() {
+  try {
+    const data = await apiRequest("/v1/me/access");
+
+    state.access = {
+      isPro: Boolean(data?.is_pro),
+      ownedPacks: Array.isArray(data?.owned_packs) ? data.owned_packs : []
+    };
+  } catch (error) {
+    console.warn("[SM PRO] Failed to hydrate access:", error);
+
+    state.access = {
+      isPro: false,
+      ownedPacks: []
+    };
+  }
+}
+
+async function hydrateSavedItems() {
+  try {
+    const data = await apiRequest("/v1/saved-items");
+    const items = Array.isArray(data?.items) ? data.items : [];
+
+    state.saved = items.map((item) => {
+      return getSavedKey(item.item_type, item.item_id);
+    });
+  } catch (error) {
+    console.warn("[SM PRO] Failed to hydrate saved items:", error);
+    state.saved = [];
+  }
+}
   function getSavedKey(type, id) {
     return `${type}:${id}`;
   }
@@ -132,18 +208,47 @@
     return state.saved.includes(getSavedKey(type, id));
   }
 
-  function toggleSaved(type, id) {
-    const key = getSavedKey(type, id);
+  async function toggleSaved(type, id) {
+  const key = getSavedKey(type, id);
+  const wasSaved = state.saved.includes(key);
 
-    if (state.saved.includes(key)) {
-      state.saved = state.saved.filter((item) => item !== key);
+  if (wasSaved) {
+    state.saved = state.saved.filter((item) => item !== key);
+  } else {
+    state.saved.push(key);
+  }
+
+  renderApp();
+
+  try {
+    if (wasSaved) {
+      await apiRequest(`/v1/saved-items/${encodeURIComponent(type)}/${encodeURIComponent(id)}`, {
+        method: "DELETE"
+      });
     } else {
-      state.saved.push(key);
+      await apiRequest("/v1/saved-items", {
+        method: "POST",
+        body: JSON.stringify({
+          item_type: type,
+          item_id: id
+        })
+      });
     }
 
-    saveLocalSaved();
+    await hydrateSavedItems();
+    renderApp();
+  } catch (error) {
+    console.error("[SM PRO] Failed to toggle saved item:", error);
+
+    if (wasSaved) {
+      state.saved.push(key);
+    } else {
+      state.saved = state.saved.filter((item) => item !== key);
+    }
+
     renderApp();
   }
+}
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -1271,7 +1376,9 @@ root.querySelectorAll("[data-action='open-step-move']").forEach((button) => {
         plans: Array.isArray(data.plans) ? data.plans : [],
         packs: Array.isArray(data.packs) ? data.packs : []
       };
-
+      await hydrateAccess();
+      await hydrateSavedItems();
+      state.isBackendReady = true;
       renderApp();
     } catch (error) {
       console.error("[SM PRO] Failed to load data:", error);
