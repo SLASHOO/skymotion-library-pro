@@ -103,6 +103,7 @@
     activeTab: "all",
     view: "library",
     activePackId: null,
+    lockedPackId: null,
     modal: null,
     saved: [],
     access: {
@@ -303,6 +304,12 @@ async function hydrateSavedItems() {
   function getPackById(id) {
     return state.data.packs.find((pack) => String(pack.id) === String(id));
   }
+  function userCanAccessPack(packId) {
+  if (state.access.isPro) return true;
+
+  return Array.isArray(state.access.ownedPacks) &&
+    state.access.ownedPacks.includes(packId);
+}
 
   function arrayHas(value, selected) {
     if (!selected) return true;
@@ -949,6 +956,37 @@ async function hydrateSavedItems() {
     if (!state.modal) return "";
 
     const { type, id } = state.modal;
+    if (type === "locked-pack") {
+  const pack = getPackById(id);
+
+  return `
+    <div class="sm-pro-modal" data-action="close-modal">
+      <div class="sm-pro-modal__dialog" data-modal-dialog>
+        <button class="sm-pro-modal__close" type="button" data-action="close-modal">×</button>
+
+        <img class="sm-pro-modal__image" src="${getImageUrl(pack?.cover)}" alt="${escapeHtml(pack?.title || "Pro Pack")}" />
+
+        <div class="sm-pro-modal__body">
+          <div class="sm-pro-modal__topline">
+            <span class="sm-pill sm-pill--purple">BETA PRO</span>
+          </div>
+
+          <h2>${escapeHtml(pack?.title || "Pro Pack")}</h2>
+          <p>This pack is part of SkyMotion Pro Beta. Access is free for selected beta users right now. Ask for Pro Beta access to test this pack.</p>
+
+          <div class="sm-pro-modal__actions">
+            <button type="button" class="sm-primary-button" data-action="request-beta-access">
+              Request Beta Access
+            </button>
+            <button type="button" class="sm-secondary-button" data-action="close-modal">
+              Not now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
     if (type === "move") {
   const move = getMoveById(id);
@@ -1189,6 +1227,7 @@ async function hydrateSavedItems() {
   }
 
   function bindEvents() {
+
     root.querySelectorAll("[data-tab]").forEach((button) => {
       button.addEventListener("click", () => {
         state.activeTab = button.dataset.tab || "all";
@@ -1197,15 +1236,25 @@ async function hydrateSavedItems() {
         renderApp();
       });
     });
+  root.querySelectorAll("[data-action='request-beta-access']").forEach((button) => {
+  button.addEventListener("click", () => {
+    console.log("[SM PRO] Beta access request clicked.");
+  });
+});
 
-    root.querySelectorAll("[data-tab-jump]").forEach((button) => {
-      button.addEventListener("click", () => {
-        state.activeTab = button.dataset.tabJump || "saved";
-        state.view = "library";
-        state.modal = null;
-        renderApp();
-      });
-    });
+root.querySelectorAll("[data-save-type][data-save-id]").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const type = button.dataset.saveType;
+    const id = button.dataset.saveId;
+
+    if (!type || !id) return;
+
+    toggleSaved(type, id);
+  });
+});
 
     root.querySelectorAll("[data-action='back-to-library']").forEach((button) => {
       button.addEventListener("click", () => {
@@ -1267,14 +1316,27 @@ async function hydrateSavedItems() {
     });
 
     root.querySelectorAll("[data-action='open-pack']").forEach((card) => {
-      card.addEventListener("click", () => {
-        state.view = "pack";
-        state.activePackId = card.dataset.packId;
-        state.modal = null;
-        renderApp();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    });
+  card.addEventListener("click", () => {
+    const packId = card.dataset.packId;
+
+    if (!userCanAccessPack(packId)) {
+      state.lockedPackId = packId;
+      state.modal = {
+        type: "locked-pack",
+        id: packId
+      };
+      renderApp();
+      return;
+    }
+
+    state.view = "pack";
+    state.activePackId = packId;
+    state.lockedPackId = null;
+    state.modal = null;
+    renderApp();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
 
     root.querySelectorAll("[data-action='open-move']").forEach((card) => {
       card.addEventListener("click", () => {
