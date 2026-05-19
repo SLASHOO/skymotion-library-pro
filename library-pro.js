@@ -8,6 +8,8 @@
   const FALLBACK_THUMB = "https://skymotion-cdn.b-cdn.net/thumb.jpg";
   const API_BASE = String(window.SM_API_BASE || "http://127.0.0.1:8000").replace(/\/$/, "");
   const DEV_MEMBERSTACK_ID = "test_user_123";
+  const PRO_BETA_PLAN_ID = "pln_skymotion-pro-beta-r8ai0gbb";
+  const PRO_BETA_PACK_ID = "journey_pack";
   const IS_LOCAL_DEV =
     location.hostname === "localhost" ||
     location.hostname === "127.0.0.1" ||
@@ -161,11 +163,46 @@
   return null;
 }
 
+async function getCurrentMemberSafe() {
+  try {
+    const memberstack = window.$memberstackDom;
+
+    if (!memberstack || typeof memberstack.getCurrentMember !== "function") {
+      return null;
+    }
+
+    const result = await memberstack.getCurrentMember();
+    return result?.data?.member || result?.data || result?.member || result || null;
+  } catch (error) {
+    console.warn("[SM PRO] Failed to get current Memberstack member:", error);
+    return null;
+  }
+}
+
+async function memberHasProBetaPlan() {
+  const member = await getCurrentMemberSafe();
+
+  if (!member) return false;
+
+  const planConnections = Array.isArray(member.planConnections)
+    ? member.planConnections
+    : [];
+
+  return planConnections.some((connection) => {
+    return (
+      connection?.planId === PRO_BETA_PLAN_ID &&
+      connection?.active === true &&
+      String(connection?.status || "").toUpperCase() === "ACTIVE"
+    );
+  });
+}
+
 async function apiRequest(path, options = {}) {
   const memberstackId = await getMemberstackId();
+
   if (!memberstackId) {
-  throw new Error("Memberstack member is not available. Please log in.");
-}
+    throw new Error("Memberstack member is not available. Please log in.");
+  }
 
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -185,22 +222,37 @@ async function apiRequest(path, options = {}) {
 
   return response.json();
 }
-
 async function hydrateAccess() {
+  const hasMemberstackProBeta = await memberHasProBetaPlan();
+
   try {
     const data = await apiRequest("/v1/me/access");
 
-    state.access = {
-      isPro: Boolean(data?.is_pro),
-      ownedPacks: Array.isArray(data?.owned_packs) ? data.owned_packs : []
-    };
-  } catch (error) {
-    console.warn("[SM PRO] Failed to hydrate access:", error);
+    const backendOwnedPacks = Array.isArray(data?.owned_packs)
+      ? data.owned_packs
+      : [];
+
+    const ownedPacks = [...backendOwnedPacks];
+
+    if (hasMemberstackProBeta && !ownedPacks.includes(PRO_BETA_PACK_ID)) {
+      ownedPacks.push(PRO_BETA_PACK_ID);
+    }
 
     state.access = {
-      isPro: false,
-      ownedPacks: []
+      isPro: Boolean(data?.is_pro) || hasMemberstackProBeta,
+      ownedPacks
     };
+
+    console.log("[SM PRO] Access hydrated:", state.access);
+  } catch (error) {
+    console.warn("[SM PRO] Failed to hydrate backend access:", error);
+
+    state.access = {
+      isPro: hasMemberstackProBeta,
+      ownedPacks: hasMemberstackProBeta ? [PRO_BETA_PACK_ID] : []
+    };
+
+    console.log("[SM PRO] Access from Memberstack only:", state.access);
   }
 }
 
