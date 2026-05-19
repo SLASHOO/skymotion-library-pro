@@ -1600,3 +1600,23 @@ body {
     padding: 22px;
   }
 }
+
+.sm-card-save.is-pending,
+.sm-secondary-button.is-pending {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.sm-card-save.is-pending {
+  animation: smSavePendingPulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes smSavePendingPulse {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(0.92);
+  }
+}

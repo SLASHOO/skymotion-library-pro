@@ -106,6 +106,7 @@
     lockedPackId: null,
     modal: null,
     saved: [],
+    pendingSaved: new Set(),
     access: {
       isPro: false,
       ownedPacks: []
@@ -211,6 +212,13 @@ async function hydrateSavedItems() {
 
   async function toggleSaved(type, id) {
   const key = getSavedKey(type, id);
+
+  if (state.pendingSaved.has(key)) {
+    return;
+  }
+
+  state.pendingSaved.add(key);
+
   const wasSaved = state.saved.includes(key);
 
   if (wasSaved) {
@@ -235,7 +243,6 @@ async function hydrateSavedItems() {
         })
       });
     }
-
   } catch (error) {
     console.error("[SM PRO] Failed to toggle saved item:", error);
 
@@ -244,7 +251,8 @@ async function hydrateSavedItems() {
     } else {
       state.saved = state.saved.filter((item) => item !== key);
     }
-
+  } finally {
+    state.pendingSaved.delete(key);
     renderApp();
   }
 }
@@ -513,6 +521,7 @@ async function hydrateSavedItems() {
 
     const bestFor = Array.isArray(pack.bestFor) ? pack.bestFor.join(", ") : "";
     const saved = isSaved("pack", pack.id);
+    const pending = state.pendingSaved.has(getSavedKey("pack", pack.id));
 
     return `
       <section class="sm-pro-section sm-pro-featured-pack">
@@ -525,7 +534,7 @@ async function hydrateSavedItems() {
 
           <div class="sm-pack-hero__top">
             <span class="sm-pill sm-pill--purple">${escapeHtml(pack.badge || "PRO PACK")}</span>
-            <button class="sm-card-save ${saved ? "is-saved" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
+            <button class="sm-card-save ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
           </div>
 
           <div class="sm-pack-hero__content">
@@ -549,6 +558,7 @@ async function hydrateSavedItems() {
     const difficulty = getDifficultyLabel(move.difficulty);
     const difficultyClass = getDifficultyClass(move.difficulty);
     const saved = isSaved("move", move.id);
+    const pending = state.pendingSaved.has(getSavedKey("move", move.id));
 
     return `
       <article class="sm-move-card" data-move-id="${escapeHtml(move.id)}" data-action="open-move">
@@ -558,7 +568,7 @@ async function hydrateSavedItems() {
 
         <div class="sm-move-card__top">
           ${duration ? `<span class="sm-duration">${escapeHtml(duration)}</span>` : ""}
-          <button class="sm-card-save ${saved ? "is-saved" : ""}" type="button" aria-label="Save move" data-save-type="move" data-save-id="${escapeHtml(move.id)}"></button>
+        <button class="sm-card-save ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}" type="button" aria-label="Save move" data-save-type="move" data-save-id="${escapeHtml(move.id)}"></button>
         </div>
 
         <button class="sm-play-button" type="button" aria-label="Play ${escapeHtml(move.title)}">
@@ -579,6 +589,7 @@ async function hydrateSavedItems() {
     const duration = formatSeconds(plan.final_clip_duration_s);
     const difficulty = getDifficultyLabel(plan.difficulty);
     const saved = isSaved("plan", plan.id);
+    const pending = state.pendingSaved.has(getSavedKey("plan", plan.id));
 
     return `
       <article class="sm-plan-card" data-plan-id="${escapeHtml(plan.id)}" data-action="open-plan">
@@ -590,7 +601,7 @@ async function hydrateSavedItems() {
           ${duration ? `<span class="sm-duration">${escapeHtml(duration)}</span>` : ""}
           <span class="sm-pill sm-pill--soft">${Number(plan.shots_count || 0)} shots</span>
           <span class="sm-pill sm-pill--purple">Plan</span>
-          <button class="sm-card-save ${saved ? "is-saved" : ""}" type="button" aria-label="Save plan" data-save-type="plan" data-save-id="${escapeHtml(plan.id)}"></button>
+          <button class="sm-card-save ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}" type="button" aria-label="Save plan" data-save-type="plan" data-save-id="${escapeHtml(plan.id)}"></button>
         </div>
 
         <div class="sm-plan-card__bottom">
@@ -640,6 +651,7 @@ async function hydrateSavedItems() {
         <div class="sm-pack-list">
           ${packs.map((pack) => {
             const saved = isSaved("pack", pack.id);
+            const pending = state.pendingSaved.has(getSavedKey("pack", pack.id));
 
             return `
               <article class="sm-pack-row" data-pack-id="${escapeHtml(pack.id)}" data-action="open-pack">
@@ -647,7 +659,7 @@ async function hydrateSavedItems() {
                 <div>
                   <div class="sm-pack-row__top">
                     <span class="sm-pill sm-pill--purple">${escapeHtml(pack.badge || "PRO PACK")}</span>
-                    <button class="sm-card-save ${saved ? "is-saved" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
+                    <button class="sm-card-save ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
                   </div>
                   <h3>${escapeHtml(pack.title)}</h3>
                   <p>${escapeHtml(pack.description || "")}</p>
@@ -707,27 +719,31 @@ async function hydrateSavedItems() {
   }
 
   function renderSavedPacks(packs) {
-    return `
-      <section class="sm-pro-section">
-        ${renderSectionHeader("Saved packs", "View all")}
-        <div class="sm-pack-list">
-          ${packs.map((pack) => `
+  return `
+    <section class="sm-pro-section">
+      ${renderSectionHeader("Saved packs", "View all")}
+      <div class="sm-pack-list">
+        ${packs.map((pack) => {
+          const pending = state.pendingSaved.has(getSavedKey("pack", pack.id));
+
+          return `
             <article class="sm-pack-row" data-pack-id="${escapeHtml(pack.id)}" data-action="open-pack">
               <img src="${getImageUrl(pack.cover)}" alt="${escapeHtml(pack.title)}" loading="lazy" />
               <div>
                 <div class="sm-pack-row__top">
                   <span class="sm-pill sm-pill--purple">${escapeHtml(pack.badge || "PRO PACK")}</span>
-                  <button class="sm-card-save is-saved" type="button" aria-label="Unsave pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
+                  <button class="sm-card-save is-saved ${pending ? "is-pending" : ""}" type="button" aria-label="Unsave pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
                 </div>
                 <h3>${escapeHtml(pack.title)}</h3>
                 <p>${escapeHtml(pack.description || "")}</p>
               </div>
             </article>
-          `).join("")}
-        </div>
-      </section>
-    `;
-  }
+          `;
+        }).join("")}
+      </div>
+    </section>
+  `;
+}
 
   function renderPackDetail() {
     const pack = getPackById(state.activePackId);
@@ -743,6 +759,7 @@ async function hydrateSavedItems() {
     const bestFor = Array.isArray(pack.bestFor) ? pack.bestFor.join(", ") : "";
     const checklist = Array.isArray(pack.checklist) ? pack.checklist : [];
     const saved = isSaved("pack", pack.id);
+    const pending = state.pendingSaved.has(getSavedKey("pack", pack.id));
     const tips = Array.isArray(pack.tips) ? pack.tips : [];
 
     return `
@@ -757,7 +774,7 @@ async function hydrateSavedItems() {
 
               <div class="sm-pack-detail-hero__top">
                 <span class="sm-pill sm-pill--purple">${escapeHtml(pack.badge || "PRO PACK")}</span>
-                <button class="sm-card-save ${saved ? "is-saved" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
+                <button class="sm-card-save ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}" type="button" aria-label="Save pack" data-save-type="pack" data-save-id="${escapeHtml(pack.id)}"></button>
               </div>
 
               <div class="sm-pack-detail-hero__content">
@@ -993,6 +1010,7 @@ async function hydrateSavedItems() {
   const duration = formatSeconds(move.duration_s);
   const difficulty = getDifficultyLabel(move.difficulty);
   const saved = isSaved("move", move.id);
+  const pending = state.pendingSaved.has(getSavedKey("move", move.id));
   const videoUrl = String(move.videoUrl || move.video_url || "").trim();
 
   return `
@@ -1039,11 +1057,11 @@ async function hydrateSavedItems() {
 
           <button
             type="button"
-            class="sm-secondary-button ${saved ? "is-saved" : ""}"
+            class="sm-secondary-button ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}"
             data-save-type="move"
             data-save-id="${escapeHtml(move.id)}"
           >
-            ${saved ? "Saved" : "Save"}
+            ${pending ? "Saving..." : saved ? "Saved" : "Save"}
           </button>
         </div>
       </div>
@@ -1056,6 +1074,7 @@ async function hydrateSavedItems() {
   if (!plan) return "";
 
   const saved = isSaved("plan", plan.id);
+  const pending = state.pendingSaved.has(getSavedKey("plan", plan.id));
   const steps = Array.isArray(plan.steps) ? plan.steps : [];
   const resultVideo = String(plan.result_video || plan.resultVideo || "").trim();
   const duration = formatSeconds(plan.final_clip_duration_s);
@@ -1126,11 +1145,11 @@ async function hydrateSavedItems() {
 
             <button
               type="button"
-              class="sm-secondary-button ${saved ? "is-saved" : ""}"
+              class="sm-secondary-button ${saved ? "is-saved" : ""} ${pending ? "is-pending" : ""}"
               data-save-type="plan"
               data-save-id="${escapeHtml(plan.id)}"
             >
-              ${saved ? "Saved" : "Save"}
+              ${pending ? "Saving..." : saved ? "Saved" : "Save"}
             </button>
           </div>
 
@@ -1240,19 +1259,7 @@ async function hydrateSavedItems() {
   });
 });
 
-root.querySelectorAll("[data-save-type][data-save-id]").forEach((button) => {
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
 
-    const type = button.dataset.saveType;
-    const id = button.dataset.saveId;
-
-    if (!type || !id) return;
-
-    toggleSaved(type, id);
-  });
-});
 
     root.querySelectorAll("[data-action='back-to-library']").forEach((button) => {
       button.addEventListener("click", () => {
