@@ -236,8 +236,6 @@ async function hydrateSavedItems() {
       });
     }
 
-    await hydrateSavedItems();
-    renderApp();
   } catch (error) {
     console.error("[SM PRO] Failed to toggle saved item:", error);
 
