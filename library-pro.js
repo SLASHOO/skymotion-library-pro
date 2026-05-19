@@ -8,7 +8,10 @@
   const FALLBACK_THUMB = "https://skymotion-cdn.b-cdn.net/thumb.jpg";
   const API_BASE = String(window.SM_API_BASE || "http://127.0.0.1:8000").replace(/\/$/, "");
   const DEV_MEMBERSTACK_ID = "test_user_123";
-
+  const IS_LOCAL_DEV =
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1" ||
+    location.hostname === "";
   const root = document.getElementById("sm-library-pro");
 
   if (!root) {
@@ -138,19 +141,31 @@
 
     if (memberstack && typeof memberstack.getCurrentMember === "function") {
       const result = await memberstack.getCurrentMember();
-      const member = result?.data || result;
+      const member = result?.data?.member || result?.data || result?.member || result;
 
-      if (member?.id) return member.id;
+      if (member?.id) {
+        console.log("[SM PRO] Memberstack ID:", member.id);
+        return member.id;
+      }
     }
   } catch (error) {
     console.warn("[SM PRO] Memberstack user not available:", error);
   }
 
-  return DEV_MEMBERSTACK_ID;
+  if (IS_LOCAL_DEV) {
+    console.warn("[SM PRO] Using local dev Memberstack fallback:", DEV_MEMBERSTACK_ID);
+    return DEV_MEMBERSTACK_ID;
+  }
+
+  console.warn("[SM PRO] No Memberstack member detected on live site.");
+  return null;
 }
 
 async function apiRequest(path, options = {}) {
   const memberstackId = await getMemberstackId();
+  if (!memberstackId) {
+  throw new Error("Memberstack member is not available. Please log in.");
+}
 
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
