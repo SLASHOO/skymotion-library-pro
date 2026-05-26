@@ -3,18 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkyMotion Library Pro</title>
+  <title>SkyMotion Pro Library</title>
 
+  <script>
+    window.SM_API_BASE = "https://skymotion.onrender.com";
+    window.SM_LIBRARY_DATA_URL = "./library-data-pro.json";
+  </script>
+
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./library-pro.css" />
+  <link rel="stylesheet" href="./plan-viewer-v3.css" />
 </head>
 <body>
-  <div id="sm-library-pro"></div>
+<div id="sm-library-scope" class="sm">
+  <div class="library" id="smLibrary">
 
-    <script>
-  window.SM_API_BASE = "https://skymotion-backend.onrender.com";
-  window.SM_LIBRARY_DATA_URL = "./library-data-pro.json";
-    </script>
+    <div class="sm-pro-mobile-top" aria-label="Pro Library header">
+      <div class="sm-pro-title-wrap">
+        <div class="sm-pro-title-row">
+          <h1>Pro Library</h1>
+          <span class="sm-pro-badge">PRO</span>
+        </div>
+        <p>Moves, plans and packs for your shoot.</p>
+      </div>
+    </div>
+    <button class="mobile-open" id="openAssistantBtn" type="button" aria-label="Open filters">
+      <span class="filterIcon" aria-hidden="true"></span>
+      <span>Filters</span>
+    </button>
 
-  <script src="./library-pro.js"></script>
+    <nav class="sm-pro-mobile-tabs" aria-label="Pro Library tabs">
+      <button class="is-active" type="button">All</button>
+      <button type="button">Moves</button>
+      <button type="button">Plans</button>
+      <button type="button">Packs</button>
+      <button type="button">Saved</button>
+    </nav>
+
+    <div class="assistantBackdrop" id="assistantBackdrop" aria-hidden="true"></div>
+
+    <aside class="assistant" aria-label="Filters panel">
+      <div class="assistant__header">
+  <div class="assistant__heading">
+    <button class="assistant__backToResults" id="backToResultsBtn" type="button">
+      ← Back to library
+    </button>
+    <div class="assistant__title">Filters</div>
+  </div>
+
+  <div class="assistant__right">
+    <button class="assistant__count assistant__showTopBtn" id="showResultsBtn" type="button">
+      Show <span id="matchCount">—</span> moves
+    </button>
+
+    <button class="assistant__close" id="closeAssistantBtn" type="button" aria-label="Close filters">
+      ×
+    </button>
+  </div>
+</div>
+
+      <div class="chat" id="chat" aria-live="polite"></div>
+
+      <div class="assistant__footer">
+        <div class="filterProgress" aria-hidden="true">
+          <div class="filterProgress__bar" id="filterProgressBar"></div>
+        </div>
+
+        <div class="assistant__footerRow">
+          <button class="btn btn--ghost" id="resetBtn" type="button">Reset</button>
+          <button class="btn btn--ghost" id="backBtn" type="button" disabled>Previous</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="results" aria-label="Video results">
+      <div class="results__head" id="resultsHead" style="display:none;"></div>
+      <div class="results__grid" id="resultsGrid"></div>
+      <button class="btn btn--ghost results__more" id="moreBtn" type="button">Load more</button>
+    </main>
+  </div>
+
+  <div class="sm-modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="sm-modal__backdrop" id="modalBackdrop"></div>
+    <div class="sm-modal__content" id="modalContent"></div>
+  </div>
+</div>
+
+<div id="sm-plan-v3-root">
+  <div
+    class="spv3"
+    id="spv3Modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Plan viewer"
+  >
+    <div class="spv3__backdrop" id="spv3Backdrop"></div>
+
+    <div class="spv3__dialog" role="document">
+      <button class="spv3__close" id="spv3Close" type="button" aria-label="Close">
+        ×
+      </button>
+
+      <div class="spv3__viewport" id="spv3Viewport">
+        <div class="spv3__track" id="spv3Track"></div>
+      </div>
+
+      <div class="spv3__dots" id="spv3Dots"></div>
+    </div>
+  </div>
+</div>
+
+<script src="./plan-viewer-v3.js"></script>
+<script src="./library-pro.js"></script>
 </body>
 </html>
