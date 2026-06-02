@@ -8,11 +8,17 @@
   <script>
     window.SM_API_BASE = "https://skymotion.onrender.com";
     window.SM_LIBRARY_DATA_URL = "./library-data-pro.json";
+    window.SM_CHECKLIST_PAPER_ASSET_URL = "https://skymotion-cdn.b-cdn.net/checklist.png";
+
+    // Optional pack copy/assets. Edit these values when the final pack is ready.
+    window.SM_PRO_PACK_TITLE = "Test Pack";
+    window.SM_PRO_PACK_CREATOR = "Creator Name";
+    window.SM_PRO_PACK_DESCRIPTION = "A test shooting pack for SkyMotion Premium. Final name, creator, content and pack direction will be updated after we choose the first official pack.";
+    // window.SM_REAL_ESTATE_PACK_COVER_URL = "https://your-cover-image-url.jpg";
   </script>
 
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./library-pro.css" />
-  <link rel="stylesheet" href="./plan-viewer-v3.css" />
+  <link rel="stylesheet" href="./library-pro.css?v=121" />
 </head>
 <body>
 <div id="sm-library-scope" class="sm">
@@ -27,6 +33,7 @@
         <p>Moves, plans and packs for your shoot.</p>
       </div>
     </div>
+
     <button class="mobile-open" id="openAssistantBtn" type="button" aria-label="Open filters">
       <span class="filterIcon" aria-hidden="true"></span>
       <span>Filters</span>
@@ -44,23 +51,23 @@
 
     <aside class="assistant" aria-label="Filters panel">
       <div class="assistant__header">
-  <div class="assistant__heading">
-    <button class="assistant__backToResults" id="backToResultsBtn" type="button">
-      ← Back to library
-    </button>
-    <div class="assistant__title">Filters</div>
-  </div>
+        <div class="assistant__heading">
+          <button class="assistant__backToResults" id="backToResultsBtn" type="button">
+            ← Back to library
+          </button>
+          <div class="assistant__title">Filters</div>
+        </div>
 
-  <div class="assistant__right">
-    <button class="assistant__count assistant__showTopBtn" id="showResultsBtn" type="button">
-      Show <span id="matchCount">—</span> moves
-    </button>
+        <div class="assistant__right">
+          <button class="assistant__count assistant__showTopBtn" id="showResultsBtn" type="button">
+            Show <span id="matchCount">—</span> moves
+          </button>
 
-    <button class="assistant__close" id="closeAssistantBtn" type="button" aria-label="Close filters">
-      ×
-    </button>
-  </div>
-</div>
+          <button class="assistant__close" id="closeAssistantBtn" type="button" aria-label="Close filters">
+            ×
+          </button>
+        </div>
+      </div>
 
       <div class="chat" id="chat" aria-live="polite"></div>
 
@@ -89,32 +96,6 @@
   </div>
 </div>
 
-<div id="sm-plan-v3-root">
-  <div
-    class="spv3"
-    id="spv3Modal"
-    aria-hidden="true"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Plan viewer"
-  >
-    <div class="spv3__backdrop" id="spv3Backdrop"></div>
-
-    <div class="spv3__dialog" role="document">
-      <button class="spv3__close" id="spv3Close" type="button" aria-label="Close">
-        ×
-      </button>
-
-      <div class="spv3__viewport" id="spv3Viewport">
-        <div class="spv3__track" id="spv3Track"></div>
-      </div>
-
-      <div class="spv3__dots" id="spv3Dots"></div>
-    </div>
-  </div>
-</div>
-
-<script src="./plan-viewer-v3.js"></script>
-<script src="./library-pro.js"></script>
+<script src="./library-pro.js?v=121"></script>
 </body>
 </html>

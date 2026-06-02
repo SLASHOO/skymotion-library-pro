@@ -1,17 +1,74 @@
 (() => {
   "use strict";
-  console.info("[SM PRO] library-pro.js v28 clean modules loaded");
+  console.info("[SM PRO] library-pro.js v126 mobile pack detail clean loaded");
   if (window.__SM_LIBRARY_V1_CLEAN_SPLIT__) return;
   window.__SM_LIBRARY_V1_CLEAN_SPLIT__ = true;
 
 
   const FALLBACK_THUMB = "https://skymotion-cdn.b-cdn.net/thumb.jpg";
+  const REAL_ESTATE_PACK_COVER = window.SM_REAL_ESTATE_PACK_COVER_URL || "https://skymotion-cdn.b-cdn.net/thumb.jpg";
+  const CHECKLIST_PAPER_ASSET_URL = window.SM_CHECKLIST_PAPER_ASSET_URL || "https://skymotion-cdn.b-cdn.net/checklist.png";
   const CDN_INDEX_URL = "https://skymotion-cdn.b-cdn.net/videos_index_v16.json";
   const API_BASE = String(window.SM_API_BASE || "https://skymotion.onrender.com").replace(/\/$/, "");
   const $ = (id) => document.getElementById(id);
 
   const scope = $("sm-library-scope");
   if (!scope) return;
+
+  function setPackDetailPageMode(enabled) {
+    const on = !!enabled;
+    document.documentElement.classList.toggle("sm-pack-detail-open", on);
+    document.body.classList.toggle("sm-pack-detail-open", on);
+
+    const setImp = (el, prop, value) => {
+      if (!el) return;
+      el.style.setProperty(prop, value, "important");
+    };
+
+    const clear = (el, props) => {
+      if (!el) return;
+      props.forEach((prop) => el.style.removeProperty(prop));
+    };
+
+    const pageEls = [
+      document.documentElement,
+      document.body
+    ];
+
+    const packEls = [
+      scope,
+      scope?.querySelector(".library"),
+      scope?.querySelector(".results"),
+      scope?.querySelector(".results__grid")
+    ];
+
+    if (on) {
+      pageEls.forEach((el) => {
+        setImp(el, "height", "auto");
+        setImp(el, "min-height", "100%");
+        setImp(el, "max-height", "none");
+        setImp(el, "overflow", "auto");
+        setImp(el, "overflow-x", "hidden");
+        setImp(el, "overflow-y", "auto");
+        setImp(el, "position", "static");
+      });
+
+      packEls.forEach((el) => {
+        setImp(el, "height", "auto");
+        setImp(el, "max-height", "none");
+        setImp(el, "overflow", "visible");
+      });
+
+      if (scope) {
+        setImp(scope, "min-height", "100vh");
+        setImp(scope, "overflow-x", "hidden");
+        setImp(scope, "overflow-y", "visible");
+      }
+    } else {
+      pageEls.forEach((el) => clear(el, ["height", "min-height", "max-height", "overflow", "overflow-x", "overflow-y", "position"]));
+      packEls.forEach((el) => clear(el, ["height", "min-height", "max-height", "overflow", "overflow-x", "overflow-y"]));
+    }
+  }
 
   function emit(name, detail = {}) {
     window.dispatchEvent(new CustomEvent(name, { detail }));
@@ -268,6 +325,142 @@
   }
 
   let savedCache = [];
+  let savedItemKeys = new Set();
+  let accessCache = {
+    isPro: false,
+    ownedPacks: []
+  };
+
+  const PRO_BETA_PACK_ID = String(window.SM_PRO_BETA_PACK_ID || "real_estate_creator_pack");
+  const LOCAL_SAVED_MOVES_KEY = "sm_pro_saved_moves_v1";
+  const LOCAL_SAVED_ITEMS_KEY = "sm_pro_saved_items_v1";
+
+  function normalizeSavedMoveRecord(x = {}) {
+    const id = x?.id || x?.video_id || x?.slug || x?.videoUrl || x?.video_url || "";
+    if (!id) return null;
+
+    return {
+      ...x,
+      id,
+      title: x?.title || "",
+      thumb: x?.thumb || FALLBACK_THUMB,
+      videoUrl: x?.videoUrl || x?.video_url || "",
+      video_url: x?.video_url || x?.videoUrl || "",
+      duration: x?.duration || "",
+      env: Array.isArray(x?.env) ? x.env : [],
+      risk: Array.isArray(x?.risk) ? x.risk : [],
+      subject: Array.isArray(x?.subject) ? x.subject : [],
+      pilot: Array.isArray(x?.pilot) ? x.pilot : [],
+      mood: Array.isArray(x?.mood) ? x.mood : [],
+    };
+  }
+
+  function readLocalJson(key, fallback) {
+    try {
+      const raw = window.localStorage?.getItem(key);
+      if (!raw) return fallback;
+      const parsed = JSON.parse(raw);
+      return parsed ?? fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function loadLocalSavedState() {
+    const localMoves = readLocalJson(LOCAL_SAVED_MOVES_KEY, []);
+    const localKeys = readLocalJson(LOCAL_SAVED_ITEMS_KEY, []);
+
+    if (Array.isArray(localMoves)) {
+      const normalized = localMoves.map(normalizeSavedMoveRecord).filter(Boolean);
+      const byId = new Map(savedCache.map((item) => [String(item?.id || ""), item]));
+      normalized.forEach((item) => byId.set(String(item.id), item));
+      savedCache = Array.from(byId.values()).filter((item) => item?.id);
+    }
+
+    if (Array.isArray(localKeys)) {
+      localKeys.forEach((key) => {
+        const clean = String(key || "").trim();
+        if (clean && clean !== ":") savedItemKeys.add(clean);
+      });
+    }
+
+    syncMoveKeysFromSavedCache();
+  }
+
+  function persistLocalSavedState() {
+    try {
+      window.localStorage?.setItem(LOCAL_SAVED_MOVES_KEY, JSON.stringify(savedCache || []));
+      window.localStorage?.setItem(LOCAL_SAVED_ITEMS_KEY, JSON.stringify(Array.from(savedItemKeys || [])));
+    } catch (_) {}
+  }
+
+  function getSavedKey(type, id) {
+    return `${String(type || "").trim().toLowerCase()}:${String(id || "").trim()}`;
+  }
+
+  function isGenericSaved(type, id) {
+    return savedItemKeys.has(getSavedKey(type, id));
+  }
+
+  function addSavedKey(type, id) {
+    const key = getSavedKey(type, id);
+    if (key !== ":") savedItemKeys.add(key);
+  }
+
+  function removeSavedKey(type, id) {
+    savedItemKeys.delete(getSavedKey(type, id));
+  }
+
+  function syncMoveKeysFromSavedCache() {
+    if (!Array.isArray(savedCache)) return;
+    savedCache.forEach((item) => {
+      const id = item?.id || item?.video_id || item?.slug || item?.videoUrl || item?.video_url || "";
+      if (id) addSavedKey("move", id);
+    });
+  }
+
+  async function hydrateAccessCache() {
+    try {
+      const data = await api(`/v1/me/access`, { method: "GET" });
+      const ownedPacks = Array.isArray(data?.owned_packs) ? data.owned_packs : [];
+
+      accessCache = {
+        isPro: Boolean(data?.is_pro || data?.pro || data?.has_pro),
+        ownedPacks: [...ownedPacks]
+      };
+
+      if (accessCache.isPro && PRO_BETA_PACK_ID && !accessCache.ownedPacks.includes(PRO_BETA_PACK_ID)) {
+        accessCache.ownedPacks.push(PRO_BETA_PACK_ID);
+      }
+    } catch (e) {
+      // Non-blocking: Pro UI should still work while backend access endpoint is being finalized.
+      console.warn("[SM PRO] access hydrate failed", e?.status, e?.payload || e);
+      accessCache = { isPro: false, ownedPacks: [] };
+    }
+  }
+
+  async function hydrateSavedItemsCache() {
+    try {
+      const data = await api(`/v1/saved-items`, { method: "GET" });
+      const list = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.items) ? data.items
+        : Array.isArray(data?.saved_items) ? data.saved_items
+        : [];
+
+      list
+        .map((item) => getSavedKey(item?.item_type || item?.type, item?.item_id || item?.id))
+        .filter((key) => key && key !== ":")
+        .forEach((key) => savedItemKeys.add(key));
+    } catch (e) {
+      // Older backend may not have /v1/saved-items yet, or local Memberstack may be missing.
+      // Do not wipe local saved state. Keep localStorage as the fallback source of truth for dev.
+      console.warn("[SM PRO] saved-items hydrate failed", e?.status, e?.payload || e);
+    }
+
+    syncMoveKeysFromSavedCache();
+    persistLocalSavedState();
+  }
 
   async function hydrateSavedCache() {
     try {
@@ -280,14 +473,17 @@
         : Array.isArray(data?.moves) ? data.moves
         : [];
 
-      savedCache = list.map((x) => ({
-        ...x,
-        id: x?.id || x?.video_id || x?.slug || x?.videoUrl || x?.video_url || "",
-        videoUrl: x?.videoUrl || x?.video_url || "",
-      })).filter((x) => x.id);
+      const backendSaved = list.map(normalizeSavedMoveRecord).filter(Boolean);
+      const byId = new Map(savedCache.map((item) => [String(item?.id || ""), item]));
+      backendSaved.forEach((item) => byId.set(String(item.id), item));
+      savedCache = Array.from(byId.values()).filter((item) => item?.id);
+      syncMoveKeysFromSavedCache();
+      persistLocalSavedState();
     } catch (e) {
+      // Do not clear savedCache here. On localhost/backend failure, localStorage must keep saved items after reload.
       console.warn("[SM] saved-moves GET failed", e?.status, e?.payload || e);
-      savedCache = [];
+      syncMoveKeysFromSavedCache();
+      persistLocalSavedState();
     }
   }
 
@@ -295,7 +491,35 @@
     return Array.isArray(savedCache) && savedCache.some((x) => String(x?.id) === String(id));
   }
 
-  async function toggleSaved(video) {
+  function syncSavedMoveToBackend(action, id, payload) {
+    // Backend sync is intentionally non-blocking. The save icon must update instantly,
+    // even on localhost where Memberstack may not be available.
+    const task = action === "save"
+      ? api(`/v1/saved-moves`, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        }).then(() => {
+          api(`/v1/saved-items`, {
+            method: "POST",
+            body: JSON.stringify({ item_type: "move", item_id: id })
+          }).catch(() => null);
+        })
+      : api(`/v1/saved-moves/${encodeURIComponent(id)}`, { method: "DELETE" })
+          .then(() => {
+            api(`/v1/saved-items/${encodeURIComponent("move")}/${encodeURIComponent(id)}`, { method: "DELETE" }).catch(() => null);
+          });
+
+    task
+      .then(() => hydrateSavedCache())
+      .then(() => {
+        if (activeProTab === "saved") renderResults();
+      })
+      .catch((e) => {
+        console.warn(`[SM] ${action} sync failed`, e?.status, e?.payload || e);
+      });
+  }
+
+  function toggleSaved(video) {
     const id = getVideoId(video);
 
     const payload = {
@@ -311,48 +535,65 @@
       mood: video?.mood || [],
     };
 
-    if (isSaved(id)) {
-      // Optimistic UI: remove locally immediately, then try to sync backend.
+    const wasSaved = isSaved(id);
+
+    if (wasSaved) {
       savedCache = savedCache.filter((x) => String(x?.id) !== String(id));
-
-      try {
-        await api(`/v1/saved-moves/${encodeURIComponent(id)}`, { method: "DELETE" });
-        await hydrateSavedCache();
-      } catch (e) {
-        console.warn("[SM] unsave failed", e?.status, e?.payload || e);
-      }
-
-      emit("sm:save_clicked", {
-        item_id: id,
-        action: "unsave",
-        item_type: "move",
-        title: video?.title || ""
-      });
-
-      return false;
+      removeSavedKey("move", id);
+    } else {
+      savedCache = [payload, ...savedCache.filter((x) => String(x?.id) !== String(id))];
+      addSavedKey("move", id);
     }
 
-    // Optimistic UI: add locally immediately, then try to sync backend.
-    savedCache = [payload, ...savedCache.filter((x) => String(x?.id) !== String(id))];
-
-    try {
-      await api(`/v1/saved-moves`, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
-      await hydrateSavedCache();
-    } catch (e) {
-      console.warn("[SM] save failed", e?.status, e?.payload || e);
-    }
+    persistLocalSavedState();
 
     emit("sm:save_clicked", {
       item_id: id,
-      action: "save",
+      action: wasSaved ? "unsave" : "save",
       item_type: "move",
       title: video?.title || ""
     });
 
-    return true;
+    syncSavedMoveToBackend(wasSaved ? "unsave" : "save", id, payload);
+
+    return !wasSaved;
+  }
+
+  function toggleSavedPack(pack) {
+    const id = String(pack?.id || "");
+    if (!id) return false;
+
+    const wasSaved = isGenericSaved("pack", id);
+
+    if (wasSaved) removeSavedKey("pack", id);
+    else addSavedKey("pack", id);
+
+    persistLocalSavedState();
+
+    emit("sm:save_clicked", {
+      item_id: id,
+      action: wasSaved ? "unsave" : "save",
+      item_type: "pack",
+      title: pack?.title || ""
+    });
+
+    const task = wasSaved
+      ? api(`/v1/saved-items/${encodeURIComponent("pack")}/${encodeURIComponent(id)}`, { method: "DELETE" })
+      : api(`/v1/saved-items`, {
+          method: "POST",
+          body: JSON.stringify({ item_type: "pack", item_id: id })
+        });
+
+    task
+      .then(() => hydrateSavedItemsCache())
+      .then(() => {
+        if (activeProTab === "saved") renderResults();
+      })
+      .catch((e) => {
+        console.warn("[SM PRO] pack save sync failed", e?.status, e?.payload || e);
+      });
+
+    return !wasSaved;
   }
 
   const locks = { drawer: false, modal: false };
@@ -360,8 +601,25 @@
   function applyOverflow() {
     const videoOpen = modal.getAttribute("aria-hidden") === "false";
     const lock = locks.drawer || videoOpen || locks.modal;
-    document.documentElement.style.overflow = lock ? "hidden" : "";
-    document.body.style.overflow = lock ? "hidden" : "";
+    const packDetailOpen = scope.classList.contains("sm-pro-pack-detail-active") || document.documentElement.classList.contains("sm-pack-detail-open");
+
+    if (lock) {
+      document.documentElement.style.setProperty("overflow", "hidden", "important");
+      document.body.style.setProperty("overflow", "hidden", "important");
+      return;
+    }
+
+    if (packDetailOpen) {
+      setPackDetailPageMode(true);
+      return;
+    }
+
+    document.documentElement.style.removeProperty("overflow");
+    document.documentElement.style.removeProperty("overflow-x");
+    document.documentElement.style.removeProperty("overflow-y");
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("overflow-x");
+    document.body.style.removeProperty("overflow-y");
   }
 
   function isDrawerMode() {
@@ -853,14 +1111,21 @@
   }
 
   function ensureFilterHero() {
-    if (!isProMobilePortrait()) {
-      assistant?.classList.remove("sm-pro-filter-screen");
+    const useProFilterScreen = isProMobilePortrait() || isProDesktopLayout();
+
+    if (!useProFilterScreen) {
+      assistant?.classList.remove("sm-pro-filter-screen", "sm-pro-desktop-filter");
       return null;
     }
 
     assistant?.classList.add("sm-pro-filter-screen");
+    assistant?.classList.toggle("sm-pro-desktop-filter", isProDesktopLayout());
+
     let hero = scope.querySelector(".sm-pro-filter-hero");
-    if (hero) return hero;
+    if (hero) {
+      hero.classList.toggle("sm-pro-filter-hero--desktop", isProDesktopLayout());
+      return hero;
+    }
 
     hero = document.createElement("div");
     hero.className = "sm-pro-filter-hero";
@@ -877,6 +1142,8 @@
       </div>
       <div class="sm-pro-filter-segments" aria-hidden="true"></div>
     `;
+
+    hero.classList.toggle("sm-pro-filter-hero--desktop", isProDesktopLayout());
 
     const chatEl = scope.querySelector(".chat");
     if (chatEl?.parentNode) chatEl.parentNode.insertBefore(hero, chatEl);
@@ -1004,7 +1271,7 @@
 
     applyFilters();
 
-    if (isProMobilePortrait()) {
+    if (isProMobilePortrait() || isProDesktopLayout()) {
       renderOptions();
       updateFilterUi();
       return;
@@ -1080,12 +1347,76 @@
     scrollChatBottom();
   }
 
+  function renderDesktopStepScreen() {
+    ensureFilterHero();
+    assistant?.classList.add("sm-pro-desktop-filter");
+    chat.className = "chat sm-pro-step-mode sm-pro-desktop-step-mode";
+    chat.innerHTML = "";
+
+    if (stepIndex >= steps.length) {
+      chat.innerHTML = `
+        <div class="sm-pro-step-copy sm-pro-step-copy--final sm-pro-desktop-step-copy">
+          <h2>Results are ready</h2>
+          <p>Open the recommended moves and plans for this shoot.</p>
+        </div>
+      `;
+      updateFilterUi();
+      return;
+    }
+
+    const s = steps[stepIndex];
+    const isVisualEnv = s.key === "env";
+
+    if (isVisualEnv) chat.classList.add("sm-env-visual-mode");
+
+    const copy = document.createElement("div");
+    copy.className = "sm-pro-step-copy sm-pro-desktop-step-copy";
+    copy.innerHTML = `
+      <h2>${escapeHtml(s.text)}</h2>
+      <p>${escapeHtml(s.help || "")}</p>
+    `;
+    chat.appendChild(copy);
+
+    const wrap = document.createElement("div");
+    wrap.className = isVisualEnv ? "options sm-env-visual-grid sm-env-visual-grid--desktop" : "options sm-pro-pill-grid sm-pro-pill-grid--desktop";
+
+    s.options.forEach((label) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+
+      if (isVisualEnv) {
+        btn.className = `opt sm-env-card ${getEnvArtClass(label)}`;
+        btn.innerHTML = `
+          <img class="sm-env-card__img" src="${escapeHtml(getEnvThumb(label))}" alt="" loading="lazy" aria-hidden="true">
+          <span class="sm-env-card__paint" aria-hidden="true"></span>
+          <span class="sm-env-card__label">${escapeHtml(label)}</span>
+        `;
+      } else {
+        btn.className = "opt";
+        btn.textContent = label;
+      }
+
+      btn.addEventListener("click", () => handleFilterOptionClick(btn, label, s));
+      wrap.appendChild(btn);
+    });
+
+    chat.appendChild(wrap);
+    scrollChatBottom();
+  }
+
   function renderOptions() {
     clearOptions();
-    chat.classList.remove("sm-env-visual-mode", "sm-pro-step-mode");
+    chat.classList.remove("sm-env-visual-mode", "sm-pro-step-mode", "sm-pro-desktop-step-mode");
+    if (!isProDesktopLayout()) assistant?.classList.remove("sm-pro-desktop-filter");
+    if (!isProMobilePortrait() && !isProDesktopLayout()) assistant?.classList.remove("sm-pro-filter-screen");
 
     if (isProMobilePortrait()) {
       renderMobileStepScreen();
+      return;
+    }
+
+    if (isProDesktopLayout()) {
+      renderDesktopStepScreen();
       return;
     }
 
@@ -1126,8 +1457,10 @@
       Object.keys(state).forEach((k) => delete state[k]);
       Object.assign(state, last.prevState || {});
 
-      if (!isProMobilePortrait()) {
+      if (!isProMobilePortrait() && !isProDesktopLayout()) {
         chat.innerHTML = last.prevChatHTML;
+      } else {
+        chat.innerHTML = "";
       }
 
       applyFilters();
@@ -1151,7 +1484,7 @@
 
     if (backBtn) backBtn.disabled = true;
 
-    if (!isProMobilePortrait()) {
+    if (!isProMobilePortrait() && !isProDesktopLayout()) {
       await addBotTyped("Hi. Let’s browse moves and cinematic plans.");
       await addBotTyped(steps[0].text);
     }
@@ -1366,6 +1699,13 @@
 
   function isProMobilePortrait() {
     return window.matchMedia("(max-width: 900px) and (orientation: portrait)").matches;
+  }
+
+  function isProDesktopLayout() {
+    return (
+      window.matchMedia("(min-width: 901px)").matches &&
+      !window.matchMedia("(max-height: 560px) and (orientation: landscape)").matches
+    );
   }
 
   function getItemFilteredIndex(item) {
@@ -1713,7 +2053,7 @@ function setProTab(tab) {
   }
 
   function updateProMovesLive() {
-    if (!isProMobilePortrait() || activeProTab !== "moves") return;
+    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "moves") return;
 
     const wrap = scope.querySelector(".sm-pro-moves-screen");
     if (!wrap) return;
@@ -1905,6 +2245,8 @@ function setProTab(tab) {
     const changed = activeProTab !== next || !!activeProPackId;
     activeProTab = next;
     activeProPackId = null;
+    setPackDetailPageMode(false);
+    scope.classList.remove("sm-pro-pack-detail-active");
 
     if (changed) {
       proSearchOpen = false;
@@ -1935,7 +2277,7 @@ function setProTab(tab) {
   }
 
   function updateProActiveLive() {
-    if (!isProMobilePortrait()) return;
+    if (!isProMobilePortrait() && !isProDesktopLayout()) return;
     if (activeProTab === "moves") return updateProMovesLive();
     if (activeProTab === "plans") return updateProPlansLive();
     if (activeProTab === "packs") return updateProPacksLive();
@@ -2073,7 +2415,7 @@ function setProTab(tab) {
   }
 
   function updateProMovesLive() {
-    if (!isProMobilePortrait() || activeProTab !== "moves") return;
+    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "moves") return;
 
     const wrap = scope.querySelector(".sm-pro-moves-screen");
     if (!wrap) return;
@@ -2191,13 +2533,13 @@ function setProTab(tab) {
   function renderProPlansScreen() {
     const { allPlans, plans } = getProPlansData();
     const wrap = renderProScreenShell("Plans");
-    wrap.classList.add("sm-pro-plans-screen");
+    wrap.classList.add("sm-pro-plans-screen", "sm-pro-plans-poster-screen");
 
     renderProSearchBar(wrap);
     renderProCountRow(wrap, getProPlansCountLabel(plans, allPlans), "Search plans");
 
     const list = document.createElement("div");
-    list.className = "sm-pro-move-list sm-pro-plan-list";
+    list.className = "sm-pro-plan-grid sm-pro-plan-poster-grid";
     list.setAttribute("data-pro-plan-list", "1");
     wrap.appendChild(list);
 
@@ -2207,13 +2549,17 @@ function setProTab(tab) {
       return;
     }
 
-    plans.forEach((item) => list.appendChild(renderPlanListCard(item)));
+    plans.forEach((item) => {
+      const idx = getItemFilteredIndex(item);
+      list.appendChild(renderPlanCard(item, idx));
+    });
+
     attachImgFallback(wrap);
     safeText(matchCount, String(plans.length));
   }
 
   function updateProPlansLive() {
-    if (!isProMobilePortrait() || activeProTab !== "plans") return;
+    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "plans") return;
     const wrap = scope.querySelector(".sm-pro-plans-screen");
     if (!wrap) return;
     const { allPlans, plans } = getProPlansData();
@@ -2228,7 +2574,11 @@ function setProTab(tab) {
       safeText(matchCount, "0");
       return;
     }
-    plans.forEach((item) => list.appendChild(renderPlanListCard(item)));
+    plans.forEach((item) => {
+      const idx = getItemFilteredIndex(item);
+      list.appendChild(renderPlanCard(item, idx));
+    });
+
     attachImgFallback(wrap);
     safeText(matchCount, String(plans.length));
   }
@@ -2237,11 +2587,22 @@ function setProTab(tab) {
     const plans = filtered.filter(isPlan);
     const moves = filtered.filter((item) => !isPlan(item));
 
-    const carMove = moves.find((m) => hasMatch(m?.subject, "car_bike")) ||
-      moves.find((m) => String(m?.title || "").toLowerCase().includes("car"));
-    const heroMove = carMove || moves.find((m) => String(m?.title || "").toLowerCase().includes("tracking")) || moves[0];
-    const heroPlan = plans.find((p) => String(p?.title || "").toLowerCase().includes("car")) || plans[0];
-    const heroCover = pickThumb(heroMove?.thumb, heroPlan ? getPlanCover(heroPlan) : "", moves?.[0]?.thumb, FALLBACK_THUMB);
+    const buildingMove = moves.find((m) => hasMatch(m?.subject, "building")) ||
+      moves.find((m) => String(m?.title || "").toLowerCase().includes("reveal")) ||
+      moves.find((m) => String(m?.title || "").toLowerCase().includes("orbit"));
+
+    const buildingPlan = plans.find((p) => String(p?.title || "").toLowerCase().includes("home")) ||
+      plans.find((p) => String(p?.title || "").toLowerCase().includes("villa")) ||
+      plans.find((p) => String(p?.title || "").toLowerCase().includes("building")) ||
+      plans[0];
+
+    const heroCover = pickThumb(
+      REAL_ESTATE_PACK_COVER,
+      getPlanCover(buildingPlan),
+      buildingMove?.thumb,
+      moves?.[0]?.thumb,
+      FALLBACK_THUMB
+    );
 
     const travelCover = (() => {
       const coverPlan = plans.find((p) => String(p?.title || "").toLowerCase().includes("hike")) || plans[0];
@@ -2251,12 +2612,12 @@ function setProTab(tab) {
     return [
       {
         id: "real_estate_creator_pack",
-        title: "Real Estate Pack",
-        creator: "Creator Name",
+        title: window.SM_PRO_PACK_TITLE || "Real Estate Pack",
+        creator: window.SM_PRO_PACK_CREATOR || "creator name",
         label: "PACK",
-        thumb: "https://skymotion-cdn.b-cdn.net/thumb.jpg",
+        thumb: heroCover,
         meta: "13 moves · 5 plans · Checklist",
-        description: "Test pack description. Final name, creator and copy will be updated after discussion with Fabian.",
+        description: window.SM_PRO_PACK_DESCRIPTION || "A practical shooting pack for real estate drone videos. Learn the key shots, camera setup, checklist and ready-made cinematic plans for property shoots.",
         bestFor: ["Real estate", "Property videos", "Client-ready sequences"],
         movesCount: 13,
         plansCount: 5,
@@ -2265,37 +2626,78 @@ function setProTab(tab) {
           {
             n: 1,
             title: "Intro",
-            desc: "Use this pack when...",
+            desc: "Start with the pack logic before flying.",
             duration: "1:18",
             thumb: "https://skymotion-cdn.b-cdn.net/intro-test.png"
           },
           {
             n: 2,
             title: "Camera Settings",
-            desc: "Pack-specific settings.",
+            desc: "Set exposure, ND and basic capture settings.",
             duration: "2:05",
             thumb: "https://skymotion-cdn.b-cdn.net/camera-settings-test.png"
           },
           {
             n: 3,
             title: "Editing Workflow",
-            desc: "Pack-specific editing flow.",
+            desc: "Turn the shots into a clean property sequence.",
             duration: "2:20",
             thumb: "https://skymotion-cdn.b-cdn.net/Editing-Workflow-test.png"
           }
         ],
+        checklistGroups: [
+          {
+            title: "Before the shoot",
+            items: [
+              "Check weather & wind",
+              "Inspect location on map",
+              "Confirm battery levels",
+              "Format SD cards",
+              "Check drone firmware",
+              "Scout takeoff/landing spots"
+            ]
+          },
+          {
+            title: "During the shoot",
+            items: [
+              "Keep line of sight",
+              "Monitor battery (30% RTH)",
+              "Check ND filter if needed",
+              "Vary angles & heights",
+              "Capture establishing shots"
+            ]
+          },
+          {
+            title: "After the shoot",
+            items: [
+              "Backup all footage",
+              "Review key shots",
+              "Note ideas for edits",
+              "Charge batteries"
+            ]
+          }
+        ],
         checklist: [
-          "Pick the safest takeoff and landing spot before people gather around.",
-          "Choose one hero car or one main event area before takeoff.",
-          "Capture a wide event overview before close or dynamic shots.",
-          "Avoid low passes above people, expensive cars or crowded lines.",
-          "Record 3–5 seconds before and after every move for editing.",
-          "Only use dynamic tracking if the route is clear and legal."
+          "Check weather & wind",
+          "Inspect location on map",
+          "Confirm battery levels",
+          "Format SD cards",
+          "Check drone firmware",
+          "Scout takeoff/landing spots",
+          "Keep line of sight",
+          "Monitor battery (30% RTH)",
+          "Check ND filter if needed",
+          "Vary angles & heights",
+          "Capture establishing shots",
+          "Backup all footage",
+          "Review key shots",
+          "Note ideas for edits",
+          "Charge batteries"
         ],
         mistakes: [
-          "Don’t only film one car and forget the scale of the event.",
-          "Don’t repeat the same side move in every clip.",
-          "Don’t fly low over people or cars just for a more dramatic shot."
+          "Don’t repeat the same angle for every room or exterior shot.",
+          "Don’t fly low near windows, people or tight balconies.",
+          "Don’t forget wide establishing shots before close details."
         ]
       },
       {
@@ -2328,20 +2730,135 @@ function setProTab(tab) {
     ];
   }
 
+  function getPackCommercialInfo(pack = {}) {
+    const id = String(pack?.id || "").toLowerCase();
+    const title = String(pack?.title || "").toLowerCase();
+    const meta = String(pack?.meta || "");
+    const moves = (meta.match(/(\d+)\s*moves/i) || [])[1] || "—";
+    const plans = (meta.match(/(\d+)\s*plans/i) || [])[1] || "—";
+    const hasChecklist = /checklist/i.test(meta);
+    const inside = `${moves} moves · ${plans} plans${hasChecklist ? " · checklist" : ""}`;
+    const rawCreator = String(pack?.creator || "").trim();
+    const creatorName = (!rawCreator || rawCreator.toLowerCase() === "creator name") ? "Dominic Hayles" : rawCreator;
+    const creatorBadge = `BY ${creatorName.toUpperCase()}`;
+
+    if (id.includes("real") || title.includes("test")) {
+      return {
+        badge: creatorBadge,
+        cardTitle: "Real Estate Starter Pack",
+        intent: "For paid property shoots",
+        output: "30–60s property reel · 5 hero shots",
+        useCase: "Real estate / rentals",
+        inside,
+        level: "Beginner-friendly · 30–45 min shoot",
+        bestFor: "Real estate · Property videos · Client-ready sequences"
+      };
+    }
+
+    if (id.includes("travel") || title.includes("travel")) {
+      return {
+        badge: creatorBadge,
+        cardTitle: "Travel Creator Pack",
+        intent: "For paid travel / tourism shoots",
+        output: "Cinematic reel · establishing shots",
+        useCase: "Hotels / tourism / personal brand",
+        inside,
+        level: "Intermediate · fast planning",
+        bestFor: "Travel reels · Location stories · Tourism content"
+      };
+    }
+
+    if (id.includes("urban") || title.includes("urban")) {
+      return {
+        badge: creatorBadge,
+        cardTitle: "Urban Creator Pack",
+        intent: "For paid local business promos",
+        output: "Urban reel · reveals · detail shots",
+        useCase: "Local business / streets / buildings",
+        inside,
+        level: "Intermediate · safety-focused",
+        bestFor: "City promos · Buildings · Local business videos"
+      };
+    }
+
+    if (id.includes("beginner") || title.includes("beginner")) {
+      return {
+        badge: creatorBadge,
+        cardTitle: "Beginner Safe Pack",
+        intent: "For first paid client-style shoots",
+        output: "Clean practice reel · simple hero shots",
+        useCase: "Practice / first paid shoots",
+        inside,
+        level: "Beginner · low-risk moves",
+        bestFor: "First paid shoots · Safe practice · Simple client videos"
+      };
+    }
+
+    return {
+      badge: creatorBadge,
+      cardTitle: pack?.title || "Creator Pack",
+      intent: "For client-ready shooting workflows",
+      output: "Cinematic sequence · usable shot list",
+      useCase: "Creator workflow",
+      inside,
+      level: "Plan faster on location",
+      bestFor: "Client work · Fast planning · Cinematic sequences"
+    };
+  }
+
+  function getPackInsideRows(pack = {}) {
+    const meta = String(pack?.meta || "");
+    const moves = (meta.match(/(\d+)\s*moves/i) || [])[1] || "—";
+    const plans = (meta.match(/(\d+)\s*plans/i) || [])[1] || "—";
+    let bonus = "Checklist";
+
+    if (/pro tips/i.test(meta)) bonus = "Pro tips";
+    else if (/safety tips/i.test(meta)) bonus = "Safety tips";
+    else if (/practice flow/i.test(meta)) bonus = "Practice flow";
+    else if (!/checklist/i.test(meta)) bonus = "Shot guide";
+
+    return [
+      [moves, "Moves"],
+      [plans, "Plans"],
+      [bonus, "Included"]
+    ];
+  }
+
+  function renderPackInfoPanel(pack = {}) {
+    const rows = getPackInsideRows(pack);
+
+    return `
+      <div class="sm-pro-pack-row__info-panel" aria-label="Pack contents">
+        <div class="sm-pro-pack-row__info-title">Inside</div>
+        ${rows.map(([value, label]) => `
+          <div class="sm-pro-pack-row__info-item">
+            <strong>${escapeHtml(value)}</strong>
+            <span>${escapeHtml(label)}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
   function renderPackListCard(pack) {
     const card = document.createElement("article");
+    const saved = isGenericSaved("pack", pack?.id);
+    const info = getPackCommercialInfo(pack);
     card.className = "sm-pro-pack-row";
     card.dataset.proPack = pack.id;
     card.innerHTML = `
       <div class="sm-pro-pack-row__media">
         <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
-        <span>${escapeHtml(pack.label)}</span>
+        <span>${escapeHtml(info.badge)}</span>
       </div>
       <div class="sm-pro-pack-row__body">
-        <h3>${escapeHtml(pack.title)}</h3>
-        <div>${escapeHtml(pack.meta)}</div>
-        <p>${escapeHtml(pack.description)}</p>
+        <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
+        <div class="sm-pro-pack-row__meta">${escapeHtml(info.inside)}</div>
+        <p><strong>${escapeHtml(info.intent || "For paid shoots")}</strong> · ${escapeHtml(info.output || info.bestFor || "Client-ready sequence")}</p>
       </div>
+      <button class="sm-pro-pack-save ${saved ? "isSaved" : ""}" type="button" aria-label="${saved ? "Unsave pack" : "Save pack"}" data-pro-pack-save="${escapeHtml(pack.id)}">
+        ${bookmarkSvg()}
+      </button>
     `;
     attachImgFallback(card);
     return card;
@@ -2367,7 +2884,7 @@ function setProTab(tab) {
     const moves = filtered.filter((item) => !isPlan(item));
     if (!moves.length) return [];
 
-    const preferred = ["orbit", "raise", "top", "tracking", "push", "reveal", "dolly", "pull", "side"];
+    const preferred = ["orbit", "raise", "top", "push", "reveal", "take", "gimbal", "dolly", "tracking", "pull", "side", "drift", "parallax"];
     const picked = [];
 
     preferred.forEach((key) => {
@@ -2391,40 +2908,40 @@ function setProTab(tab) {
     return `
       <article class="sm-pro-pack-lesson" data-pro-lesson="${escapeHtml(lesson.title)}">
         <img src="${escapeHtml(lesson.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(lesson.title)}" loading="lazy">
-        <div class="sm-pro-pack-lesson__shade"></div>
+        <span class="sm-pro-pack-lesson__shade" aria-hidden="true"></span>
         <span class="sm-pro-pack-lesson__num">${escapeHtml(lesson.n)}</span>
         <span class="sm-pro-pack-lesson__play" aria-hidden="true"></span>
         <div class="sm-pro-pack-lesson__body">
           <h3>${escapeHtml(lesson.title)}</h3>
-          <p>${escapeHtml(lesson.desc || "")}</p>
-          <small>${escapeHtml(lesson.duration || "")}</small>
+          ${lesson.duration ? `<small>${escapeHtml(lesson.duration)}</small>` : ""}
         </div>
       </article>
     `;
   }
 
-  function renderPackMoveTile(move) {
-    const idx = getItemFilteredIndex(move);
-    const id = getVideoId(move);
-    const saved = isSaved(id);
-    const title = move?.title || "Move";
-    const duration = move?.duration || formatSeconds(move?.duration_s) || "";
-    const difficulty = getMoveDifficulty(move);
+  function renderPackMoveTile(move, slotIndex = 0) {
+    const fallbackTitles = ["Orbit", "Raise Up", "Top Down", "Push Out", "Move + Gimbal Up", "Take Off"];
+    const fallbackDurations = ["0:15", "0:21", "0:21", "0:10", "0:10", "0:11"];
+    const idx = move ? getItemFilteredIndex(move) : -1;
+    const id = move ? getVideoId(move) : `pack-placeholder-move-${slotIndex + 1}`;
+    const saved = move ? isSaved(id) : false;
+    const title = move?.title || fallbackTitles[slotIndex % fallbackTitles.length] || "Move";
+    const duration = move?.duration || formatSeconds(move?.duration_s) || fallbackDurations[slotIndex % fallbackDurations.length] || "";
+    const difficulty = getMoveDifficulty(move || { title });
     const tone = difficultyTone(difficulty);
-    const thumb = pickThumb(move?.thumb, move?.poster, move?.image);
+    const thumb = pickThumb(move?.thumb, move?.poster, move?.image, filtered.find((item) => !isPlan(item))?.thumb, FALLBACK_THUMB);
+    const clickAttrs = move
+      ? `data-index="${idx}" data-kind="move" data-item-id="${escapeHtml(id)}"`
+      : `data-pack-placeholder-move="${slotIndex + 1}"`;
 
     return `
-      <article class="sm-pro-pack-move-card" data-index="${idx}" data-kind="move" data-item-id="${escapeHtml(id)}">
+      <article class="sm-pro-pack-move-card" ${clickAttrs}>
         <img class="sm-pro-pack-move-card__img" src="${escapeHtml(thumb)}" alt="${escapeHtml(title)}" loading="lazy">
         <span class="sm-pro-pack-move-card__shade" aria-hidden="true"></span>
-
         ${duration ? `<span class="sm-pro-pack-move-card__time">${escapeHtml(duration)}</span>` : ""}
-
-        <button class="sm-save ${saved ? "isSaved" : ""}" type="button"
-          aria-label="${saved ? "Unsave" : "Save"}" data-save-id="${escapeHtml(id)}">
+        ${move ? `<button class="sm-save ${saved ? "isSaved" : ""}" type="button" aria-label="${saved ? "Unsave" : "Save"}" data-save-id="${escapeHtml(id)}">
           ${bookmarkSvg()}
-        </button>
-
+        </button>` : ""}
         <div class="sm-pro-pack-move-card__meta">
           <h3>${escapeHtml(title)}</h3>
           <span class="sm-pro-difficulty-pill sm-pro-difficulty-pill--${tone}">${escapeHtml(difficulty)}</span>
@@ -2433,13 +2950,24 @@ function setProTab(tab) {
     `;
   }
 
+  function renderPackMoreMovesCard(hiddenCount = 0) {
+    if (hiddenCount <= 0) return "";
+    return `
+      <button class="sm-pro-pack-more-moves" type="button" data-pro-go-tab="moves">
+        <strong>+${hiddenCount}</strong>
+        <span>more moves</span>
+        <em aria-hidden="true">→</em>
+      </button>
+    `;
+  }
+
   function makePackPlanSlot(plan, slotIndex = 0) {
     const defaults = [
-      { title: "Quick Pack Plan", desc: "Fast plan for a short on-location shoot.", time: 10, shots: 4, difficulty: "Basic" },
-      { title: "Hero Sequence", desc: "Focus on one main subject with clean cinematic shots.", time: 15, shots: 5, difficulty: "Intermediate" },
-      { title: "Full Shoot Flow", desc: "Complete sequence with wide, medium and closing shots.", time: 20, shots: 6, difficulty: "Intermediate" },
-      { title: "Safe Location Plan", desc: "Use this when the location feels busy or limited.", time: 12, shots: 4, difficulty: "Basic" },
-      { title: "Dynamic Finish Plan", desc: "Adds more energy when the space is clear and safe.", time: 18, shots: 5, difficulty: "Advanced" }
+      { title: "Coastline Plan", desc: "3 shots cinematic coastline drone sequence.", time: 15, shots: 3, difficulty: "Intermediate" },
+      { title: "Hike With Friends", desc: "Simple travel sequence with people and landscape.", time: 17, shots: 4, difficulty: "Basic" },
+      { title: "Modern Home Tour", desc: "Clean exterior flow for a property video.", time: 14, shots: 4, difficulty: "Basic" },
+      { title: "Sunset Cityscape", desc: "Warm urban sequence with wide establishing shots.", time: 16, shots: 4, difficulty: "Intermediate" },
+      { title: "Luxury Villa", desc: "Elegant property sequence with smooth reveals.", time: 18, shots: 5, difficulty: "Intermediate" }
     ];
 
     const fallback = defaults[slotIndex % defaults.length];
@@ -2452,7 +2980,8 @@ function setProTab(tab) {
       shootTime: getPlanShootTime(plan) || fallback.time,
       difficulty: getPlanDifficulty(plan) || fallback.difficulty,
       index: plan ? getItemFilteredIndex(plan) : -1,
-      id: plan?.id || fallback.title
+      id: plan?.id || fallback.title,
+      recommended: slotIndex === 0
     };
   }
 
@@ -2461,21 +2990,21 @@ function setProTab(tab) {
     const dataAttrs = slot.source
       ? `data-index="${slot.index}" data-kind="plan" data-item-id="${escapeHtml(slot.id || slot.title)}"`
       : `data-pack-placeholder-plan="${slotIndex + 1}"`;
+    const featured = slotIndex === 0;
 
     return `
-      <article class="sm-pro-pack-plan-card" ${dataAttrs}>
+      <article class="sm-pro-pack-plan-card ${featured ? "is-featured" : ""}" ${dataAttrs}>
         <img class="sm-pro-pack-plan-card__img" src="${escapeHtml(slot.cover)}" alt="${escapeHtml(slot.title)}" loading="lazy">
         <span class="sm-pro-pack-plan-card__shade" aria-hidden="true"></span>
-
-        <div class="sm-pro-pack-plan-card__top">
-          <span>${slot.shootTime} min</span>
-          <span>${slot.shots} shots</span>
-        </div>
-
+        ${featured ? `<span class="sm-pro-pack-plan-card__recommended">Recommended</span>` : ""}
         <div class="sm-pro-pack-plan-card__body">
           <h3>${escapeHtml(slot.title)}</h3>
-          <p>${escapeHtml(slot.desc)}</p>
-          <div class="sm-pro-pack-plan-card__meta">${escapeHtml(slot.difficulty)}</div>
+          ${featured ? `<p>${escapeHtml(slot.desc)}</p>` : ""}
+          <div class="sm-pro-pack-plan-card__meta">
+            <span>${slot.shootTime} min</span>
+            <span>${slot.shots} shots</span>
+            <span class="sm-pro-plan-diff sm-pro-plan-diff--${difficultyTone(slot.difficulty)}">${escapeHtml(slot.difficulty)}</span>
+          </div>
         </div>
       </article>
     `;
@@ -2492,7 +3021,159 @@ function setProTab(tab) {
     `;
   }
 
-  function renderProPackDetailScreen() {
+  function getChecklistGroups(pack) {
+    if (Array.isArray(pack?.checklistGroups) && pack.checklistGroups.length) return pack.checklistGroups;
+
+    const items = Array.isArray(pack?.checklist) ? pack.checklist : [];
+    const mistakes = Array.isArray(pack?.mistakes) ? pack.mistakes : [];
+    return [
+      { title: "Before the shoot", items: items.slice(0, 6) },
+      { title: "During the shoot", items: items.slice(6, 11) },
+      { title: "After the shoot", items: items.slice(11).concat(mistakes.slice(0, 1)) }
+    ].filter((g) => Array.isArray(g.items) && g.items.length);
+  }
+
+  function renderChecklistContentOverlay(pack) {
+    const groups = getChecklistGroups(pack);
+
+    return `
+      <div class="sm-pro-pack-checklist-overlay" aria-label="Checklist content">
+        <div class="sm-pro-pack-checklist-titleRow">
+          <span class="sm-pro-pack-checklist-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M8.2 5.2h7.6M9.3 3.5h5.4l.75 1.7h1.1c.9 0 1.65.74 1.65 1.65v12.0c0 .9-.74 1.65-1.65 1.65H7.45c-.9 0-1.65-.74-1.65-1.65V6.85c0-.91.74-1.65 1.65-1.65h1.1l.75-1.7Z" />
+              <path d="M9.2 12.2l1.55 1.55 3.95-4.25" />
+            </svg>
+          </span>
+          <span class="sm-pro-pack-checklist-titleText">Checklist</span>
+        </div>
+
+        <div class="sm-pro-pack-checklist-line" aria-hidden="true"></div>
+
+        <div class="sm-pro-pack-checklist-groups">
+          ${groups.map((group) => `
+            <section class="sm-pro-pack-checklist-group">
+              <h3>${escapeHtml(group.title)}</h3>
+              <div class="sm-pro-pack-checklist-items">
+                ${(group.items || []).map((item) => `
+                  <label class="sm-pro-pack-checklist-item">
+                    <input type="checkbox" aria-label="${escapeHtml(item)}">
+                    <span class="sm-pro-pack-checklist-box" aria-hidden="true"></span>
+                    <span class="sm-pro-pack-checklist-copy">${escapeHtml(item)}</span>
+                  </label>
+                `).join("")}
+              </div>
+            </section>
+          `).join("")}
+        </div>
+
+        <div class="sm-pro-pack-checklist-safe">Fly safe!</div>
+      </div>
+    `;
+  }
+
+  function renderPackChecklistSticker(pack) {
+    return `
+      <aside class="sm-pro-pack-sticky-checklist sm-pro-pack-sticky-checklist--svg" aria-label="Pack checklist">
+        <img
+          class="sm-pro-pack-checklist-paper-img"
+          src="${escapeHtml(CHECKLIST_PAPER_ASSET_URL)}"
+          alt=""
+          loading="eager"
+          decoding="async"
+          draggable="false"
+          aria-hidden="true"
+        >
+        ${renderChecklistContentOverlay(pack)}
+      </aside>
+    `;
+  }
+
+  function renderProPackDetailScreenDesktopV125() {
+    const pack = getActivePackItem();
+    if (!pack) {
+      activeProPackId = null;
+      activeProTab = "packs";
+      setPackDetailPageMode(false);
+      renderProPacksScreen();
+      return;
+    }
+
+    const moves = getPackMovesForDetail(pack);
+    const plans = getPackPlansForDetail(pack);
+    const lessons = Array.isArray(pack.lessons) ? pack.lessons : [];
+    const visibleMoves = Array.from({ length: 6 }, (_, index) => moves[index] || moves[index % Math.max(moves.length, 1)] || null);
+    const hiddenMoves = Math.max(0, Number(pack.movesCount || moves.length || 0) - visibleMoves.length);
+
+    grid.innerHTML = "";
+    if (resultsHead) resultsHead.style.display = "none";
+    if (moreBtn) moreBtn.style.display = "none";
+    scope.classList.add("sm-pro-subscreen", "sm-pro-pack-detail-active");
+    setPackDetailPageMode(true);
+
+    const wrap = document.createElement("div");
+    wrap.className = "sm-pro-pack-detail-screen sm-pro-tab-screen";
+    wrap.innerHTML = `
+      <div class="sm-pro-pack-bg" aria-hidden="true">
+        <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="" loading="eager" decoding="async">
+      </div>
+
+      <main class="sm-pro-pack-main">
+        <section class="sm-pro-pack-hero-copy">
+          <button class="sm-pro-pack-back" type="button" aria-label="Back to library" data-pro-go-tab="all">‹</button>
+          <h1>${escapeHtml(pack.title)}</h1>
+          <p class="sm-pro-pack-powered">powered by <strong>${escapeHtml(pack.creator || "SkyMotion")}</strong></p>
+          <p class="sm-pro-pack-description">${escapeHtml(pack.description || "A ready-to-use shooting workflow for this situation.")}</p>
+          <div class="sm-pro-pack-stats" aria-label="Pack contents">
+            <span>${Number(pack.movesCount || moves.length || 0)} moves</span>
+            <span>${Number(pack.plansCount || plans.length || 0)} plans</span>
+            <span>Checklist</span>
+          </div>
+        </section>
+
+        <section class="sm-pro-pack-section sm-pro-pack-section--start">
+          <div class="sm-pro-pack-section-head"><h2>Start here</h2></div>
+          <div class="sm-pro-pack-lessons">
+            ${lessons.map(renderPackLessonCard).join("")}
+          </div>
+        </section>
+
+        <button class="sm-pro-pack-checklist-card" type="button" data-pro-open-checklist="1">
+          <span class="sm-pro-pack-checklist-icon" aria-hidden="true">✓</span>
+          <span>
+            <strong>${escapeHtml(pack.checklistTitle || "Open checklist")}</strong>
+            <small>Everything you need before and during the shoot.</small>
+          </span>
+          <em aria-hidden="true">›</em>
+        </button>
+
+        <section class="sm-pro-pack-section sm-pro-pack-section--plans">
+          <div class="sm-pro-pack-section-head"><h2>Plans in this pack</h2></div>
+          ${renderPackPlansRail(plans)}
+        </section>
+
+        <section class="sm-pro-pack-section sm-pro-pack-section--moves">
+          <div class="sm-pro-pack-section-head"><h2>Moves in this pack</h2></div>
+          <div class="sm-pro-pack-move-row">
+            ${visibleMoves.map((move, index) => renderPackMoveTile(move, index)).join("")}
+            ${renderPackMoreMovesCard(hiddenMoves)}
+          </div>
+        </section>
+
+        <footer class="sm-pro-pack-footer" aria-label="SkyMotion signature">
+          Learn. Create. Elevate.
+        </footer>
+      </main>
+
+      ${renderPackChecklistSticker(pack)}
+    `;
+
+    grid.appendChild(wrap);
+    attachImgFallback(wrap);
+    safeText(matchCount, String(moves.length + plans.length));
+  }
+
+  function renderProPackDetailScreenMobileV25() {
     const pack = getActivePackItem();
     if (!pack) {
       activeProPackId = null;
@@ -2509,6 +3190,7 @@ function setProTab(tab) {
     if (resultsHead) resultsHead.style.display = "none";
     if (moreBtn) moreBtn.style.display = "none";
     scope.classList.add("sm-pro-subscreen", "sm-pro-pack-detail-active");
+    setPackDetailPageMode(true);
 
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-pack-detail-screen sm-pro-tab-screen";
@@ -2575,7 +3257,7 @@ function setProTab(tab) {
       </section>
 
       <footer class="sm-pro-pack-footer" aria-label="SkyMotion signature">
-        Built by <span class="sm-pro-pack-footer__brand">SkyMotion</span>
+        Learn. Create. Elevate.
       </footer>
     `;
 
@@ -2584,31 +3266,36 @@ function setProTab(tab) {
     safeText(matchCount, String(moves.length + plans.length));
   }
 
+  function renderProPackDetailScreen() {
+    if (isProMobilePortrait()) {
+      return renderProPackDetailScreenMobileV25();
+    }
+
+    return renderProPackDetailScreenDesktopV125();
+  }
+
   function openProChecklist(pack) {
     const current = pack || getActivePackItem();
     if (!current) return;
-    const items = Array.isArray(current.checklist) ? current.checklist : [];
-    const mistakes = Array.isArray(current.mistakes) ? current.mistakes : [];
 
     const sheet = document.createElement("div");
-    sheet.className = "sm-pro-checklist-sheet";
+    sheet.className = "sm-pro-checklist-sheet sm-pro-checklist-sheet--svg";
     sheet.setAttribute("role", "dialog");
     sheet.setAttribute("aria-modal", "true");
     sheet.innerHTML = `
       <div class="sm-pro-checklist-sheet__backdrop" data-pro-close-checklist="1"></div>
-      <div class="sm-pro-checklist-sheet__panel">
+      <div class="sm-pro-checklist-sheet__panel sm-pro-checklist-sheet__panel--svg">
         <button class="sm-pro-checklist-sheet__close" type="button" aria-label="Close checklist" data-pro-close-checklist="1">×</button>
-        <h2>Creator checklist</h2>
-        <p>Use this before takeoff so the pack stays practical, not random.</p>
-        <div class="sm-pro-checklist-list">
-          ${items.map((item) => `<div><span>✓</span><p>${escapeHtml(item)}</p></div>`).join("")}
-        </div>
-        ${mistakes.length ? `
-          <h3>Mistakes to avoid</h3>
-          <div class="sm-pro-checklist-list sm-pro-checklist-list--danger">
-            ${mistakes.map((item) => `<div><span>×</span><p>${escapeHtml(item)}</p></div>`).join("")}
-          </div>
-        ` : ""}
+        <img
+          class="sm-pro-pack-checklist-paper-img"
+          src="${escapeHtml(CHECKLIST_PAPER_ASSET_URL)}"
+          alt=""
+          loading="eager"
+          decoding="async"
+          draggable="false"
+          aria-hidden="true"
+        >
+        ${renderChecklistContentOverlay(current)}
       </div>
     `;
 
@@ -2652,7 +3339,7 @@ function setProTab(tab) {
   }
 
   function updateProPacksLive() {
-    if (!isProMobilePortrait() || activeProTab !== "packs") return;
+    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "packs") return;
     const wrap = scope.querySelector(".sm-pro-packs-screen");
     if (!wrap) return;
     const { allPacks, packs } = getProPacksData();
@@ -2673,65 +3360,83 @@ function setProTab(tab) {
   }
 
   function getProSavedData() {
-    const allSaved = filtered.filter((item) => !isPlan(item) && isSaved(getVideoId(item)));
-    const saved = filterByTitleOnly(allSaved);
-    return { allSaved, saved };
+    const allSavedMoves = filtered.filter((item) => !isPlan(item) && isSaved(getVideoId(item)));
+    const savedMoves = filterByTitleOnly(allSavedMoves);
+
+    const allSavedPacks = getProPackItems().filter((pack) => isGenericSaved("pack", pack?.id));
+    const q = normalizeSearchText(proSearchQuery);
+    const savedPacks = q
+      ? allSavedPacks.filter((pack) => normalizeSearchText(pack?.title || "").includes(q))
+      : allSavedPacks;
+
+    return { allSavedMoves, savedMoves, allSavedPacks, savedPacks };
   }
 
-  function getProSavedCountLabel(saved, allSaved) {
-    return proSearchQuery ? `${saved.length} found · ${allSaved.length} saved` : `${saved.length}/${allSaved.length} saved`;
+  function getProSavedCountLabel(data) {
+    const savedCount = (data?.savedMoves?.length || 0) + (data?.savedPacks?.length || 0);
+    const totalCount = (data?.allSavedMoves?.length || 0) + (data?.allSavedPacks?.length || 0);
+    return proSearchQuery ? `${savedCount} found · ${totalCount} saved` : `${savedCount}/${totalCount} saved`;
   }
 
   function renderProSavedScreen() {
-    const { allSaved, saved } = getProSavedData();
+    const savedData = getProSavedData();
+    const { savedPacks, savedMoves, allSavedPacks, allSavedMoves } = savedData;
     const wrap = renderProScreenShell("Saved");
     wrap.classList.add("sm-pro-saved-screen");
 
     renderProSearchBar(wrap);
-    renderProCountRow(wrap, getProSavedCountLabel(saved, allSaved), "Search saved moves");
+    renderProCountRow(wrap, getProSavedCountLabel(savedData), "Search saved items");
 
-    const list = document.createElement("div");
-    list.className = "sm-pro-move-list";
-    list.setAttribute("data-pro-saved-list", "1");
-    wrap.appendChild(list);
+    const hasAny = savedPacks.length || savedMoves.length;
+    const totalAny = allSavedPacks.length || allSavedMoves.length;
 
-    if (!saved.length) {
-      renderProEmpty(wrap, allSaved.length ? "No saved moves found" : "No saved moves yet", allSaved.length ? "No saved move title matches this search." : "Save useful moves from the library and they will appear here.");
+    if (!hasAny) {
+      renderProEmpty(
+        wrap,
+        totalAny ? "No saved items found" : "No saved items yet",
+        totalAny ? "No saved item title matches this search." : "Save useful moves or packs and they will appear here."
+      );
       safeText(matchCount, "0");
       return;
     }
 
-    saved.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      list.appendChild(renderMoveListCard(item, idx));
-    });
+    if (savedPacks.length) {
+      const packTitle = document.createElement("div");
+      packTitle.className = "sm-pro-saved-subtitle";
+      packTitle.textContent = "Saved packs";
+      wrap.appendChild(packTitle);
+
+      const packList = document.createElement("div");
+      packList.className = "sm-pro-pack-list sm-pro-saved-pack-list";
+      packList.setAttribute("data-pro-saved-pack-list", "1");
+      wrap.appendChild(packList);
+      savedPacks.forEach((pack) => packList.appendChild(renderPackListCard(pack)));
+    }
+
+    if (savedMoves.length) {
+      const movesTitle = document.createElement("div");
+      movesTitle.className = "sm-pro-saved-subtitle";
+      movesTitle.textContent = "Saved moves";
+      wrap.appendChild(movesTitle);
+
+      const list = document.createElement("div");
+      list.className = "sm-pro-move-list";
+      list.setAttribute("data-pro-saved-list", "1");
+      wrap.appendChild(list);
+
+      savedMoves.forEach((item) => {
+        const idx = getItemFilteredIndex(item);
+        list.appendChild(renderMoveListCard(item, idx));
+      });
+    }
 
     attachImgFallback(wrap);
-    safeText(matchCount, String(saved.length));
+    safeText(matchCount, String(savedPacks.length + savedMoves.length));
   }
 
   function updateProSavedLive() {
-    if (!isProMobilePortrait() || activeProTab !== "saved") return;
-    const wrap = scope.querySelector(".sm-pro-saved-screen");
-    if (!wrap) return;
-    const { allSaved, saved } = getProSavedData();
-    setProCount(wrap, getProSavedCountLabel(saved, allSaved));
-    const list = wrap.querySelector("[data-pro-saved-list]");
-    const oldEmpty = wrap.querySelector(".sm-pro-empty");
-    if (!list) return;
-    list.innerHTML = "";
-    if (oldEmpty) oldEmpty.remove();
-    if (!saved.length) {
-      renderProEmpty(wrap, allSaved.length ? "No saved moves found" : "No saved moves yet", allSaved.length ? "No saved move title matches this search." : "Save useful moves from the library and they will appear here.");
-      safeText(matchCount, "0");
-      return;
-    }
-    saved.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      list.appendChild(renderMoveListCard(item, idx));
-    });
-    attachImgFallback(wrap);
-    safeText(matchCount, String(saved.length));
+    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "saved") return;
+    renderProSavedScreen();
   }
 
 
@@ -2739,6 +3444,36 @@ function setProTab(tab) {
     const pack = getProPackItems()[0];
     const movesCount = Number(pack?.movesCount || 10);
     const plansCount = Number(pack?.plansCount || 3);
+
+    // Desktop home must use the new black Promo Real Estate card.
+    // Mobile home and the Packs tab keep the existing card behavior.
+    if (activeProTab === "all" && isProDesktopLayout()) {
+      const title = "Promo Real Estate Pack";
+      const badge = "BY DOMINIC HAYLES";
+      const line = "For paid property shoots · 30–60s property reel · 5 hero shots";
+
+      return `
+        <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate" data-pro-pack="${escapeHtml(pack.id)}">
+          <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
+          <div class="sm-pro-pack-shade"></div>
+
+          <div class="sm-pro-pack-content">
+            <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
+            <h3>${escapeHtml(title)}</h3>
+            <div class="sm-pro-pack-meta">
+              <span>${movesCount} moves</span>
+              <span>${plansCount} plans</span>
+              <span>Checklist</span>
+            </div>
+            <p>${escapeHtml(line)}</p>
+          </div>
+
+          <button class="sm-pro-pack-save ${isGenericSaved("pack", pack.id) ? "isSaved" : ""}" type="button" aria-label="${isGenericSaved("pack", pack.id) ? "Unsave pack" : "Save pack"}" data-pro-pack-save="${escapeHtml(pack.id)}">
+            ${bookmarkSvg()}
+          </button>
+        </article>
+      `;
+    }
 
     return `
       <article class="sm-pro-pack-card" data-pro-pack="${escapeHtml(pack.id)}">
@@ -2756,7 +3491,40 @@ function setProTab(tab) {
           <p>${escapeHtml((pack.bestFor || []).length ? `Best for: ${pack.bestFor.join(", ")}` : pack.description)}</p>
         </div>
 
-        <button class="sm-pro-pack-save" type="button" aria-label="Save pack">
+        <button class="sm-pro-pack-save ${isGenericSaved("pack", pack.id) ? "isSaved" : ""}" type="button" aria-label="${isGenericSaved("pack", pack.id) ? "Unsave pack" : "Save pack"}" data-pro-pack-save="${escapeHtml(pack.id)}">
+          ${bookmarkSvg()}
+        </button>
+      </article>
+    `;
+  }
+
+
+  function renderDesktopHomePromoRealEstatePackCard(plans = [], moves = []) {
+    const pack = getProPackItems()[0];
+    const info = getPackCommercialInfo(pack);
+    const movesCount = Number(pack?.movesCount || 10);
+    const plansCount = Number(pack?.plansCount || 3);
+    const title = "Promo Real Estate Pack";
+    const badge = info?.badge || "BY CREATOR";
+    const line = `${info?.intent || "For paid property shoots"} · ${info?.output || "30–60s property reel · 5 hero shots"}`;
+
+    return `
+      <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate" data-pro-pack="${escapeHtml(pack.id)}">
+        <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
+        <div class="sm-pro-pack-shade"></div>
+
+        <div class="sm-pro-pack-content">
+          <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
+          <h3>${escapeHtml(title)}</h3>
+          <div class="sm-pro-pack-meta">
+            <span>${movesCount} moves</span>
+            <span>${plansCount} plans</span>
+            <span>Checklist</span>
+          </div>
+          <p>${escapeHtml(line)}</p>
+        </div>
+
+        <button class="sm-pro-pack-save ${isGenericSaved("pack", pack.id) ? "isSaved" : ""}" type="button" aria-label="${isGenericSaved("pack", pack.id) ? "Unsave pack" : "Save pack"}" data-pro-pack-save="${escapeHtml(pack.id)}">
           ${bookmarkSvg()}
         </button>
       </article>
@@ -2825,10 +3593,71 @@ function setProTab(tab) {
     safeText(matchCount, String(filtered.length));
   }
 
+  function renderProDesktopHome() {
+    grid.innerHTML = "";
+    grid.classList.add("sm-pro-desktop-home-grid");
+
+    const plans = filtered.filter(isPlan);
+    const moves = filtered.filter((item) => !isPlan(item));
+
+    if (!filtered.length) {
+      grid.innerHTML = `<div class="card" style="padding:14px">No results.</div>`;
+      if (moreBtn) moreBtn.style.display = "none";
+      safeText(matchCount, "0");
+      if (resultsHead) resultsHead.style.display = "none";
+      updateFilterUi();
+      return;
+    }
+
+    if (resultsHead) resultsHead.style.display = "none";
+    if (moreBtn) moreBtn.style.display = "none";
+
+    const wrap = document.createElement("div");
+    wrap.className = "sm-pro-desktop-home";
+
+    const planCards = plans.slice(0, 2).map((item) => {
+      const idx = getItemFilteredIndex(item);
+      const card = renderPlanCard(item, idx);
+      return card.outerHTML;
+    }).join("");
+
+    wrap.innerHTML = `
+      <div class="sm-pro-desktop-primary">
+        <section class="sm-pro-section sm-pro-section--pack sm-pro-desktop-panel sm-pro-desktop-panel--pack">
+          ${renderSectionHeader("Featured pack", "View all", "packs")}
+          ${renderFeaturedPackCard(plans, moves)}
+        </section>
+
+        <section class="sm-pro-section sm-pro-section--plans sm-pro-desktop-panel sm-pro-desktop-panel--plans">
+          ${renderSectionHeader("Cinematic plans", "View all", "plans")}
+          <div class="sm-pro-desktop-plan-grid" data-pro-desktop-section="plans">${planCards}</div>
+        </section>
+      </div>
+
+      <aside class="sm-pro-desktop-side">
+        <section class="sm-pro-section sm-pro-section--moves sm-pro-desktop-panel sm-pro-desktop-panel--moves">
+          ${renderSectionHeader("Popular moves", "View all", "moves")}
+          <div class="sm-pro-desktop-move-stack" data-pro-desktop-section="moves"></div>
+        </section>
+      </aside>
+    `;
+
+    const moveStack = wrap.querySelector('[data-pro-desktop-section="moves"]');
+    moves.slice(0, 5).forEach((item) => {
+      const idx = getItemFilteredIndex(item);
+      moveStack.appendChild(renderMoveCard(item, idx));
+    });
+
+    grid.appendChild(wrap);
+    attachImgFallback(grid);
+    safeText(matchCount, String(filtered.length));
+  }
+
   function renderResults() {
     if (isInitialLoading) return;
 
     setupProTabs();
+    grid.classList.remove("sm-pro-desktop-home-grid");
 
     if (isProMobilePortrait()) {
       if (activeProPackId) {
@@ -2837,6 +3666,7 @@ function setProTab(tab) {
       }
 
       scope.classList.remove("sm-pro-pack-detail-active");
+      setPackDetailPageMode(false);
 
       if (activeProTab === "moves") {
         renderProMovesScreen();
@@ -2847,11 +3677,36 @@ function setProTab(tab) {
       } else if (activeProTab === "saved") {
         renderProSavedScreen();
       } else {
-        scope.classList.remove("sm-pro-pack-detail-active");
         renderProMobileHome();
       }
       return;
     }
+
+    if (isProDesktopLayout()) {
+      if (activeProPackId) {
+        renderProPackDetailScreen();
+        return;
+      }
+
+      scope.classList.remove("sm-pro-pack-detail-active");
+      setPackDetailPageMode(false);
+
+      if (activeProTab === "moves") {
+        renderProMovesScreen();
+      } else if (activeProTab === "plans") {
+        renderProPlansScreen();
+      } else if (activeProTab === "packs") {
+        renderProPacksScreen();
+      } else if (activeProTab === "saved") {
+        renderProSavedScreen();
+      } else {
+        renderProDesktopHome();
+      }
+      return;
+    }
+
+    scope.classList.remove("sm-pro-pack-detail-active");
+    setPackDetailPageMode(false);
 
     grid.innerHTML = "";
     const slice = filtered.slice(0, visibleCount);
@@ -3298,6 +4153,57 @@ function setProTab(tab) {
     };
   });
 
+  function findMoveForSave(saveId, sourceCard = null) {
+    const id = String(saveId || "");
+    if (!id) return null;
+
+    const fromCard = getLibraryItemFromCard(sourceCard);
+    if (fromCard && !isPlan(fromCard) && String(getVideoId(fromCard)) === id) return fromCard;
+
+    return (
+      filtered.find((item) => !isPlan(item) && String(getVideoId(item)) === id) ||
+      allItems.find((item) => !isPlan(item) && String(getVideoId(item)) === id) ||
+      savedCache.find((item) => String(item?.id || item?.video_id || item?.slug || item?.videoUrl || item?.video_url || "") === id) ||
+      null
+    );
+  }
+
+  function setMoveSaveUi(id, saved) {
+    const key = String(id || "");
+    if (!key) return;
+
+    scope.querySelectorAll(`[data-save-id="${CSS.escape(key)}"]`).forEach((btn) => {
+      btn.classList.toggle("isSaved", !!saved);
+      btn.setAttribute("aria-label", saved ? "Unsave" : "Save");
+      btn.disabled = false;
+      btn.removeAttribute("aria-busy");
+    });
+  }
+
+  function setPackSaveUi(id, saved) {
+    const key = String(id || "");
+    if (!key) return;
+
+    scope.querySelectorAll(`[data-pro-pack-save="${CSS.escape(key)}"]`).forEach((btn) => {
+      btn.classList.toggle("isSaved", !!saved);
+      btn.setAttribute("aria-label", saved ? "Unsave pack" : "Save pack");
+      btn.disabled = false;
+      btn.removeAttribute("aria-busy");
+    });
+  }
+
+  function refreshSaveDependentViews() {
+    if (activeProTab === "saved") {
+      renderResults();
+      return;
+    }
+
+    if (activeProTab === "moves") {
+      if (activeMoveLevel === "saved") renderResults();
+      else updateProMovesLive();
+    }
+  }
+
   grid.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-open-pro-filters]");
     if (!btn) return;
@@ -3333,7 +4239,30 @@ function setProTab(tab) {
     if (packSaveBtn) {
       e.preventDefault();
       e.stopPropagation();
-      packSaveBtn.classList.toggle("isSaved");
+
+      const packId = packSaveBtn.dataset.proPackSave || packSaveBtn.closest("[data-pro-pack]")?.dataset.proPack || activeProPackId;
+      const pack = getProPackItems().find((item) => String(item?.id) === String(packId));
+      if (!pack) return;
+
+      const nowSaved = toggleSavedPack(pack);
+      setPackSaveUi(pack.id, nowSaved);
+      if (activeProTab === "saved") renderResults();
+      return;
+    }
+
+    const directSaveBtn = e.target.closest(".sm-save");
+    if (directSaveBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const saveId = directSaveBtn.dataset.saveId || "";
+      const sourceCard = directSaveBtn.closest(".card, .sm-pro-move-row, .sm-pro-pack-move-card");
+      const item = findMoveForSave(saveId, sourceCard);
+      if (!item || isPlan(item)) return;
+
+      const nowSaved = toggleSaved(item);
+      setMoveSaveUi(getVideoId(item), nowSaved);
+      refreshSaveDependentViews();
       return;
     }
 
@@ -3368,14 +4297,9 @@ function setProTab(tab) {
 
       if (isPlan(item)) return;
 
-      const nowSaved = await toggleSaved(item);
-      scope.querySelectorAll(`[data-save-id="${CSS.escape(String(getVideoId(item)))}"]`).forEach((btn) => {
-        btn.classList.toggle("isSaved", nowSaved);
-        btn.setAttribute("aria-label", nowSaved ? "Unsave" : "Save");
-      });
-      if (activeProTab === "moves" && activeMoveLevel === "saved") renderResults();
-      else if (activeProTab === "moves") updateProMovesLive();
-      if (activeProTab === "saved") renderResults();
+      const nowSaved = toggleSaved(item);
+      setMoveSaveUi(getVideoId(item), nowSaved);
+      refreshSaveDependentViews();
       return;
     }
 
@@ -3415,6 +4339,76 @@ function setProTab(tab) {
     if (e.key === "Escape") closeProChecklist();
   });
 
+
+  function ensureBasicPlanViewer() {
+    if (window.SMPlanViewerV3 && typeof window.SMPlanViewerV3.open === "function") return;
+
+    window.SMPlanViewerV3 = {
+      open(plan) {
+        const existing = document.querySelector(".sm-basic-plan-viewer");
+        if (existing) existing.remove();
+
+        const steps = Array.isArray(plan?.steps) ? plan.steps : [];
+        const cover = getPlanCover(plan) || FALLBACK_THUMB;
+        const title = plan?.title || "Cinematic plan";
+        const desc = getPlanDescription(plan) || "A ready-made cinematic sequence built from several drone moves.";
+        const shots = getPlanShots(plan) || steps.length || 0;
+        const time = getPlanShootTime(plan) || 0;
+        const difficulty = getPlanDifficulty(plan) || plan?.difficulty || "Basic";
+
+        const viewer = document.createElement("div");
+        viewer.className = "sm-basic-plan-viewer";
+        viewer.setAttribute("role", "dialog");
+        viewer.setAttribute("aria-modal", "true");
+        viewer.innerHTML = `
+          <div class="sm-basic-plan-viewer__panel">
+            <section class="sm-basic-plan-viewer__hero">
+              <img src="${escapeHtml(cover)}" alt="" loading="eager">
+              <button class="sm-basic-plan-viewer__close" type="button" aria-label="Close plan">×</button>
+              <div class="sm-basic-plan-viewer__title">
+                <h2>${escapeHtml(title)}</h2>
+                <p>${escapeHtml(desc)}</p>
+              </div>
+            </section>
+            <section class="sm-basic-plan-viewer__body">
+              <div class="sm-basic-plan-viewer__meta">
+                ${time ? `<span>${escapeHtml(time)} min</span>` : ""}
+                ${shots ? `<span>${escapeHtml(shots)} shots</span>` : ""}
+                <span>${escapeHtml(difficulty)}</span>
+              </div>
+              <div class="sm-basic-plan-viewer__steps">
+                ${(steps.length ? steps : [{ title: "Opening shot" }, { title: "Main movement" }, { title: "Final detail" }]).map((step, index) => `
+                  <div class="sm-basic-plan-viewer__step">
+                    <strong>${index + 1}. ${escapeHtml(step?.title || step?.move_title || step?.name || "Shot")}</strong>
+                    <span>${escapeHtml(step?.description || step?.note || step?.move || "Use this shot as part of the sequence.")}</span>
+                  </div>
+                `).join("")}
+              </div>
+            </section>
+          </div>
+        `;
+
+        document.body.appendChild(viewer);
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        attachImgFallback(viewer);
+
+        const close = () => {
+          viewer.remove();
+          document.documentElement.style.overflow = "";
+          document.body.style.overflow = "";
+        };
+
+        viewer.querySelector(".sm-basic-plan-viewer__close")?.addEventListener("click", close);
+        viewer.addEventListener("click", (e) => {
+          if (e.target === viewer) close();
+        });
+      }
+    };
+  }
+
+  ensureBasicPlanViewer();
+
   async function loadItems() {
     try {
       safeText(matchCount, "Loading…");
@@ -3437,7 +4431,7 @@ function setProTab(tab) {
       applyFilters();
 
       // Refresh visual filter cards after CDN items load, so environment options can use real library thumbs.
-      if (isProMobilePortrait() && stepIndex < steps.length) {
+      if ((isProMobilePortrait() || isProDesktopLayout()) && stepIndex < steps.length) {
         renderOptions();
         updateFilterUi();
       }
@@ -3463,14 +4457,16 @@ function setProTab(tab) {
   (async () => {
     if (backBtn) backBtn.disabled = true;
 
-    // Desktop/landscape keeps the original Free Library chat intro.
-    // Mobile portrait Pro filters start directly as a clean step screen.
-    if (!isProMobilePortrait()) {
+    // Old chat intro is kept only for non-Pro layouts.
+    // Mobile portrait and desktop Pro filters start directly as clean step screens.
+    if (!isProMobilePortrait() && !isProDesktopLayout()) {
       await addBotTyped("Hi. Let’s browse moves and cinematic plans.");
       await addBotTyped(steps[0].text);
     } else {
       chat.innerHTML = "";
     }
+
+    loadLocalSavedState();
 
     renderOptions();
     updateFilterUi();
@@ -3486,7 +4482,10 @@ function setProTab(tab) {
     getMember(12000)
       .then((member) => {
         if (!member?.id) return null;
-        return hydrateSavedCache();
+        return Promise.allSettled([
+          hydrateAccessCache(),
+          hydrateSavedCache().then(() => hydrateSavedItemsCache())
+        ]);
       })
       .then(() => {
         renderResults();
