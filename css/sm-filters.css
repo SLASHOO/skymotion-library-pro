@@ -1,0 +1,85 @@
+/* =============================================================
+   SkyMotion Pro Library — Filter Options
+   Base filter option buttons, filterHelp warning, and smShake.
+   Copied from library-pro.css lines 18–73 + smShake keyframe.
+   Do NOT delete from library-pro.css until verified in local
+   dev and Webflow production.
+
+   NOT included here (belong in separate future files):
+   - .opt.sm-env-card / .options.sm-env-visual-grid → sm-filter-env.css
+   - .options.sm-pro-pill-grid                      → sm-filter-mobile.css
+   - .assistant.sm-pro-desktop-filter overrides      → sm-desktop.css
+   - @media portrait/landscape overrides             → sm-responsive-*.css
+   ============================================================= */
+
+
+/* ── 1. Filter option buttons ────────────────────────────────── */
+/* Filter options */
+#sm-library-scope .options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:8px 0 16px 38px;
+}
+
+#sm-library-scope .opt{
+  padding:7px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  font-size:13px;
+  font-weight:850;
+  cursor:pointer;
+  transition:transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+#sm-library-scope .opt:hover{
+  transform:translateY(-1px);
+  border-color:rgba(120,59,226,.45);
+  background:rgba(120,59,226,.10);
+}
+
+#sm-library-scope .opt:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+#sm-library-scope .opt.is-shaking{
+  animation:smShake .34s ease;
+  border-color:rgba(201,154,110,.62);
+  background:rgba(201,154,110,.12);
+}
+
+
+/* ── 2. Filter warning message ───────────────────────────────── */
+#sm-library-scope .filterHelp{
+  z-index:1;
+  margin:0 0 14px 38px;
+  max-width:270px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(201,154,110,.26);
+  background:rgba(201,154,110,.08);
+  color:rgba(255,255,255,.82);
+  font-size:12px;
+  line-height:1.35;
+  box-shadow:0 10px 24px rgba(0,0,0,.22);
+}
+
+#sm-library-scope .filterHelp strong{
+  display:block;
+  margin-bottom:3px;
+  color:rgba(255,255,255,.94);
+}
+
+
+/* ── 3. Shake animation (used by .opt.is-shaking) ────────────── */
+@keyframes smShake{
+  0%{ transform:translateX(0); }
+  20%{ transform:translateX(-5px); }
+  40%{ transform:translateX(5px); }
+  60%{ transform:translateX(-4px); }
+  80%{ transform:translateX(4px); }
+  100%{ transform:translateX(0); }
+}

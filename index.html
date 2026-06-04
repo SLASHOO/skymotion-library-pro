@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>SkyMotion Pro Library</title>
 
   <script>
@@ -18,7 +18,14 @@
   </script>
 
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="./library-pro.css?v=121" />
+  <link rel="stylesheet" href="./css/sm-tokens.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-layout.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-cards.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-filters.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-player-modal.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-responsive-mobile.css?v=1" />
+  <link rel="stylesheet" href="./library-pro.css?v=122" />
+  <link rel="stylesheet" href="./plan-viewer-v3.css?v=1" />
 </head>
 <body>
 <div id="sm-library-scope" class="sm">
@@ -97,5 +104,20 @@
 </div>
 
 <script src="./library-pro.js?v=121"></script>
+
+<div id="sm-plan-v3-root">
+  <div class="spv3" id="spv3Modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="spv3__backdrop" id="spv3Backdrop"></div>
+    <div class="spv3__dialog">
+      <button class="spv3__close" id="spv3Close" type="button" aria-label="Close">✕</button>
+      <div class="spv3__viewport" id="spv3Viewport">
+        <div class="spv3__track" id="spv3Track"></div>
+      </div>
+      <div class="spv3__dots" id="spv3Dots"></div>
+    </div>
+  </div>
+</div>
+
+<script src="./plan-viewer-v3.js?v=1"></script>
 </body>
 </html>

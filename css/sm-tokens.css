@@ -1,0 +1,58 @@
+/* =============================================================
+   SkyMotion Pro Library — Design Tokens
+   CSS custom properties and base #sm-library-scope resets.
+   Copied from library-pro.css lines 18-67.
+   Do NOT delete those lines from library-pro.css until this
+   file is verified working in both local dev and Webflow.
+   ============================================================= */
+
+#sm-library-scope{
+  --bg:#121212;
+  --line:rgba(255,255,255,.10);
+  --line-soft:rgba(255,255,255,.06);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.62);
+  --accent:#c99a6e;
+  --accent2:#b98a5f;
+  --purple:#783be2;
+  --pad:16px;
+  --gap:16px;
+  --side:320px;
+  --z-drawer-backdrop:99998;
+  --z-drawer:99999;
+  --z-modal:100000;
+
+  min-height:100vh;
+  color:var(--text);
+  font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:
+    radial-gradient(1100px 700px at 25% -10%, rgba(255,255,255,.06), transparent 55%),
+    radial-gradient(900px 600px at 90% 10%, rgba(120,59,226,.10), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+#sm-library-scope *,
+#sm-library-scope *::before,
+#sm-library-scope *::after{
+  box-sizing:border-box;
+}
+
+#sm-library-scope img{
+  display:block;
+  max-width:100%;
+  height:auto;
+}
+
+#sm-library-scope button{
+  font:inherit;
+}
+
+#sm-library-scope button:focus-visible,
+#sm-library-scope .opt:focus-visible,
+#sm-library-scope .card:focus-visible,
+#sm-library-scope .cardPlan:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}

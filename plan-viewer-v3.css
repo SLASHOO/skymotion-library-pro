@@ -687,7 +687,7 @@
 
   #sm-plan-v3-root .spv3TimelineFlow__transition{
     top:-7px;
-    font-size:7px;
+    font-size:9px;
     padding:3px 5px;
   }
 }
@@ -821,7 +821,7 @@
 
   #sm-plan-v3-root .spv3TimelineFlow__num,
   #sm-plan-v3-root .spv3TimelineFlow__dur{
-    font-size:7px;
+    font-size:8px;
   }
 
   #sm-plan-v3-root .spv3TimelineFlow__cut{

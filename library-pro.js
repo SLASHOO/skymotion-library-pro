@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-  console.info("[SM PRO] library-pro.js v126 mobile pack detail clean loaded");
   if (window.__SM_LIBRARY_V1_CLEAN_SPLIT__) return;
   window.__SM_LIBRARY_V1_CLEAN_SPLIT__ = true;
 
@@ -1092,10 +1091,6 @@
     }
   }
 
-  function isProMobilePortrait() {
-    return window.matchMedia("(max-width: 900px) and (orientation: portrait)").matches;
-  }
-
   function ensureMobileShowButton() {
     if (mobileShowResultsBtn) return mobileShowResultsBtn;
     const footerRow = scope.querySelector(".assistant__footerRow");
@@ -1137,7 +1132,7 @@
             <span class="sm-pro-filter-title">Pro Library</span>
             <span class="sm-pro-filter-badge">PRO</span>
           </div>
-          <div class="sm-pro-filter-subtitle">Pick a style or setting pack for your shoot</div>
+          <div class="sm-pro-filter-subtitle">Choose your flight context to find the right moves faster.</div>
         </div>
       </div>
       <div class="sm-pro-filter-segments" aria-hidden="true"></div>
@@ -1731,20 +1726,6 @@
   }
 
 
-function setProTab(tab) {
-    const allowed = ["all", "moves", "plans", "packs", "saved"];
-    activeProTab = allowed.includes(tab) ? tab : "all";
-
-    scope.classList.toggle("sm-pro-subscreen", activeProTab !== "all");
-
-    scope.querySelectorAll(".sm-pro-mobile-tabs button").forEach((btn) => {
-      const key = String(btn.dataset.proTab || btn.textContent || "").trim().toLowerCase();
-      btn.classList.toggle("is-active", key === activeProTab);
-    });
-
-    visibleCount = 12;
-    renderResults();
-  }
 
   function setupProTabs() {
     const tabs = scope.querySelectorAll(".sm-pro-mobile-tabs button");
@@ -1918,56 +1899,6 @@ function setProTab(tab) {
     return card;
   }
 
-  function renderProToolHeader(title, options = {}) {
-    const right = options.right || "search";
-    const rightBtn = right === "none"
-      ? `<span class="sm-pro-tool-spacer" aria-hidden="true"></span>`
-      : right === "filters"
-        ? `<button class="sm-pro-tool-icon sm-pro-tool-filter" type="button" aria-label="Filters" data-open-pro-filters="1"><span class="filterIcon" aria-hidden="true"></span></button>`
-        : `<button class="sm-pro-tool-icon sm-pro-tool-search" type="button" aria-label="Search" data-pro-toggle-search="1"></button>`;
-
-    return `
-      <div class="sm-pro-tool-header">
-        <button class="sm-pro-tool-back" type="button" aria-label="Back" data-pro-go-tab="all">‹</button>
-        <div class="sm-pro-tool-titleRow">
-          <span class="sm-pro-tool-title">${escapeHtml(title)}</span>
-          <span class="sm-pro-tool-badge">PRO</span>
-        </div>
-        ${rightBtn}
-      </div>
-    `;
-  }
-
-  function renderProScreenShell(title, subtitle = "", countText = "") {
-    grid.innerHTML = "";
-    if (resultsHead) resultsHead.style.display = "none";
-    if (moreBtn) moreBtn.style.display = "none";
-
-    const wrap = document.createElement("div");
-    wrap.className = "sm-pro-tab-screen";
-    wrap.innerHTML = `
-      ${renderProToolHeader(title, { right: title === "Moves" ? "none" : "search" })}
-      <div class="sm-pro-screen-head">
-        <div>
-          <h2>${escapeHtml(title)}</h2>
-          ${subtitle ? `<p>${escapeHtml(subtitle)}</p>` : ""}
-        </div>
-        ${countText ? `<span>${escapeHtml(countText)}</span>` : ""}
-      </div>
-    `;
-    grid.appendChild(wrap);
-    return wrap;
-  }
-
-  function renderProEmpty(wrap, title, text) {
-    const empty = document.createElement("div");
-    empty.className = "sm-pro-empty";
-    empty.innerHTML = `
-      <h3>${escapeHtml(title)}</h3>
-      <p>${escapeHtml(text)}</p>
-    `;
-    wrap.appendChild(empty);
-  }
 
   function getMovesForActiveLevel(moves) {
     if (activeMoveLevel === "saved") return moves.filter((item) => isSaved(getVideoId(item)));
@@ -2002,42 +1933,6 @@ function setProTab(tab) {
     wrap.appendChild(tabs);
   }
 
-  function renderProSearchBar(wrap) {
-    const search = document.createElement("div");
-    search.className = `sm-pro-searchbar ${proSearchOpen ? "is-open" : ""}`;
-    search.innerHTML = `
-      <div class="sm-pro-searchbar__inner">
-        <span class="sm-pro-searchbar__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <circle cx="10.5" cy="10.5" r="6.2"></circle>
-            <path d="M15.2 15.2L20 20"></path>
-          </svg>
-        </span>
-        <input type="text" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Search by move name" value="${escapeHtml(proSearchQuery)}" aria-label="Search moves by name">
-        <button class="sm-pro-searchbar__clear ${proSearchQuery ? "is-visible" : ""}" type="button" aria-label="Clear search">×</button>
-      </div>
-    `;
-
-    const input = search.querySelector("input");
-    const clear = search.querySelector("button");
-    proSearchInputRef = input;
-
-    input?.addEventListener("input", () => {
-      proSearchQuery = input.value || "";
-      clear?.classList.toggle("is-visible", !!proSearchQuery);
-      updateProMovesLive();
-    });
-
-    clear?.addEventListener("click", () => {
-      proSearchQuery = "";
-      if (input) input.value = "";
-      clear?.classList.remove("is-visible");
-      updateProMovesLive();
-      setTimeout(() => input?.focus(), 0);
-    });
-
-    wrap.appendChild(search);
-  }
 
   function getProMovesData() {
     const allMoves = filtered.filter((item) => !isPlan(item));
@@ -2052,187 +1947,9 @@ function setProTab(tab) {
       : `${moves.length}/${levelMoves.length} moves`;
   }
 
-  function updateProMovesLive() {
-    if ((!isProMobilePortrait() && !isProDesktopLayout()) || activeProTab !== "moves") return;
-
-    const wrap = scope.querySelector(".sm-pro-moves-screen");
-    if (!wrap) return;
-
-    const { levelMoves, moves } = getProMovesData();
-    const countEl = wrap.querySelector("[data-pro-moves-count]");
-    const list = wrap.querySelector("[data-pro-move-list]");
-    const oldEmpty = wrap.querySelector(".sm-pro-empty");
-
-    if (countEl) countEl.textContent = getProMovesCountLabel(moves, levelMoves);
-    if (!list) return;
-
-    list.innerHTML = "";
-    if (oldEmpty) oldEmpty.remove();
-
-    if (!moves.length) {
-      renderProEmpty(wrap, "No moves found", proSearchQuery ? "Nothing matches this search. Try a shorter word or clear it." : "Change the level filter or reset filters.");
-      safeText(matchCount, "0");
-      return;
-    }
-
-    moves.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      list.appendChild(renderMoveListCard(item, idx));
-    });
-
-    attachImgFallback(wrap);
-    safeText(matchCount, String(moves.length));
-  }
-
-  function renderProMovesScreen() {
-    const { allMoves, levelMoves, moves } = getProMovesData();
-
-    const wrap = renderProScreenShell(
-      "Moves",
-      "",
-      ""
-    );
-    wrap.classList.add("sm-pro-moves-screen");
-
-    renderMoveLevelTabs(wrap, allMoves);
-    renderProSearchBar(wrap);
-
-    const countRow = document.createElement("div");
-    countRow.className = "sm-pro-moves-count-row";
-    countRow.innerHTML = `
-      <span class="sm-pro-moves-count-text" data-pro-moves-count>${escapeHtml(getProMovesCountLabel(moves, levelMoves))}</span>
-      <button class="sm-pro-tool-icon sm-pro-tool-search ${proSearchOpen ? "is-active" : ""}" type="button" aria-label="Search moves" data-pro-toggle-search="1">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <circle cx="10.5" cy="10.5" r="6.2"></circle>
-          <path d="M15.2 15.2L20 20"></path>
-        </svg>
-      </button>
-    `;
-    wrap.appendChild(countRow);
-
-    const list = document.createElement("div");
-    list.className = "sm-pro-move-list";
-    list.setAttribute("data-pro-move-list", "1");
-    wrap.appendChild(list);
-
-    if (!moves.length) {
-      renderProEmpty(wrap, "No moves here", proSearchQuery ? "No moves match your search. Try a shorter word or clear search." : "Change the filter or reset to see more recommendations.");
-      safeText(matchCount, "0");
-      return;
-    }
-
-    moves.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      list.appendChild(renderMoveListCard(item, idx));
-    });
-
-    attachImgFallback(wrap);
-    safeText(matchCount, String(moves.length));
-  }
-
-  function renderProPlansScreen() {
-    const plans = filtered.filter(isPlan);
-
-    const wrap = renderProScreenShell(
-      "Plans",
-      "Ready-made cinematic sequences built from several moves.",
-      `${plans.length} plans`
-    );
-
-    const gridEl = document.createElement("div");
-    gridEl.className = "sm-pro-plan-grid";
-    wrap.appendChild(gridEl);
-
-    if (!plans.length) {
-      renderProEmpty(wrap, "No plans found", "Try a broader location, more time, or reset the filters.");
-      safeText(matchCount, "0");
-      return;
-    }
-
-    plans.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      gridEl.appendChild(renderPlanCard(item, idx));
-    });
-
-    attachImgFallback(wrap);
-    safeText(matchCount, String(plans.length));
-  }
-
-  function renderProPacksScreen() {
-    const plans = filtered.filter(isPlan);
-    const moves = filtered.filter((item) => !isPlan(item));
-
-    const wrap = renderProScreenShell(
-      "Packs",
-      "Situation-based sets with moves, plans and shooting tips.",
-      "Pro packs"
-    );
-
-    const packGrid = document.createElement("div");
-    packGrid.className = "sm-pro-pack-list";
-    packGrid.innerHTML = `
-      ${renderFeaturedPackCard(plans, moves)}
-      <article class="sm-pro-pack-card sm-pro-pack-card--ghost">
-        <div class="sm-pro-pack-content">
-          <span class="sm-pro-pack-badge">COMING SOON</span>
-          <h3>Urban Creator Pack</h3>
-          <div class="sm-pro-pack-meta">
-            <span>City moves</span>
-            <span>Short plans</span>
-            <span>Safety tips</span>
-          </div>
-          <p>Built for city streets, buildings and tight spaces.</p>
-        </div>
-      </article>
-      <article class="sm-pro-pack-card sm-pro-pack-card--ghost">
-        <div class="sm-pro-pack-content">
-          <span class="sm-pro-pack-badge">COMING SOON</span>
-          <h3>Beginner Safe Pack</h3>
-          <div class="sm-pro-pack-meta">
-            <span>Safe moves</span>
-            <span>Simple plans</span>
-            <span>Practice flow</span>
-          </div>
-          <p>For pilots who want cinematic results without risky moves.</p>
-        </div>
-      </article>
-    `;
-    wrap.appendChild(packGrid);
-    attachImgFallback(wrap);
-    safeText(matchCount, String(filtered.length));
-  }
-
-  function renderProSavedScreen() {
-    const savedMoves = filtered.filter((item) => !isPlan(item) && isSaved(getVideoId(item)));
-
-    const wrap = renderProScreenShell(
-      "Saved",
-      "Your saved moves for quick access during a shoot.",
-      `${savedMoves.length} saved`
-    );
-
-    const list = document.createElement("div");
-    list.className = "sm-pro-move-list";
-    wrap.appendChild(list);
-
-    if (!savedMoves.length) {
-      renderProEmpty(wrap, "No saved moves yet", "Save useful moves from the library and they will appear here.");
-      safeText(matchCount, "0");
-      return;
-    }
-
-    savedMoves.forEach((item) => {
-      const idx = getItemFilteredIndex(item);
-      list.appendChild(renderMoveListCard(item, idx));
-    });
-
-    attachImgFallback(wrap);
-    safeText(matchCount, String(savedMoves.length));
-  }
 
 
-
-  /* =========================
+    /* =========================
      PRO SUBSCREENS v9 — Plans / Packs / Saved aligned with Moves
      - Search is title-only on each subscreen.
      - Tool header only, no main Pro Library header.
@@ -3498,38 +3215,6 @@ function setProTab(tab) {
     `;
   }
 
-
-  function renderDesktopHomePromoRealEstatePackCard(plans = [], moves = []) {
-    const pack = getProPackItems()[0];
-    const info = getPackCommercialInfo(pack);
-    const movesCount = Number(pack?.movesCount || 10);
-    const plansCount = Number(pack?.plansCount || 3);
-    const title = "Promo Real Estate Pack";
-    const badge = info?.badge || "BY CREATOR";
-    const line = `${info?.intent || "For paid property shoots"} · ${info?.output || "30–60s property reel · 5 hero shots"}`;
-
-    return `
-      <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate" data-pro-pack="${escapeHtml(pack.id)}">
-        <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
-        <div class="sm-pro-pack-shade"></div>
-
-        <div class="sm-pro-pack-content">
-          <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
-          <h3>${escapeHtml(title)}</h3>
-          <div class="sm-pro-pack-meta">
-            <span>${movesCount} moves</span>
-            <span>${plansCount} plans</span>
-            <span>Checklist</span>
-          </div>
-          <p>${escapeHtml(line)}</p>
-        </div>
-
-        <button class="sm-pro-pack-save ${isGenericSaved("pack", pack.id) ? "isSaved" : ""}" type="button" aria-label="${isGenericSaved("pack", pack.id) ? "Unsave pack" : "Save pack"}" data-pro-pack-save="${escapeHtml(pack.id)}">
-          ${bookmarkSvg()}
-        </button>
-      </article>
-    `;
-  }
 
   function renderProMobileHome() {
     grid.innerHTML = "";
