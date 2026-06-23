@@ -52,6 +52,13 @@ serves media + the data index; Render serves the API; Memberstack is site-wide.
 The build is a deterministic byte copy: building an unchanged `src/` yields a
 **zero git diff**.
 
+## Test data note
+`library-data-pro.json` at the **repository root** is the current smoke-test data
+file (read by `webflow/smoke-test.html` via `../library-data-pro.json`).
+`src/library/data/library-data-pro.json` is a **reference copy and is not yet
+synced by the build** — do not assume editing it affects the smoke test. (Live
+data comes from the BunnyCDN index, not from either file.)
+
 ## Release workflow
 1. Edit under `src/`.
 2. `node build/build.mjs`.

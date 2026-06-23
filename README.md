@@ -1,78 +1,60 @@
-# SkyMotion — Pro Library
+# SkyMotion
 
-Gated Free/Pro drone-move library. Vanilla HTML/CSS/JS embed (no React/Tailwind/build
-system) designed to be pasted into a Webflow page. Auth via Memberstack, media via
-BunnyCDN, data/access via a FastAPI backend on Render.
+Web product for beginner drone pilots — choose drone moves, shot plans, and
+camera settings before/during a flight. Two surfaces: the **Home** landing page
+and the gated **Pro Library**. Both are vanilla HTML/CSS/JS, loaded into Webflow
+pages from GitHub via jsDelivr. Auth is Memberstack (site-wide), media + data
+index are on BunnyCDN, the API is FastAPI on Render.
 
-See `CLAUDE.md` for product context and development rules.
+> **Read `AGENTS.md` before editing anything.** It defines the hard edit
+> boundaries. This file is the orientation; `docs/PROJECT_STRUCTURE.md` has the
+> full folder ownership + release workflow; `build/README.md` has the build map.
 
----
+## `src/` is the only editable product source
+- **Home work →** `src/home/` (`home.html`, `home.css`, `home.js`)
+- **Pro Library work →** `src/library/` (`library.html`, `enhancements.js`,
+  `library.js`, `library.css`, `plan-viewer.*`, `css/*`)
 
-## Production entry files
+Everything the live site serves is **generated from `src/`** by the build, or is
+**infrastructure**. Do not hand-edit those (see below).
 
-`index.html` is the entry shell: DOM skeleton, the `window.SM_*` config block, the
-Free/Pro gating injector, and the inline enhancement scripts. It loads the following.
+## Build & test
+```
+node build/build.mjs        # Home + Library  (or build-home.mjs / build-library.mjs)
+```
+Then smoke-test the outputs in a browser (serve the repo root over HTTP):
+- Home → `webflow/home-smoke-test.html`
+- Library → `webflow/smoke-test.html`
 
-**CSS — load order matters (`sm-skin.css` LAST):**
+The build is a deterministic byte copy: building an unchanged `src/` produces a
+**zero git diff**. Workflow: **edit `src/` → build → smoke test → commit**.
 
-1. `css/sm-tokens.css`
-2. `css/sm-layout.css`
-3. `css/sm-cards.css`
-4. `css/sm-filters.css`
-5. `css/sm-player-modal.css`
-6. `css/sm-responsive-mobile.css`
-7. `css/sm-filter-mobile.css`
-8. `css/sm-subscreens.css`
-9. `css/sm-desktop.css`
-10. `css/sm-pack-detail.css`
-11. `library-pro.css`  *(loads after the `css/` split files — wins conflicts)*
-12. `plan-viewer-v3.css`
-13. `css/sm-skin.css`  **← must remain last** (gating / skin overrides)
-
-**JS — load order matters:**
-
-1. `library-pro.js` — Library runtime
-2. `plan-viewer-v3.js` — Plan Viewer v3 (must load **after** `library-pro.js` and after
-   the `#sm-plan-v3-root` DOM exists, or the fallback viewer wins)
-
-**Data:** `library-data-pro.json` (local test data, selected via
-`window.SM_LIBRARY_DATA_URL`). Production falls back to BunnyCDN `videos_index_v16.json`.
-
-**External runtime deps:** Memberstack (auth/plan), Render API
-(`https://skymotion.onrender.com`), BunnyCDN (`https://skymotion-cdn.b-cdn.net`),
-Google Font "Inter Tight".
-
----
+## Do not hand-edit (generated outputs & infrastructure)
+- **Generated outputs** (overwritten by the build): `webflow/home.css`,
+  `webflow/home.js`, `webflow/home-template.html`,
+  `webflow/library-template.html`, `webflow/library-enhancements.js`, and the
+  root runtime/styles `library-pro.css`, `library-pro.js`, `plan-viewer-v3.css`,
+  `plan-viewer-v3.js`, `css/*.css`. Edit the matching file under `src/` instead.
+- **Infrastructure (approval-gated):** `webflow/*-loader.js`,
+  `webflow/WEBFLOW_*_SNIPPET.html`, the jsDelivr commit pins, and anything in
+  Webflow, BunnyCDN, Memberstack, or Render. A change goes live only when the
+  maintainer deliberately bumps the commit pin in a Webflow snippet.
 
 ## Repository layout
-
-- `index.html`, `css/`, `library-pro.{css,js}`, `plan-viewer-v3.{css,js}`,
-  `library-data-pro.json` — the production Library embed.
-- `landing.html` — live landing page mirror (separate Webflow page).
-- `webflow/` — mirrors of the Webflow auth pages and the separate Free Library page
-  (reference only; not loaded by the Pro Library embed).
-- `archive/prototypes/` — legacy standalone concepts, not used by production
-  (see `archive/prototypes/README.md`).
-- `docs/code-map/` — architecture maps, danger zones, cleanup/handoff docs.
-
----
-
-## Git branches
-
-- `main` — default branch.
-- `launch-baseline` — the launched working baseline of the gated library.
-- `webflow-transfer` — **current branch**: preparing the Library for the Webflow
-  handoff (repo organization, audit, archiving unused prototypes). No production
-  logic, gating, player, Plan Viewer, or CSS architecture is changed on this branch.
-
----
+- `src/` — the only editable product source (`home/`, `library/`, `shared` config/data).
+- `build/` — zero-dependency Node pipeline (`src/` → output paths). See `build/README.md`.
+- `webflow/` — live deployment outputs, the loaders, the Webflow paste snippets,
+  and the local smoke tests.
+- `css/`, `library-pro.*`, `plan-viewer-v3.*` (root) — **generated** Library
+  runtime/styles (outputs of the build).
+- `reference/` — non-production mirrors: `webflow-auth/` (login/signup embeds) and
+  `free-library/` (the separate Free Library page).
+- `archive/` — historical material: `legacy-sources/` (retired `index.html`,
+  `landing.html`), `staging-handoff/` (old Webflow handoff docs), `prototypes/`.
+- `docs/` — `PROJECT_STRUCTURE.md` (authoritative layout) + `code-map/` (historical audits).
 
 ## Key docs
-
-- [Webflow handoff spec](docs/code-map/WEBFLOW_HANDOFF_SPEC.md) — how to embed the
-  Library into a Webflow page without changing product logic.
-- [Webflow transfer audit](docs/code-map/AUDIT_WEBFLOW_TRANSFER.md) — production files,
-  archive candidates, dependencies, and risks.
-- [Danger zones](docs/code-map/DANGER_ZONES.md), [Dependency/duplication map](docs/code-map/DEPENDENCY_DUPLICATION_MAP.md),
-  [CSS map](docs/code-map/CSS_MAP.md), [JS map](docs/code-map/JS_MAP.md),
-  [Plan Viewer map](docs/code-map/PLAN_VIEWER_MAP.md).
+- [`AGENTS.md`](AGENTS.md) — edit boundaries (read first).
+- [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md) — folder ownership, build map, release workflow, live pins.
+- [`build/README.md`](build/README.md) — exact `src → output` mapping.
+- [`CLAUDE.md`](CLAUDE.md) — product context and design rules.

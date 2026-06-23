@@ -36,6 +36,11 @@ node build/build-library.mjs  # Library only
 `src/library/data/` (dev/reference only — live config lives in the Webflow
 snippet, live data comes from BunnyCDN).
 
+**Test data:** the root `library-data-pro.json` is the current smoke-test data
+file (read by `webflow/smoke-test.html`). `src/library/data/library-data-pro.json`
+is a reference copy and is **not yet synced by the build** — editing it does not
+affect the smoke test.
+
 ## Rules
 - **Never hand-edit the output paths** — they are overwritten by the build.
   Edit `src/`, then run the build.
