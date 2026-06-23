@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Home — Loader Smoke Test (local)</title>
+
+  <!-- LOCAL TEST ONLY. Points the loader at the local repo instead of jsDelivr.
+       Serve the repo root over HTTP and open /webflow/home-smoke-test.html
+       (file:// will fail fetch). -->
+  <script>
+    window.SM_ASSET_BASE = "../"; // this page lives in /webflow → repo root
+    window.__SMOKE_ERRORS__ = [];
+    window.addEventListener("error", function (e) {
+      window.__SMOKE_ERRORS__.push(String(e.message || e.error || e));
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+      window.__SMOKE_ERRORS__.push("promise: " + String(e.reason));
+    });
+  </script>
+
+  <style>
+    #smoke-panel{
+      position:fixed; z-index:2147483647; top:10px; right:10px; width:340px; max-height:92vh;
+      overflow:auto; font:12px/1.4 ui-monospace,Menlo,Consolas,monospace; color:#eaeaea;
+      background:rgba(12,12,12,.92); border:1px solid #333; border-radius:10px; padding:12px;
+    }
+    #smoke-panel h2{ margin:0 0 8px; font-size:13px; }
+    #smoke-panel .row{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid #222; }
+    #smoke-panel .row b{ width:34px; }
+    .pass{ color:#56d364; } .fail{ color:#f85149; } .wait{ color:#d29922; }
+  </style>
+</head>
+<body>
+  <!-- The Webflow mount div: identical to production. -->
+  <div id="sm-home"></div>
+
+  <div id="smoke-panel"><h2>Home loader smoke test</h2><div id="smoke-rows">running…</div></div>
+
+  <!-- The ONE loader script (local copy in this folder). -->
+  <script src="./home-loader.js"></script>
+
+  <script>
+  (function(){
+    var checks = [
+      { label:"Loader single-init guard set",
+        test:function(){ return window.__SM_HOME_LOADER__ === true; } },
+      { label:"home.css applied (body background from :root)",
+        test:function(){ var c=getComputedStyle(document.body).backgroundColor;
+          return c==="rgb(18, 18, 18)"; } },
+      { label:"Template injected (#sm-home has content)",
+        test:function(){ var m=document.getElementById("sm-home");
+          return m && m.children.length>0; } },
+      { label:"Main sections present (#top, #how, #library, #pro)",
+        test:function(){ return ["top","how","library","pro"].every(function(id){
+          return !!document.getElementById(id); }); } },
+      { label:"Fixed nav relocated to <body>",
+        test:function(){ return !!document.body.querySelector(":scope > #nav"); } },
+      { label:"Modals relocated to <body> (#proModal, #contactModal)",
+        test:function(){ return document.body.querySelector(":scope > #proModal")
+                            && document.body.querySelector(":scope > #contactModal"); } },
+      { label:"home.js ran (year stamped in #yr)",
+        test:function(){ var y=document.getElementById("yr");
+          return y && /^\d{4}$/.test((y.textContent||"").trim()); } },
+      { label:"home.js wired setAuth() global",
+        test:function(){ return typeof window.setAuth === "function"; } },
+      { label:"Pricing modal opens on [data-open-pro]",
+        test:function(){ var b=document.querySelector("[data-open-pro]");
+          var m=document.getElementById("proModal");
+          if(!b||!m) return false; b.click();
+          var ok=m.classList.contains("open");
+          var x=m.querySelector("[data-close]"); if(x) x.click();
+          return ok; } },
+      { label:"Contact modal opens on [data-open-contact]",
+        test:function(){ var b=document.querySelector("[data-open-contact]");
+          var m=document.getElementById("contactModal");
+          if(!b||!m) return false; b.click();
+          var ok=m.classList.contains("open");
+          var x=m.querySelector("[data-cclose]"); if(x) x.click();
+          return ok; } },
+      { label:"No Pro Library assets loaded (isolation)",
+        test:function(){ return !window.__SM_LIBRARY_V1_CLEAN_SPLIT__
+                            && !window.__SM_PLAN_VIEWER_V3__
+                            && !document.querySelector('script[src*="library-pro.js"]'); } },
+      { label:"No console errors / no double init",
+        test:function(){ return (window.__SMOKE_ERRORS__||[]).length===0; } }
+    ];
+
+    var rows=document.getElementById("smoke-rows");
+    var attempts=0, MAX=60;
+    function render(done){
+      var html="", passed=0;
+      checks.forEach(function(c){
+        var ok=false; try{ ok=!!c.test(); }catch(_){ ok=false; }
+        if(ok) passed++;
+        var cls=ok?"pass":(done?"fail":"wait");
+        var mark=ok?"PASS":(done?"FAIL":"...");
+        html+='<div class="row"><b class="'+cls+'">'+mark+'</b><span>'+c.label+'</span></div>';
+      });
+      html+='<div class="row"><b></b><span>'+passed+'/'+checks.length+' passed'+(done?'':' (settling…)')+'</span></div>';
+      if(done && (window.__SMOKE_ERRORS__||[]).length){
+        html+='<div class="row fail"><b>!</b><span>'+window.__SMOKE_ERRORS__.join("<br>")+'</span></div>';
+      }
+      rows.innerHTML=html;
+      window.__SMOKE_RESULT__={ passed:passed, total:checks.length, errors:(window.__SMOKE_ERRORS__||[]).slice(), done:done };
+    }
+    var t=setInterval(function(){
+      attempts++;
+      var allOk=checks.every(function(c){ try{return !!c.test();}catch(_){return false;} });
+      render(false);
+      if(allOk||attempts>=MAX){ clearInterval(t); render(true); console.log("[home-smoke] result", window.__SMOKE_RESULT__); }
+    },100);
+  })();
+  </script>
+</body>
+</html>

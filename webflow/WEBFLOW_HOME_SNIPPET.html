@@ -1,0 +1,22 @@
+<!-- ============================================================================
+     WEBFLOW_HOME_SNIPPET.html — the ONLY code that goes on the Webflow Home page.
+     home.css, home.js and the DOM template are loaded from GitHub via jsDelivr by
+     home-loader.js. Memberstack stays site-wide; this never loads it.
+
+     Home must be a DEDICATED, BLANK Webflow page — no native Webflow navbar or
+     footer inside the loader area (the landing renders its own nav/footer).
+
+     PLACEMENT:
+       • Block A (mount) → an Embed element in the page body
+       • Block B (loader) → Page settings → "Inside <head> tag" OR "Before </body>"
+     SEO metadata (title, description, OG/Twitter) stays in Webflow Page Settings,
+     NOT here — see the handoff report.
+     ============================================================================ -->
+
+<!-- ===== A) MOUNT (body Embed) ============================================= -->
+<div id="sm-home"></div>
+
+<!-- ===== B) LOADER ========================================================= -->
+<!-- The ONLY pin: replace <DEPLOY_COMMIT> with the commit that contains the Home
+     deployment files. The loader derives every other asset URL from this commit. -->
+<script src="https://cdn.jsdelivr.net/gh/SLASHOO/skymotion-library-pro@<DEPLOY_COMMIT>/webflow/home-loader.js"></script>
