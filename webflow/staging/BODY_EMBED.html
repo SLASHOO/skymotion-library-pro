@@ -1,0 +1,65 @@
+<!--
+  ============================================================================
+  WEBFLOW PAGE BODY  →  Embed element(s)  — LIBRARY DOM ONLY
+  ============================================================================
+  Handoff artifact. The DOM markup is owned by index.html and is NOT duplicated
+  here (see SOURCE_OF_TRUTH.md). Copy each block, in this order, from the CURRENT
+  index.html into a Webflow Embed element. Place the embed near the top of the
+  body, NOT nested inside Webflow wrappers that set transform/overflow (those
+  break the fixed-position Plan Viewer and modals).
+
+  Webflow Embed elements are size-capped (~50k chars). If the combined DOM
+  exceeds that, split across multiple Embed elements in the SAME document order;
+  the rendered page concatenates them.
+
+  DO NOT paste any <script> here — JS goes in BEFORE_BODY.html. (The two modal
+  blocks and the feedback widget each have an adjacent inline <script> in
+  index.html; copy those scripts into the BEFORE BODY slot, not here. Their
+  inline <style> blocks DO belong with the DOM and stay in this embed.)
+
+  ---------------------------------------------------------------------------
+  DOM blocks to copy, in order  (line numbers = current index.html)
+  ---------------------------------------------------------------------------
+   1. Inline logo <symbol id="sm-logo"> SVG ............... lines 50-63
+        Required: referenced via <use href="#sm-logo"> by the header & footer.
+   2. #sm-library-scope (header, tabs, assistant/filters,
+        results grid, #modal player) ........................ lines 64-138
+   3. #sm-plan-v3-root (Plan Viewer DOM) ................... lines 142-153
+        Must exist in the DOM BEFORE plan-viewer-v3.js runs (see BEFORE_BODY).
+   4. Feedback widget DOM + its inline <style> ............ lines 429-1039
+        (script for it is listed in BEFORE_BODY.html)
+   5. Pro pricing modal DOM + its inline <style> .......... lines 1227-1309
+        (open/close script listed in BEFORE_BODY.html)
+   6. Pack value modal DOM + its inline <style> .......... lines 1323-1381
+        (script listed in BEFORE_BODY.html)
+
+  ---------------------------------------------------------------------------
+  Top-level shape (reference only — copy the real markup from index.html)
+  ---------------------------------------------------------------------------
+    <svg ...><symbol id="sm-logo"> … </symbol></svg>
+
+    <div id="sm-library-scope" class="sm">
+      <div class="library" id="smLibrary">
+        .sm-pro-mobile-top         (header: h1 logo link, PRO badge, quote)
+        button#openAssistantBtn    (mobile "Assistant" opener)
+        nav.sm-pro-mobile-tabs     (All / Moves / Plans / Packs / Saved)
+        #assistantBackdrop
+        aside.assistant            (filters drawer: header, #chat, footer)
+        main.results               (#resultsHead, #resultsGrid, #moreBtn)
+      </div>
+      #modal                       (video player: #modalBackdrop, #modalContent)
+    </div>
+
+    <div id="sm-plan-v3-root">     (Plan Viewer: #spv3Modal → backdrop, dialog,
+                                    #spv3Close, #spv3Viewport>#spv3Track, #spv3Dots)
+
+    #sm-feedback-widget            (+ inline <style>)
+    #sm-pro-modal  .sm-pmodal      (+ inline <style>)
+    #sm-pack-modal .sm-pkmodal     (+ inline <style>)
+
+  ---------------------------------------------------------------------------
+  ID-collision warning: the embed uses generic ids (#modal, #chat, #resultsGrid,
+  #resultsHead, #matchCount, #moreBtn, etc.). Ensure the host Webflow page has no
+  elements with the same ids.
+  ============================================================================
+-->

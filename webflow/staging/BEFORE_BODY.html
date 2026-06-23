@@ -1,0 +1,56 @@
+<!--
+  ============================================================================
+  WEBFLOW PAGE SETTINGS  →  "Before </body> tag"  — JS LOAD ORDER
+  ============================================================================
+  Handoff artifact. The inline-script BODIES are production runtime logic owned
+  by index.html and are NOT duplicated here (see SOURCE_OF_TRUTH.md). Copy each
+  inline <script> from the CURRENT index.html, in the order below.
+
+  External scripts (library-pro.js, plan-viewer-v3.js) ARE paste-ready below —
+  just replace {{CDN_BASE}}.
+
+  LOAD-ORDER INVARIANTS (do not reorder):
+    • library-pro.js loads BEFORE plan-viewer-v3.js.
+    • plan-viewer-v3.js loads AFTER the #sm-plan-v3-root DOM exists (it does, the
+      body embed renders before this footer code) — else the fallback basic
+      viewer registers first.
+    • The 7 inline enhancement scripts keep the relative order shown below.
+    • IIFE guards inside library-pro.js (__SM_LIBRARY_V1_CLEAN_SPLIT__) and
+      plan-viewer-v3.js (__SM_PLAN_VIEWER_V3__) stay intact — they prevent
+      double-init on Webflow page transitions. Do not strip or rename them.
+    • Memberstack: do NOT add a Memberstack <script> here. It is loaded once,
+      site-wide, by the Webflow Memberstack integration; the gating injector
+      reads window.$memberstackDom. A second loader double-inits auth.
+  ---------------------------------------------------------------------------
+-->
+
+<!-- 1) Library runtime (paste-ready; replace {{CDN_BASE}}) -->
+<script src="{{CDN_BASE}}/library-pro.js?v=126"></script>
+
+<!-- 2) Plan Viewer runtime — AFTER library-pro.js and after #sm-plan-v3-root DOM -->
+<script src="{{CDN_BASE}}/plan-viewer-v3.js?v=1"></script>
+
+<!--
+  3) Inline enhancement scripts — copy each <script>…</script> from the current
+     index.html, IN THIS ORDER (line numbers = current index.html):
+
+     a. Skin: pack-detail backdrop video + landing footer + player loop/speed
+        toggles + plan montage timeline ................... lines 158-427
+     b. Feedback widget logic ........................... lines 1040-1225
+        (its DOM + <style> live in the body embed)
+     c. Pro pricing modal open/close
+        (window.smOpenProModal / smCloseProModal) ........ lines 1310-1321
+     d. Pack value modal (window.smPackModal) ........... lines 1382-1404
+     e. Free/Pro gating injector ....................... lines 1407-1690
+        ⚠ Do NOT alter. Sets sm-anon/sm-authed + sm-free/sm-pro classes on
+        #sm-library-scope, builds the free set, locks-but-shows the rest.
+        Pro plan id constant lives at index.html line 1412 (PRO_PLAN_ID).
+        Checkout/Stripe/price-id is intentionally deferred — leave as-is.
+     f. Last-watched header slot (localStorage only) .... lines 1693-1769
+     g. Mobile filter-drawer open helper ............... lines 1774-1788
+
+  All seven are additive and run after the DOM (DOMContentLoaded / observers),
+  so placing them before </body> is safe. Keep them after the two external
+  scripts above.
+  ============================================================================
+-->
