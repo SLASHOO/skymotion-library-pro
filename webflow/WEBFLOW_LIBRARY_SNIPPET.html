@@ -1,0 +1,38 @@
+<!-- ============================================================================
+     WEBFLOW_LIBRARY_SNIPPET.html — the ONLY code that goes into Webflow.
+     Everything else (CSS, JS, DOM template, enhancements) is loaded from
+     GitHub via jsDelivr by library-loader.js. BunnyCDN stays media/data only.
+     Memberstack stays site-wide in Webflow — do NOT add it here.
+
+     PLACEMENT:
+       • Blocks A + C  → Page settings → "Inside <head> tag"
+       • Block B       → an Embed element in the page body (the mount point)
+     The commit pin lives ONLY in the loader URL below (Block C). The loader
+     derives the base for every other asset from its own src — no second edit.
+     ============================================================================ -->
+
+<!-- ===== A) CONFIG (head) — must come before the loader ===================== -->
+<script>
+  window.SM_API_BASE = "https://skymotion.onrender.com";
+  window.SM_LIBRARY_DATA_URL = "https://skymotion-cdn.b-cdn.net/videos_index_v16.json";
+  window.SM_CHECKLIST_PAPER_ASSET_URL = "https://skymotion-cdn.b-cdn.net/checklist.png";
+
+  // Checkout deferred: while empty, logged-in Free users fall back to the sign-up URL.
+  window.SM_PRO_PRICE_ID = "";
+  window.SM_PRO_SIGNUP_URL = "https://skymotion.cloud/sign-up";
+
+  // Pack copy (placeholder until the first official pack is chosen).
+  window.SM_PRO_PACK_TITLE = "Test Pack";
+  window.SM_PRO_PACK_CREATOR = "Creator Name";
+  window.SM_PRO_PACK_DESCRIPTION = "A test shooting pack for SkyMotion Premium. Final name, creator, content and pack direction will be updated after we choose the first official pack.";
+  // window.SM_REAL_ESTATE_PACK_COVER_URL = "https://your-cover-image-url.jpg";
+</script>
+
+<!-- ===== B) MOUNT (body Embed) ============================================= -->
+<div id="sm-library-pro"></div>
+
+<!-- ===== C) LOADER (head, after config) ==================================== -->
+<!-- The ONLY pin in the whole setup: replace <DEPLOY_COMMIT> with the commit
+     hash that contains the 3 deployment files. The loader derives every other
+     asset URL from this same commit. -->
+<script src="https://cdn.jsdelivr.net/gh/SLASHOO/skymotion-library-pro@<DEPLOY_COMMIT>/webflow/library-loader.js"></script>

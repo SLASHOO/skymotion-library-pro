@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Library — Loader Smoke Test (local)</title>
+
+  <!-- LOCAL TEST ONLY. Points the loader at the local repo instead of jsDelivr,
+       and uses the local test data. Proves the loader orchestration end-to-end
+       without needing a pushed commit. Serve the repo root over HTTP and open
+       /webflow/smoke-test.html (file:// will fail fetch + module CORS). -->
+  <script>
+    // Load every asset from the repo root (this page lives in /webflow).
+    window.SM_ASSET_BASE = "../";
+    // Use the local test data (33 moves + 10 plans) so gating/cards work offline.
+    window.SM_LIBRARY_DATA_URL = "../library-data-pro.json";
+    window.SM_API_BASE = "https://skymotion.onrender.com";
+    window.SM_PRO_SIGNUP_URL = "https://skymotion.cloud/sign-up";
+    window.SM_PRO_PRICE_ID = "";
+
+    // Capture console errors for the harness.
+    window.__SMOKE_ERRORS__ = [];
+    window.addEventListener("error", function (e) {
+      window.__SMOKE_ERRORS__.push(String(e.message || e.error || e));
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+      window.__SMOKE_ERRORS__.push("promise: " + String(e.reason));
+    });
+  </script>
+
+  <style>
+    #smoke-panel{
+      position:fixed; z-index:2147483647; top:10px; left:10px; width:360px; max-height:90vh;
+      overflow:auto; font:12px/1.4 ui-monospace,Menlo,Consolas,monospace; color:#eaeaea;
+      background:rgba(12,12,12,.92); border:1px solid #333; border-radius:10px; padding:12px;
+    }
+    #smoke-panel h2{ margin:0 0 8px; font-size:13px; }
+    #smoke-panel .row{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid #222; }
+    #smoke-panel .row b{ width:18px; }
+    .pass{ color:#56d364; } .fail{ color:#f85149; } .wait{ color:#d29922; }
+    #smoke-panel button{ margin-top:8px; font:inherit; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1 style="color:#888;font:600 16px system-ui;padding:8px 12px;">Loader smoke test</h1>
+
+  <!-- The Webflow mount div: identical to production. -->
+  <div id="sm-library-pro"></div>
+
+  <div id="smoke-panel"><h2>SkyMotion loader smoke test</h2><div id="smoke-rows">running…</div></div>
+
+  <!-- The ONE loader script (local copy in this folder). -->
+  <script src="./library-loader.js"></script>
+
+  <!-- Harness: polls for the expected end state, then prints PASS/FAIL. -->
+  <script>
+  (function(){
+    var checks = [
+      { id:"loader",   label:"Loader single-init guard set",
+        test:function(){ return window.__SM_LIBRARY_LOADER__ === true; } },
+      { id:"template", label:"Template injected (#sm-library-scope in mount)",
+        test:function(){ return !!document.querySelector("#sm-library-pro #sm-library-scope"); } },
+      { id:"overlays", label:"Fixed overlays relocated to <body>",
+        test:function(){
+          return document.body.querySelector(":scope > #sm-plan-v3-root")
+              && document.body.querySelector(":scope > #sm-pro-modal")
+              && document.body.querySelector(":scope > #sm-pack-modal"); } },
+      { id:"runtime1", label:"library-pro.js initialized (guard)",
+        test:function(){ return window.__SM_LIBRARY_V1_CLEAN_SPLIT__ === true; } },
+      { id:"runtime2", label:"plan-viewer-v3.js initialized (guard)",
+        test:function(){ return window.__SM_PLAN_VIEWER_V3__ === true; } },
+      { id:"sequence", label:"Sequence order: runtime before Plan Viewer API",
+        test:function(){ return window.__SM_LIBRARY_V1_CLEAN_SPLIT__ === true
+                              && typeof window.SMPlanViewerV3 !== "undefined"; } },
+      { id:"enhance",  label:"Enhancements ran (gating tier classes applied)",
+        test:function(){ var s=document.getElementById("sm-library-scope");
+          return s && (s.classList.contains("sm-free") || s.classList.contains("sm-pro")); } },
+      { id:"free",     label:"Free gating: anonymous = Free (Basic badge / sm-free)",
+        test:function(){ var s=document.getElementById("sm-library-scope");
+          return s && s.classList.contains("sm-free") && !s.classList.contains("sm-pro"); } },
+      { id:"cards",    label:"Cards rendered (#resultsGrid has items)",
+        test:function(){ var g=document.getElementById("resultsGrid");
+          return g && g.children.length > 0; } },
+      { id:"unlocked", label:"Free unlocked items present (openable move + plan)",
+        test:function(){
+          var move=document.querySelector('[data-kind="move"]:not(.is-locked)');
+          var plan=document.querySelector('[data-kind="plan"]:not(.is-locked)');
+          return !!move && !!plan; } },
+      { id:"noerr",    label:"No console errors / no double init",
+        test:function(){ return (window.__SMOKE_ERRORS__||[]).length === 0; } }
+    ];
+
+    var rows = document.getElementById("smoke-rows");
+    var attempts = 0, MAX = 60; // ~6s
+    function render(done){
+      var html = "";
+      var passed = 0;
+      checks.forEach(function(c){
+        var ok=false; try{ ok=!!c.test(); }catch(_){ ok=false; }
+        if(ok) passed++;
+        var cls = ok ? "pass" : (done ? "fail" : "wait");
+        var mark = ok ? "PASS" : (done ? "FAIL" : "...");
+        html += '<div class="row"><b class="'+cls+'">'+mark+'</b><span>'+c.label+'</span></div>';
+      });
+      html += '<div class="row"><b></b><span>'+passed+'/'+checks.length+' passed'
+            + (done?'':' (settling…)')+'</span></div>';
+      if (done && (window.__SMOKE_ERRORS__||[]).length){
+        html += '<div class="row fail"><b>!</b><span>'+window.__SMOKE_ERRORS__.join("<br>")+'</span></div>';
+      }
+      rows.innerHTML = html;
+      window.__SMOKE_RESULT__ = { passed:passed, total:checks.length,
+        errors:(window.__SMOKE_ERRORS__||[]).slice(), done:done };
+    }
+    var t = setInterval(function(){
+      attempts++;
+      var allOk = checks.every(function(c){ try{return !!c.test();}catch(_){return false;} });
+      render(false);
+      if (allOk || attempts>=MAX){ clearInterval(t); render(true);
+        console.log("[smoke] result", window.__SMOKE_RESULT__); }
+    }, 100);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkyMotion Pro — fresh concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@0,400;0,500;0,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111112;
+  --ink:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.58);
+  --faint:rgba(255,255,255,.38);
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.055);
+  --accent:#c99a6e;
+  --purple:#783be2;
+  --font:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --serif:"Instrument Serif", Georgia, serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.5; letter-spacing:-.01em; -webkit-font-smoothing:antialiased; }
+.thumb{ background:#000 center/cover no-repeat; background-image:linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.66)), url("https://skymotion-cdn.b-cdn.net/thumb.jpg"); }
+.mono{ font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
+
+.wrap{ max-width:1240px; margin:0 auto; padding:0 26px; }
+
+/* ===== TOP: title + conditions strip ===== */
+.top{ position:sticky; top:0; z-index:20; background:rgba(17,17,18,.82); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--line-2); }
+.top__in{ display:flex; align-items:center; gap:20px; padding:18px 0 0; }
+.brandline{ display:flex; align-items:baseline; gap:11px; }
+.brandline h1{ margin:0; font-size:24px; font-weight:600; letter-spacing:-.03em; }
+.brandline .pro{ font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; color:var(--accent); border:1px solid rgba(201,154,110,.45); border-radius:6px; padding:3px 7px; }
+.brandline .count{ color:var(--faint); font-size:13px; }
+
+.cond{ margin-left:auto; display:flex; align-items:center; gap:9px; flex-wrap:wrap; justify-content:flex-end; }
+.cond__lbl{ color:var(--faint); }
+.chip{ display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:100px; border:1px solid var(--line); background:rgba(255,255,255,.03); font-size:13px; color:var(--ink); }
+.chip i{ width:5px; height:5px; border-radius:100px; background:var(--accent); }
+.chip x{ color:var(--faint); font-style:normal; cursor:pointer; }
+.adjust{ display:inline-flex; align-items:center; gap:7px; padding:8px 16px; border-radius:100px; border:1px solid rgba(201,154,110,.4); background:rgba(201,154,110,.08); color:var(--accent); font-weight:600; font-size:13px; cursor:pointer; }
+.adjust:hover{ background:rgba(201,154,110,.14); }
+
+.tabs{ display:flex; gap:4px; margin-top:14px; }
+.tabs button{ appearance:none; border:0; background:transparent; color:var(--muted); font:inherit; font-size:14px; font-weight:500; padding:11px 15px; cursor:pointer; position:relative; }
+.tabs button:hover{ color:var(--ink); }
+.tabs button.on{ color:var(--ink); }
+.tabs button.on::after{ content:""; position:absolute; left:15px; right:15px; bottom:0; height:2px; border-radius:100px; background:var(--accent); }
+
+/* ===== FEED ===== */
+.feed{ padding:30px 0 90px; }
+
+/* featured pack — wide cinematic banner */
+.feature{ position:relative; border-radius:22px; overflow:hidden; border:1px solid var(--line); min-height:300px; display:flex; align-items:flex-end; box-shadow:0 30px 70px rgba(0,0,0,.5); cursor:pointer; margin-bottom:14px; }
+.feature__media{ position:absolute; inset:0; }
+.feature__media::after{ content:""; position:absolute; inset:0; background:linear-gradient(110deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.5) 42%, rgba(0,0,0,.18) 100%); }
+.feature__body{ position:relative; z-index:2; padding:34px; max-width:560px; }
+.feature__by{ color:var(--accent); }
+.feature__body h2{ margin:12px 0 0; font-size:34px; font-weight:600; letter-spacing:-.035em; line-height:1.04; }
+.feature__body h2 em{ font-family:var(--serif); font-style:italic; font-weight:400; letter-spacing:-.01em; }
+.feature__stats{ margin:12px 0 0; color:rgba(255,255,255,.66); }
+.feature__desc{ margin:6px 0 0; color:rgba(255,255,255,.8); font-size:14px; }
+.feature__cta{ margin-top:20px; display:inline-flex; padding:12px 22px; border-radius:100px; background:var(--ink); color:#15110b; font-weight:600; font-size:14px; }
+
+.railhead{ display:flex; align-items:center; gap:10px; margin:30px 0 14px; }
+.railhead .mono{ color:var(--accent); }
+.railhead .ln{ flex:1; height:1px; background:var(--line-2); }
+
+/* unified card grid: plans span 2, moves single */
+.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.card{ position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line-2); cursor:pointer; transition:transform .18s ease, border-color .18s ease; }
+.card:hover{ transform:translateY(-3px); border-color:rgba(201,154,110,.4); }
+.card::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.74)); }
+.card .save{ position:absolute; top:11px; right:11px; z-index:3; width:32px; height:32px; border-radius:100px; display:grid; place-items:center; background:rgba(0,0,0,.34); border:1px solid rgba(255,255,255,.14); backdrop-filter:blur(6px); }
+.card .save svg{ width:13px; height:13px; fill:rgba(255,255,255,.85); }
+.card .top{ position:absolute; top:11px; left:11px; z-index:3; display:flex; gap:6px; }
+.pill{ font-family:var(--mono); font-size:9.5px; letter-spacing:.04em; color:#fff; background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.13); border-radius:100px; padding:4px 8px; }
+.pill--plan{ background:rgba(120,59,226,.85); border-color:transparent; }
+
+.card--move{ aspect-ratio:16/11; }
+.card--move .name{ position:absolute; left:13px; bottom:12px; z-index:3; }
+.card--move .name b{ display:block; font-size:15px; font-weight:600; }
+.card--move .name em{ font-style:normal; font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.6); }
+
+.card--plan{ grid-column:span 2; aspect-ratio:auto; min-height:240px; display:flex; flex-direction:column; justify-content:flex-end; }
+.card--plan .cap{ position:relative; z-index:3; padding:18px; }
+.card--plan .cap b{ display:block; font-size:19px; font-weight:600; letter-spacing:-.02em; }
+.card--plan .cap span{ display:block; margin-top:6px; font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.62); }
+
+@media (max-width:1000px){ .grid{ grid-template-columns:repeat(2,1fr); } .card--plan{ grid-column:span 2; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top__in">
+      <div class="brandline">
+        <h1>Library</h1>
+        <span class="pro">PRO</span>
+        <span class="count">24 moves · 8 plans</span>
+      </div>
+      <div class="cond">
+        <span class="cond__lbl mono">Flying</span>
+        <span class="chip"><i></i>Mountains <x>×</x></span>
+        <span class="chip"><i></i>Golden hour <x>×</x></span>
+        <span class="chip"><i></i>Comfortable <x>×</x></span>
+        <button class="adjust">Adjust</button>
+      </div>
+    </div>
+    <div class="wrap" style="padding:0">
+      <nav class="tabs">
+        <button class="on">All</button>
+        <button>Moves</button>
+        <button>Plans</button>
+        <button>Packs</button>
+        <button>Saved</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap feed">
+
+  <!-- FEATURED PACK -->
+  <article class="feature">
+    <div class="feature__media thumb"></div>
+    <div class="feature__body">
+      <span class="feature__by mono">Pack · by Dominic Hayles</span>
+      <h2>Promo Real&nbsp;Estate <em>Pack</em></h2>
+      <p class="feature__stats mono">13 moves · 5 plans · checklist</p>
+      <p class="feature__desc">For paid property shoots — a 30–60s reel and 5 hero shots, planned end to end.</p>
+      <span class="feature__cta">Open pack</span>
+    </div>
+  </article>
+
+  <!-- UNIFIED FEED -->
+  <div class="railhead"><span class="mono">For your conditions</span><span class="ln"></span></div>
+
+  <div class="grid">
+    <article class="card card--plan thumb">
+      <div class="top"><span class="pill">0:23</span><span class="pill">4 shots</span><span class="pill pill--plan">Plan</span></div>
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="cap"><b>Hike With Friends</b><span>Cinematic plan · 17 min · beginner</span></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:15</span></div>
+      <div class="name"><b>Orbit</b><em>Intermediate</em></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:21</span></div>
+      <div class="name"><b>Raise Up</b><em>Basic</em></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:18</span></div>
+      <div class="name"><b>Top Down</b><em>Basic</em></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:11</span></div>
+      <div class="name"><b>Take Off</b><em>Easy</em></div>
+    </article>
+
+    <article class="card card--plan thumb">
+      <div class="top"><span class="pill">0:17</span><span class="pill">3 shots</span><span class="pill pill--plan">Plan</span></div>
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="cap"><b>Coastline Plan</b><span>Cinematic plan · 15 min · intermediate</span></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:15</span></div>
+      <div class="name"><b>Move + Gimbal Up</b><em>Medium</em></div>
+    </article>
+
+    <article class="card card--move thumb">
+      <button class="save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <div class="top"><span class="pill">0:20</span></div>
+      <div class="name"><b>Reveal</b><em>Medium</em></div>
+    </article>
+  </div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checklist — fresh concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111112; --ink:rgba(255,255,255,.92); --muted:rgba(255,255,255,.58);
+  --faint:rgba(255,255,255,.40); --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.06);
+  --accent:#c99a6e; --font:"Inter Tight",ui-sans-serif,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); letter-spacing:-.01em; -webkit-font-smoothing:antialiased; display:flex; justify-content:center; padding:50px 24px; }
+
+.check{ width:340px; border:1px solid var(--line); border-radius:20px; background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.006)); box-shadow:0 30px 70px rgba(0,0,0,.5); overflow:hidden; }
+
+/* header */
+.check__head{ padding:20px 22px 0; }
+.check__top{ display:flex; align-items:center; gap:10px; }
+.check__top svg{ width:18px; height:18px; stroke:var(--accent); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.check__top b{ font-size:16px; font-weight:600; letter-spacing:-.02em; }
+.check__count{ margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--faint); }
+.check__bar{ margin:14px 0 0; height:3px; border-radius:100px; background:rgba(255,255,255,.08); overflow:hidden; }
+.check__bar i{ display:block; height:100%; width:0; background:var(--accent); border-radius:100px; transition:width .35s cubic-bezier(.2,.7,.3,1); }
+
+/* groups */
+.grp{ padding:18px 22px; border-top:1px solid var(--line-2); }
+.grp:first-of-type{ border-top:0; padding-top:18px; }
+.grp__title{ font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+.grp__items{ margin-top:12px; display:flex; flex-direction:column; gap:2px; }
+
+.item{ display:flex; align-items:center; gap:11px; padding:7px 0; cursor:pointer; user-select:none; }
+.item input{ position:absolute; opacity:0; pointer-events:none; }
+.box{ flex:0 0 auto; width:18px; height:18px; border-radius:5px; border:1px solid rgba(255,255,255,.28); display:grid; place-items:center; transition:background .15s ease, border-color .15s ease; }
+.box svg{ width:11px; height:11px; stroke:#15110b; fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:opacity .15s ease; }
+.item input:checked + .box{ background:var(--accent); border-color:var(--accent); }
+.item input:checked + .box svg{ opacity:1; }
+.item span{ font-size:13.5px; color:var(--muted); transition:color .15s ease; }
+.item input:checked ~ span{ color:var(--faint); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25); }
+
+.check__foot{ padding:14px 22px 20px; border-top:1px solid var(--line-2); }
+.check__foot span{ font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--faint); }
+</style>
+</head>
+<body>
+<div class="check" id="check">
+  <div class="check__head">
+    <div class="check__top">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <b>Pre-flight checklist</b>
+      <span class="check__count" id="count">0/15</span>
+    </div>
+    <div class="check__bar"><i id="bar"></i></div>
+  </div>
+
+  <div class="grp">
+    <div class="grp__title">Before the shoot</div>
+    <div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check weather &amp; wind</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Inspect location on map</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Confirm battery levels</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Format SD cards</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check drone firmware</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Scout takeoff / landing spots</span></label>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="grp__title">During the shoot</div>
+    <div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Keep line of sight</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Monitor battery (30% RTH)</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check ND filter if needed</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Vary angles &amp; heights</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Capture establishing shots</span></label>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="grp__title">After the shoot</div>
+    <div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Backup all footage</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Review key shots</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Note ideas for edits</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Charge batteries</span></label>
+    </div>
+  </div>
+
+  <div class="check__foot"><span>Fly safe</span></div>
+</div>
+
+<script>
+  var boxes = document.querySelectorAll('#check input[type=checkbox]');
+  var count = document.getElementById('count'), bar = document.getElementById('bar'), total = boxes.length;
+  function update(){
+    var done = [].filter.call(boxes, function(b){ return b.checked; }).length;
+    count.textContent = done + '/' + total;
+    bar.style.width = (done/total*100) + '%';
+  }
+  boxes.forEach(function(b){ b.addEventListener('change', update); });
+  update();
+</script>
+</body>
+</html>

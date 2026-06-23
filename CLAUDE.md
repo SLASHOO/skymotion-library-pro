@@ -12,6 +12,7 @@ SkyMotion is a web product for beginner drone pilots. It helps users choose dron
 - User identification often uses x-ms-id from Memberstack.
 - Media/content is served from BunnyCDN.
 - Do not assume React, Next.js, Tailwind, or a normal frontend build system unless explicitly present.
+- This repository now has a zero-dependency Node copy-build under `build/` (`src/` → deployment outputs). It is a byte-copy pipeline, not a bundler/framework. Agents must follow `AGENTS.md` for edit boundaries.
 
 ## Important design rule
 

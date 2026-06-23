@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pack detail — concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@0,400;0,500;0,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111112; --ink:rgba(255,255,255,.92); --muted:rgba(255,255,255,.58);
+  --faint:rgba(255,255,255,.40); --line:rgba(255,255,255,.10); --line-2:rgba(255,255,255,.06);
+  --accent:#c99a6e; --font:"Inter Tight",ui-sans-serif,system-ui,sans-serif;
+  --serif:"Instrument Serif",Georgia,serif; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.5; letter-spacing:-.01em; -webkit-font-smoothing:antialiased; }
+.thumb{ background:#000 center/cover no-repeat; background-image:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.7)),url("https://skymotion-cdn.b-cdn.net/thumb.jpg"); }
+.eyebrow{ font-family:var(--mono); font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+
+.wrap{ max-width:1300px; margin:0 auto; padding:26px 28px 90px; display:grid; grid-template-columns:1fr 332px; gap:34px; align-items:start; }
+.back{ width:42px; height:42px; border-radius:100px; display:grid; place-items:center; border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--ink); font-size:20px; cursor:pointer; margin-bottom:22px; }
+.back:hover{ border-color:rgba(255,255,255,.28); }
+
+/* ===== HERO ===== */
+.hero{ position:relative; border-radius:22px; overflow:hidden; border:1px solid var(--line); min-height:300px; display:flex; align-items:flex-end; box-shadow:0 28px 64px rgba(0,0,0,.5); }
+.hero__media{ position:absolute; inset:0; }
+.hero__media::after{ content:""; position:absolute; inset:0; background:linear-gradient(105deg,rgba(0,0,0,.84) 0%,rgba(0,0,0,.52) 46%,rgba(0,0,0,.2) 100%); }
+.hero__body{ position:relative; z-index:2; padding:32px; max-width:600px; }
+.hero__body h1{ margin:12px 0 0; font-size:40px; font-weight:600; letter-spacing:-.04em; line-height:1; }
+.hero__by{ margin:12px 0 0; color:rgba(255,255,255,.7); font-size:14px; }
+.hero__by b{ color:var(--accent); font-weight:600; }
+.hero__desc{ margin:12px 0 0; color:rgba(255,255,255,.78); font-size:14px; max-width:520px; }
+.hero__stats{ margin:18px 0 0; display:flex; gap:18px; font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:rgba(255,255,255,.66); }
+.hero__cta{ margin-top:20px; display:inline-flex; padding:12px 24px; border-radius:100px; background:var(--ink); color:#15110b; font-weight:600; font-size:14px; cursor:pointer; }
+
+/* ===== SECTION ===== */
+.sec{ margin-top:36px; }
+.sec__head{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.sec__head .ln{ flex:1; height:1px; background:var(--line-2); }
+
+/* lessons */
+.lessons{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.lesson{ position:relative; border-radius:16px; overflow:hidden; border:1px solid var(--line-2); cursor:pointer; transition:transform .18s ease, border-color .18s ease; }
+.lesson:hover{ transform:translateY(-3px); border-color:rgba(201,154,110,.4); }
+.lesson__media{ position:relative; aspect-ratio:16/10; }
+.lesson__media::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.6)); }
+.lesson__num{ position:absolute; top:12px; left:13px; z-index:2; font-size:22px; font-weight:600; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+.lesson__play{ position:absolute; inset:0; z-index:2; display:grid; place-items:center; }
+.lesson__play span{ width:46px; height:46px; border-radius:100px; display:grid; place-items:center; background:rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.3); backdrop-filter:blur(6px); }
+.lesson__play svg{ width:15px; height:15px; fill:#fff; margin-left:2px; }
+.lesson__bar{ display:flex; align-items:center; justify-content:space-between; padding:12px 14px; }
+.lesson__bar b{ font-size:14px; font-weight:600; }
+.lesson__bar em{ font-style:normal; font-family:var(--mono); font-size:11px; color:var(--faint); }
+
+/* plans — large recommended + row of smaller */
+.plans{ display:flex; gap:14px; align-items:stretch; }
+.plan{ position:relative; flex:1 1 0; min-width:0; min-height:224px; border-radius:18px; overflow:hidden; border:1px solid var(--line-2); cursor:pointer; transition:transform .18s ease, border-color .18s ease; }
+.plan--rec{ flex:1.95 1 0; }
+.plan:hover{ transform:translateY(-3px); border-color:rgba(201,154,110,.4); }
+.plan::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.74)); }
+.plan__top{ position:absolute; top:13px; left:13px; z-index:2; display:flex; gap:6px; flex-wrap:wrap; }
+.pill{ font-family:var(--mono); font-size:9.5px; color:#fff; background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.14); border-radius:100px; padding:4px 8px; }
+.pill--rec{ background:rgba(201,154,110,.92); border-color:transparent; color:#15110b; letter-spacing:.08em; text-transform:uppercase; font-weight:600; }
+.pill--plan{ background:rgba(120,59,226,.85); border-color:transparent; }
+.plan__cap{ position:absolute; left:16px; right:16px; bottom:15px; z-index:2; }
+.plan__cap b{ display:block; font-size:17px; font-weight:600; letter-spacing:-.02em; }
+.plan--rec .plan__cap b{ font-size:25px; letter-spacing:-.03em; }
+.plan__desc{ margin:9px 0 0; color:rgba(255,255,255,.74); font-size:13px; max-width:330px; }
+.plan__meta{ margin-top:10px; font-family:var(--mono); font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,.58); }
+
+/* moves — row of tiles ending with a "+N more" card */
+.moves{ display:flex; gap:13px; }
+.move{ position:relative; flex:1 1 0; min-width:0; aspect-ratio:16/13; border-radius:15px; overflow:hidden; border:1px solid var(--line-2); cursor:pointer; transition:transform .18s ease, border-color .18s ease; }
+.move:hover{ transform:translateY(-3px); border-color:rgba(201,154,110,.4); }
+.move::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.72)); }
+.move__dur{ position:absolute; top:10px; right:10px; z-index:2; }
+.move__save{ position:absolute; right:10px; bottom:10px; z-index:2; width:28px; height:28px; border-radius:100px; display:grid; place-items:center; background:rgba(0,0,0,.34); border:1px solid rgba(255,255,255,.14); }
+.move__save svg{ width:12px; height:12px; fill:rgba(255,255,255,.82); }
+.move__name{ position:absolute; left:12px; bottom:11px; z-index:2; }
+.move__name b{ display:block; font-size:14px; font-weight:600; }
+.move__name em{ font-style:normal; font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.56); }
+.move--more{ display:grid; place-items:center; gap:6px; background:rgba(255,255,255,.03); border:1px solid var(--line); text-align:center; }
+.move--more::after{ display:none; }
+.move--more b{ font-size:22px; font-weight:600; }
+.move--more em{ font-style:normal; font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+
+/* ===== CHECKLIST (fresh) ===== */
+.check{ position:sticky; top:24px; border:1px solid var(--line); border-radius:20px; background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.006)); box-shadow:0 30px 70px rgba(0,0,0,.5); overflow:hidden; }
+.check__head{ width:100%; display:block; text-align:left; background:transparent; border:0; color:inherit; font:inherit; cursor:pointer; padding:18px 22px; }
+.check__chev{ width:15px; height:15px; stroke:var(--muted); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; margin-left:10px; flex:0 0 auto; transition:transform .25s ease; }
+.check.open .check__chev{ transform:rotate(180deg); }
+.check__body{ display:none; }
+.check.open .check__body{ display:block; }
+.check__top{ display:flex; align-items:center; gap:10px; }
+.check__top svg{ width:18px; height:18px; stroke:var(--accent); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.check__top b{ font-size:16px; font-weight:600; letter-spacing:-.02em; }
+.check__count{ margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--faint); }
+.check__bar{ margin:14px 0 0; height:3px; border-radius:100px; background:rgba(255,255,255,.08); overflow:hidden; }
+.check__bar i{ display:block; height:100%; width:0; background:var(--accent); transition:width .35s cubic-bezier(.2,.7,.3,1); }
+.grp{ padding:18px 22px; border-top:1px solid var(--line-2); }
+.grp__title{ font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+.grp__items{ margin-top:11px; display:flex; flex-direction:column; gap:2px; }
+.item{ display:flex; align-items:center; gap:11px; padding:6px 0; cursor:pointer; user-select:none; }
+.item input{ position:absolute; opacity:0; pointer-events:none; }
+.box{ flex:0 0 auto; width:18px; height:18px; border-radius:5px; border:1px solid rgba(255,255,255,.28); display:grid; place-items:center; transition:.15s; }
+.box svg{ width:11px; height:11px; stroke:#15110b; fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:.15s; }
+.item input:checked + .box{ background:var(--accent); border-color:var(--accent); }
+.item input:checked + .box svg{ opacity:1; }
+.item span:last-child{ font-size:13px; color:var(--muted); }
+.item input:checked ~ span:last-child{ color:var(--faint); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25); }
+.check__foot{ padding:14px 22px 18px; border-top:1px solid var(--line-2); }
+.check__foot span{ font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--faint); }
+
+@media (max-width:1040px){ .wrap{ grid-template-columns:1fr; } .check{ position:static; } .lessons{ grid-template-columns:repeat(2,1fr); } .plans,.moves{ flex-wrap:wrap; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- MAIN -->
+  <main>
+    <button class="back">‹</button>
+
+    <section class="hero">
+      <div class="hero__media thumb"></div>
+      <div class="hero__body">
+        <span class="eyebrow">Creator pack</span>
+        <h1>Test Pack</h1>
+        <p class="hero__by">powered by <b>Creator Name</b></p>
+        <p class="hero__desc">A shooting pack for SkyMotion Premium — moves, plans and a pre-flight checklist, built to deliver one finished reel end to end.</p>
+        <div class="hero__stats"><span>13 MOVES</span><span>5 PLANS</span><span>CHECKLIST</span></div>
+        <span class="hero__cta">Start pack</span>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__head"><span class="eyebrow">Start here</span><span class="ln"></span></div>
+      <div class="lessons">
+        <div class="lesson">
+          <div class="lesson__media thumb"><span class="lesson__num">1</span><span class="lesson__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span></div>
+          <div class="lesson__bar"><b>Intro</b><em>1:18</em></div>
+        </div>
+        <div class="lesson">
+          <div class="lesson__media thumb"><span class="lesson__num">2</span><span class="lesson__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span></div>
+          <div class="lesson__bar"><b>Camera Settings</b><em>2:05</em></div>
+        </div>
+        <div class="lesson">
+          <div class="lesson__media thumb"><span class="lesson__num">3</span><span class="lesson__play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span></div>
+          <div class="lesson__bar"><b>Editing Workflow</b><em>2:20</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__head"><span class="eyebrow">Plans in this pack</span><span class="ln"></span></div>
+      <div class="plans">
+        <div class="plan plan--rec thumb">
+          <div class="plan__top"><span class="pill pill--rec">Recommended</span><span class="pill pill--plan">Plan</span></div>
+          <div class="plan__cap">
+            <b>Hike With Friends</b>
+            <p class="plan__desc">Cinematic hiking sequence with a person and an epic mountain reveal.</p>
+            <div class="plan__meta">17 min · 4 shots · basic</div>
+          </div>
+        </div>
+        <div class="plan thumb"><div class="plan__top"><span class="pill pill--plan">Plan</span></div><div class="plan__cap"><b>Coastline Plan</b><div class="plan__meta">15 min · 3 shots · interm.</div></div></div>
+        <div class="plan thumb"><div class="plan__top"><span class="pill pill--plan">Plan</span></div><div class="plan__cap"><b>Hike With Friends</b><div class="plan__meta">17 min · 4 shots · basic</div></div></div>
+        <div class="plan thumb"><div class="plan__top"><span class="pill pill--plan">Plan</span></div><div class="plan__cap"><b>Coastline Plan</b><div class="plan__meta">15 min · 3 shots · interm.</div></div></div>
+        <div class="plan thumb"><div class="plan__top"><span class="pill pill--plan">Plan</span></div><div class="plan__cap"><b>Hike With Friends</b><div class="plan__meta">17 min · 4 shots · basic</div></div></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec__head"><span class="eyebrow">Moves in this pack</span><span class="ln"></span></div>
+      <div class="moves">
+        <div class="move thumb"><span class="pill move__dur">0:15</span><div class="move__name"><b>Orbit</b><em>Intermediate</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move thumb"><span class="pill move__dur">0:21</span><div class="move__name"><b>Raise Up</b><em>Basic</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move thumb"><span class="pill move__dur">0:21</span><div class="move__name"><b>Top Down</b><em>Intermediate</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move thumb"><span class="pill move__dur">0:10</span><div class="move__name"><b>Push Out</b><em>Basic</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move thumb"><span class="pill move__dur">0:11</span><div class="move__name"><b>Take Off</b><em>Basic</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move thumb"><span class="pill move__dur">0:15</span><div class="move__name"><b>Move + Gimbal Up</b><em>Intermediate</em></div><button class="move__save"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button></div>
+        <div class="move move--more"><b>+7</b><em>more moves →</em></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CHECKLIST -->
+  <aside class="check" id="check">
+    <button class="check__head" id="ckToggle" type="button">
+      <div class="check__top">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <b>Pre-flight checklist</b>
+        <span class="check__count" id="count">0/15</span>
+        <svg class="check__chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="check__bar"><i id="bar"></i></div>
+    </button>
+    <div class="check__body">
+    <div class="grp"><div class="grp__title">Before the shoot</div><div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check weather &amp; wind</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Inspect location on map</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Confirm battery levels</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Format SD cards</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check drone firmware</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Scout takeoff / landing spots</span></label>
+    </div></div>
+    <div class="grp"><div class="grp__title">During the shoot</div><div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Keep line of sight</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Monitor battery (30% RTH)</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Check ND filter if needed</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Vary angles &amp; heights</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Capture establishing shots</span></label>
+    </div></div>
+    <div class="grp"><div class="grp__title">After the shoot</div><div class="grp__items">
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Backup all footage</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Review key shots</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Note ideas for edits</span></label>
+      <label class="item"><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 6"/></svg></span><span>Charge batteries</span></label>
+    </div></div>
+    <div class="check__foot"><span>Fly safe</span></div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  var boxes=document.querySelectorAll('#check input[type=checkbox]'),count=document.getElementById('count'),bar=document.getElementById('bar'),total=boxes.length;
+  function up(){var d=[].filter.call(boxes,function(b){return b.checked;}).length;count.textContent=d+'/'+total;bar.style.width=(d/total*100)+'%';}
+  boxes.forEach(function(b){b.addEventListener('change',up);});
+  document.getElementById('ckToggle').addEventListener('click',function(){ document.getElementById('check').classList.toggle('open'); });
+</script>
+</body>
+</html>

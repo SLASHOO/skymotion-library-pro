@@ -1,0 +1,293 @@
+/* =============================================================
+   SkyMotion Pro Library — Cards
+   Move cards, plan cards, skeleton cards and save button.
+   Copied from library-pro.css lines 75–336 + smSkeletonShift.
+   Do NOT delete from library-pro.css until verified in local
+   dev and Webflow production.
+
+   NOT included here:
+   - .sm-pro-difficulty-pill  → future sm-subscreens.css
+   - #modal / .player*        → future sm-player.css
+   - @media queries           → future sm-responsive-*.css
+   ============================================================= */
+
+
+/* ── 1. Move cards ───────────────────────────────────────────── */
+/* Move cards */
+#sm-library-scope .card{
+  position:relative;
+  display:block;
+  min-height:220px;
+  overflow:hidden;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#000;
+  box-shadow:0 12px 34px rgba(0,0,0,.32);
+  cursor:pointer;
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+#sm-library-scope .card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(120,59,226,.30);
+  box-shadow:0 18px 48px rgba(0,0,0,.42);
+}
+
+#sm-library-scope .thumb,
+#sm-library-scope .thumb img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+#sm-library-scope .thumb img{
+  object-fit:cover;
+}
+
+#sm-library-scope .card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.35) 55%, rgba(0,0,0,.88));
+}
+
+#sm-library-scope .meta{
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:14px;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+#sm-library-scope .badge{
+  flex:0 0 auto;
+  order:1;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(0,0,0,.52);
+  border:1px solid rgba(255,255,255,.22);
+  color:#fff;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  font-size:12px;
+}
+
+#sm-library-scope .title{
+  flex:1;
+  order:2;
+  margin:0;
+  overflow:hidden;
+  color:#fff;
+  font-size:16px;
+  font-weight:950;
+  line-height:1.1;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  text-shadow:0 10px 30px rgba(0,0,0,.6);
+}
+
+
+/* ── 2. Save button ──────────────────────────────────────────── */
+/* Save */
+#sm-library-scope .sm-save{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:3;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+#sm-library-scope .sm-save:hover{
+  transform:translateY(-1px);
+  border-color:rgba(120,59,226,.45);
+  background:rgba(0,0,0,.36);
+  box-shadow:0 0 0 3px rgba(120,59,226,.10);
+}
+
+#sm-library-scope .sm-save svg{
+  width:18px;
+  height:18px;
+  fill:rgba(255,255,255,.86);
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.55));
+}
+
+#sm-library-scope .sm-save.isSaved{
+  border-color:rgba(120,59,226,.70);
+  background:rgba(201,154,110,.18);
+  box-shadow:0 0 0 3px rgba(201,154,110,.10);
+}
+
+#sm-library-scope .sm-save.isSaved svg{
+  fill:rgba(255,245,235,.95);
+}
+
+
+/* ── 3. Plan cards ───────────────────────────────────────────── */
+/* Plan cards */
+#sm-library-scope .cardPlan{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  min-height:420px;
+  grid-row:span 2;
+  overflow:hidden;
+  border-radius:24px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(900px 420px at 20% 0%, rgba(201,154,110,.10), transparent 55%),
+    radial-gradient(800px 420px at 90% 0%, rgba(120,59,226,.12), transparent 55%),
+    linear-gradient(180deg, rgba(20,20,20,.94), rgba(10,10,10,.96));
+  box-shadow:0 14px 44px rgba(0,0,0,.38);
+  cursor:pointer;
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+#sm-library-scope .cardPlan:hover{
+  transform:translateY(-3px);
+  border-color:rgba(120,59,226,.40);
+  box-shadow:0 22px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(120,59,226,.20);
+}
+
+#sm-library-scope .cardPlan .planMedia{
+  position:relative;
+  flex:0 0 68%;
+  min-height:0;
+  overflow:hidden;
+  background:#000;
+}
+
+#sm-library-scope .cardPlan .planMedia::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.10) 45%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.82));
+}
+
+#sm-library-scope .cardPlan .planImg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  filter:saturate(1.06) contrast(1.04) brightness(.98);
+  transform:none;
+  transition:filter .22s ease;
+}
+
+#sm-library-scope .cardPlan:hover .planImg{
+  filter:saturate(1.08) contrast(1.06) brightness(1.02);
+}
+
+#sm-library-scope .cardPlan .planPills{
+  position:absolute;
+  top:14px;
+  left:14px;
+  z-index:3;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  max-width:92%;
+}
+
+#sm-library-scope .cardPlan .pill{
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(0,0,0,.42);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  font-size:12px;
+  font-weight:950;
+}
+
+#sm-library-scope .cardPlan .pill--plan{
+  border-color:rgba(120,59,226,.45);
+  box-shadow:0 0 0 3px rgba(120,59,226,.10);
+}
+
+#sm-library-scope .cardPlan .planCaption{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:16px;
+  z-index:3;
+  overflow:hidden;
+  color:#fff;
+  font-size:17px;
+  font-weight:950;
+  line-height:1.08;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  text-shadow:0 10px 30px rgba(0,0,0,.72);
+}
+
+#sm-library-scope .cardPlan .planBubble{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin:18px;
+  margin-top:auto;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.28));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 12px 28px rgba(0,0,0,.22);
+}
+
+#sm-library-scope .cardPlan .planType{
+  color:rgba(255,255,255,.94);
+  font-size:15px;
+  font-weight:900;
+  line-height:1.1;
+}
+
+#sm-library-scope .cardPlan .planMeta{
+  color:rgba(255,255,255,.68);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.35;
+}
+
+
+/* ── 4. Skeleton cards ───────────────────────────────────────── */
+/* Skeleton */
+#sm-library-scope .sm-skeleton-card{
+  position:relative;
+  min-height:220px;
+  overflow:hidden;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.03);
+}
+
+#sm-library-scope .sm-skeleton-fill{
+  background:linear-gradient(90deg, rgba(255,255,255,.03), rgba(255,255,255,.08), rgba(255,255,255,.03));
+  background-size:200% 100%;
+  animation:smSkeletonShift 1.2s linear infinite;
+}
+
+
+/* ── 5. Skeleton animation ───────────────────────────────────── */
+/* Used exclusively by .sm-skeleton-fill above */
+@keyframes smSkeletonShift{
+  0%{ background-position:200% 0; }
+  100%{ background-position:-200% 0; }
+}

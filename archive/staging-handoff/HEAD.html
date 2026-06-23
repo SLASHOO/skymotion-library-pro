@@ -1,0 +1,59 @@
+<!--
+  ============================================================================
+  WEBFLOW PAGE SETTINGS  →  "Inside <head> tag"
+  ============================================================================
+  Handoff artifact. Canonical source = index.html <head> (lines 3-48).
+  See SOURCE_OF_TRUTH.md. Paste the blocks below IN THIS ORDER.
+
+  Three blocks:
+    1) Config <script>      — paste the contents of CONFIG.example.js (filled in)
+    2) Fonts                — paste as-is (already absolute URLs)
+    3) CSS <link> tags      — paste as-is after replacing {{CDN_BASE}}
+
+  LOAD-ORDER INVARIANTS (do not reorder):
+    • library-pro.css loads AFTER the 10 css/ split files (it overrides them).
+    • css/sm-skin.css loads LAST of all stylesheets (visual skin overrides).
+  Keep the ?v=N cache-bust query on every file; bump it when that file changes.
+  ============================================================================
+-->
+
+<!-- 1) CONFIG ----------------------------------------------------------------
+     Paste the production-filled contents of CONFIG.example.js here, wrapped in
+     a <script>…</script>. It must come BEFORE the CSS and BEFORE any JS so the
+     window.SM_* values exist when library-pro.js runs.
+     (Canonical reference: index.html lines 8-26.)
+-->
+<!-- <script> … paste CONFIG.example.js values here … </script> -->
+
+<!-- 2) FONTS (paste as-is — already absolute) -------------------------------- -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@0,400;0,450;0,500;0,550;0,600&display=swap" rel="stylesheet">
+
+<!-- 3) CSS — EXACT ORDER. Replace {{CDN_BASE}} with the host base from
+        ASSET_MANIFEST.md (e.g. https://skymotion-cdn.b-cdn.net). ----------- -->
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-tokens.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-layout.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-cards.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-filters.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-player-modal.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-responsive-mobile.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-filter-mobile.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-subscreens.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-desktop.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-pack-detail.css?v=1" />
+<link rel="stylesheet" href="{{CDN_BASE}}/library-pro.css?v=128" />
+<link rel="stylesheet" href="{{CDN_BASE}}/plan-viewer-v3.css?v=1" />
+<!-- Visual skin — MUST stay last -->
+<link rel="stylesheet" href="{{CDN_BASE}}/css/sm-skin.css?v=86" />
+
+<!--
+  NOTE on Memberstack: do NOT add a Memberstack <script> here. Memberstack is
+  loaded once, site-wide, by the Webflow Memberstack integration. The Library
+  reads window.$memberstackDom; a second loader would double-init auth.
+
+  NOTE on global CSS: library-pro.css lines 1-16 style *, html, body (page-wide,
+  not scoped to #sm-library-scope). On a page dedicated to the Library this is
+  fine; on a shared page, decide whether to scope those rules. Do not change the
+  file here — flag only. (See AUDIT_WEBFLOW_TRANSFER.md / WEBFLOW_HANDOFF_SPEC.md.)
+-->
