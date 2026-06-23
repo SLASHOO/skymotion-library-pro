@@ -1,0 +1,979 @@
+<!--
+  SkyMotion — Webflow "Log in" page embed (mirror of the live Webflow custom code).
+  This is the source-of-truth copy kept in the repo so we can see the full auth picture
+  and edit redirects here before pasting back into Webflow.
+
+  PENDING (redirect logic): after login, route by Memberstack plan —
+    member HAS a paid plan  -> redirect to /pro-library
+    member has NO paid plan -> redirect to / (or /library)
+  Currently REDIRECT_AFTER_LOGIN is a single "/".
+-->
+<div id="sm-login-v4"></div>
+<script>
+(function () {
+  console.log("SM LOGIN V4 ACTIVE — FINAL LOGIN WITH CLEAR ERRORS");
+  const AUTO_REDIRECT_AFTER_LOGIN = true;
+  // Unified single library for everyone at /library (gating happens inside by plan).
+  const PRO_PLAN_ID  = "pln_skymotion-pro-beta-r8ai0gbb";
+  const PRO_REDIRECT  = "/library"; // one library for all
+  const FREE_REDIRECT = "/library"; // one library for all
+  const css = `
+    :root{
+      --sml-panel:#101010;
+      --sml-text:#f5f5f5;
+      --sml-accent:#d19b68;
+      --sml-input:#d8d8d8;
+      --sml-shadow:0 22px 70px rgba(0,0,0,.32);
+    }
+    html, body {
+      margin:0 !important;
+      min-height:100% !important;
+      background:#070a0e !important;
+      overflow:auto !important;
+      -webkit-font-smoothing:antialiased;
+    }
+    #sm-login-v4 {
+      position:fixed !important;
+      inset:0 !important;
+      z-index:2147483647 !important;
+      width:100vw !important;
+      min-height:100dvh !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      padding:22px !important;
+      box-sizing:border-box !important;
+      background:#070a0e !important;
+      color:var(--sml-text) !important;
+      font-family:Inter, Arial, sans-serif !important;
+      overflow:auto !important;
+    }
+    #sm-login-v4 * {
+      box-sizing:border-box !important;
+      font-family:inherit !important;
+    }
+    #sm-login-v4 .sml-bg {
+      position:absolute !important;
+      inset:0 !important;
+      z-index:0 !important;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,.08), transparent 34%),
+        linear-gradient(180deg, rgba(7,10,14,.35), rgba(7,10,14,.72)) !important;
+      backdrop-filter:blur(14px) saturate(.9) !important;
+      -webkit-backdrop-filter:blur(14px) saturate(.9) !important;
+    }
+    #sm-login-v4 .sml-shell {
+      position:relative !important;
+      z-index:5 !important;
+      width:min(1080px, 100%) !important;
+      min-height:560px !important;
+      display:grid !important;
+      grid-template-columns:.96fr 1.04fr !important;
+      border-radius:28px !important;
+      overflow:hidden !important;
+      border:1px solid rgba(255,255,255,.07) !important;
+      box-shadow:var(--sml-shadow) !important;
+      background:rgba(255,255,255,.025) !important;
+    }
+    #sm-login-v4 .sml-left {
+      position:relative !important;
+      display:flex !important;
+      align-items:flex-end !important;
+      padding:36px 32px 30px !important;
+      overflow:hidden !important;
+      background:#0d1015 !important;
+      min-height:560px !important;
+    }
+    #sm-login-v4 .sml-left video {
+      position:absolute !important;
+      inset:0 !important;
+      width:100% !important;
+      height:100% !important;
+      object-fit:cover !important;
+      pointer-events:none !important;
+      z-index:0 !important;
+    }
+    #sm-login-v4 .sml-left video::-webkit-media-controls,
+    #sm-login-v4 .sml-left video::-webkit-media-controls-enclosure,
+    #sm-login-v4 .sml-left video::-webkit-media-controls-panel,
+    #sm-login-v4 .sml-left video::-webkit-media-controls-play-button,
+    #sm-login-v4 .sml-left video::-webkit-media-controls-start-playback-button{
+      display:none !important;
+      -webkit-appearance:none !important;
+      opacity:0 !important;
+    }
+    #sm-login-v4 .sml-left::after {
+      content:"" !important;
+      position:absolute !important;
+      inset:0 !important;
+      z-index:1 !important;
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,0) 48%, rgba(0,0,0,.18) 78%, rgba(0,0,0,.34) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.64) 0%, rgba(0,0,0,.36) 36%, rgba(0,0,0,.18) 70%, rgba(0,0,0,.14) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.42)) !important;
+      pointer-events:none !important;
+    }
+    #sm-login-v4 .sml-left-inner {
+      position:relative !important;
+      z-index:2 !important;
+      max-width:310px !important;
+      color:#fff !important;
+    }
+    #sm-login-v4 .sml-kicker {
+      margin:0 0 12px !important;
+      font-size:12px !important;
+      letter-spacing:.12em !important;
+      text-transform:uppercase !important;
+      opacity:.78 !important;
+      font-weight:800 !important;
+    }
+    #sm-login-v4 .sml-left-title {
+      margin:0 0 10px !important;
+      font-size:34px !important;
+      line-height:.96 !important;
+      font-weight:900 !important;
+      letter-spacing:-.04em !important;
+      color:#fff !important;
+    }
+    #sm-login-v4 .sml-left-text {
+      margin:0 0 20px !important;
+      max-width:280px !important;
+      font-size:14px !important;
+      line-height:1.45 !important;
+      color:rgba(255,255,255,.88) !important;
+      font-weight:600 !important;
+    }
+    #sm-login-v4 .sml-watch-btn {
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      min-height:44px !important;
+      padding:0 16px !important;
+      border-radius:999px !important;
+      border:1.2px solid rgba(255,255,255,.54) !important;
+      background:rgba(255,255,255,.04) !important;
+      color:#fff !important;
+      font-size:14px !important;
+      font-weight:900 !important;
+      cursor:pointer !important;
+      backdrop-filter:blur(6px) !important;
+    }
+    #sm-login-v4 .sml-right {
+      background:var(--sml-panel) !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      padding:24px 34px !important;
+      min-height:560px !important;
+      overflow:hidden !important;
+    }
+    #sm-login-v4 .sml-form-box {
+      width:min(100%, 430px) !important;
+      max-width:430px !important;
+      display:flex !important;
+      flex-direction:column !important;
+    }
+    #sm-login-v4 .sml-title {
+      margin:0 0 18px !important;
+      text-align:center !important;
+      font-size:24px !important;
+      line-height:1 !important;
+      font-weight:950 !important;
+      letter-spacing:-.045em !important;
+      color:#fff !important;
+    }
+    #sm-login-v4 .sml-form {
+      display:grid !important;
+      gap:11px !important;
+      width:100% !important;
+    }
+    #sm-login-v4 .sml-google-btn {
+      width:100% !important;
+      height:44px !important;
+      border:0 !important;
+      border-radius:7px !important;
+      background:#f5f7fb !important;
+      color:#111 !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:flex-start !important;
+      gap:12px !important;
+      padding:0 16px !important;
+      cursor:pointer !important;
+      font-size:12px !important;
+      font-weight:800 !important;
+      text-decoration:none !important;
+      opacity:1 !important;
+      appearance:none !important;
+      -webkit-appearance:none !important;
+    }
+    #sm-login-v4 .sml-google-btn:disabled {
+      opacity:.65 !important;
+      cursor:not-allowed !important;
+    }
+    #sm-login-v4 .sml-google-icon {
+      width:18px !important;
+      height:18px !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      border-radius:50% !important;
+      font-size:15px !important;
+      font-weight:900 !important;
+      color:#4285f4 !important;
+      background:#fff !important;
+      flex:0 0 auto !important;
+    }
+    #sm-login-v4 .sml-or {
+      display:grid !important;
+      grid-template-columns:1fr auto 1fr !important;
+      align-items:center !important;
+      gap:18px !important;
+      margin:20px 0 14px !important;
+    }
+    #sm-login-v4 .sml-or span {
+      height:1px !important;
+      background:rgba(255,255,255,.34) !important;
+    }
+    #sm-login-v4 .sml-or p {
+      margin:0 !important;
+      font-size:10px !important;
+      font-weight:900 !important;
+      letter-spacing:.08em !important;
+      color:rgba(255,255,255,.78) !important;
+    }
+    #sm-login-v4 .sml-input {
+      width:100% !important;
+      height:43px !important;
+      border:0 !important;
+      outline:none !important;
+      border-radius:7px !important;
+      background:var(--sml-input) !important;
+      color:#111 !important;
+      font-size:13px !important;
+      font-weight:900 !important;
+      padding:0 13px !important;
+    }
+    #sm-login-v4 .sml-input::placeholder {
+      color:#69727c !important;
+      font-size:13px !important;
+      font-weight:900 !important;
+    }
+    #sm-login-v4 .sml-input:focus{
+      box-shadow:0 0 0 3px rgba(209,155,104,.24) !important;
+    }
+    #sm-login-v4 .sml-btn {
+      width:100% !important;
+      height:47px !important;
+      margin-top:14px !important;
+      border:0 !important;
+      border-radius:999px !important;
+      background:var(--sml-accent) !important;
+      color:#fff !important;
+      font-size:12px !important;
+      font-weight:950 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.01em !important;
+      cursor:pointer !important;
+      box-shadow:0 10px 24px rgba(201,154,110,.18) !important;
+    }
+    #sm-login-v4 .sml-btn:disabled{
+      opacity:.72 !important;
+      cursor:not-allowed !important;
+    }
+    #sm-login-v4 .sml-row {
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:12px !important;
+      margin-top:12px !important;
+      font-size:10px !important;
+      color:rgba(255,255,255,.42) !important;
+      font-weight:700 !important;
+    }
+    #sm-login-v4 .sml-link,
+    #sm-login-v4 .sml-link-btn {
+      border:0 !important;
+      padding:0 !important;
+      background:transparent !important;
+      color:rgba(255,255,255,.76) !important;
+      font-size:10px !important;
+      font-weight:900 !important;
+      text-decoration:none !important;
+      cursor:pointer !important;
+    }
+    #sm-login-v4 .sml-error,
+    #sm-login-v4 .sml-success {
+      display:none !important;
+      margin-top:10px !important;
+      padding:10px 12px !important;
+      border-radius:12px !important;
+      font-size:12px !important;
+      line-height:1.35 !important;
+      border:1px solid rgba(255,255,255,.05) !important;
+    }
+    #sm-login-v4 .sml-error {
+      color:#ffb6b6 !important;
+      background:rgba(143,45,45,.18) !important;
+    }
+    #sm-login-v4 .sml-success {
+      color:#c7ffd5 !important;
+      background:rgba(45,143,72,.16) !important;
+    }
+    #sm-login-v4 .sml-error.is-visible,
+    #sm-login-v4 .sml-success.is-visible {
+      display:block !important;
+    }
+    #sm-login-v4 .sml-loading {
+      display:none !important;
+      margin-top:12px !important;
+      font-size:11px !important;
+      color:rgba(255,255,255,.42) !important;
+    }
+    #sm-login-v4 .sml-loading.is-visible {
+      display:block !important;
+    }
+    #sm-login-v4 .sml-video-modal{
+      position:fixed !important;
+      inset:0 !important;
+      z-index:2147483647 !important;
+      display:none !important;
+      align-items:center !important;
+      justify-content:center !important;
+      padding:18px !important;
+      background:rgba(6,10,14,.78) !important;
+      backdrop-filter:blur(8px) !important;
+    }
+    #sm-login-v4 .sml-video-modal.is-open{
+      display:flex !important;
+    }
+    #sm-login-v4 .sml-video-card{
+      width:min(920px, 100%) !important;
+      border-radius:22px !important;
+      overflow:hidden !important;
+      background:#0f1217 !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      box-shadow:0 20px 70px rgba(0,0,0,.55) !important;
+    }
+    #sm-login-v4 .sml-video-top{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      padding:13px 15px !important;
+      color:#fff !important;
+      background:rgba(255,255,255,.04) !important;
+    }
+    #sm-login-v4 .sml-video-title{
+      font-size:13px !important;
+      font-weight:800 !important;
+    }
+    #sm-login-v4 .sml-video-close{
+      border:0 !important;
+      background:transparent !important;
+      color:#fff !important;
+      font-size:26px !important;
+      line-height:1 !important;
+      cursor:pointer !important;
+    }
+    #sm-login-v4 .sml-video-embed{
+      aspect-ratio:16/9 !important;
+      width:100% !important;
+      background:#000 !important;
+    }
+    #sm-login-v4 .sml-video-embed video{
+      width:100% !important;
+      height:100% !important;
+      border:0 !important;
+      display:block !important;
+      background:#000 !important;
+    }
+    @media (max-width:991px) {
+      #sm-login-v4 .sml-shell {
+        grid-template-columns:1fr !important;
+        width:min(760px, 100%) !important;
+        min-height:auto !important;
+      }
+      #sm-login-v4 .sml-left {
+        min-height:220px !important;
+        padding:24px 22px 20px !important;
+      }
+      #sm-login-v4 .sml-right {
+        min-height:220px !important;
+        padding:24px 22px !important;
+      }
+      #sm-login-v4 .sml-left-title {
+        font-size:26px !important;
+      }
+    }
+    @media (max-width:640px) and (orientation:portrait) {
+      #sm-login-v4 {
+        padding:0 !important;
+        align-items:stretch !important;
+        justify-content:stretch !important;
+        overflow:auto !important;
+        background:#070a0e !important;
+      }
+      #sm-login-v4 .sml-shell {
+        width:100vw !important;
+        min-height:100dvh !important;
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        grid-template-rows:34dvh auto !important;
+        border-radius:0 !important;
+        border:0 !important;
+        box-shadow:none !important;
+        background:#101010 !important;
+        overflow:visible !important;
+      }
+      #sm-login-v4 .sml-left {
+        min-height:0 !important;
+        height:34dvh !important;
+        padding:24px 22px 34px !important;
+        align-items:center !important;
+        justify-content:center !important;
+        text-align:center !important;
+        overflow:hidden !important;
+      }
+      #sm-login-v4 .sml-left::after {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(0,0,0,.08) 0%,
+            rgba(0,0,0,.20) 38%,
+            rgba(0,0,0,.48) 72%,
+            rgba(16,16,16,.92) 92%,
+            rgba(16,16,16,1) 100%
+          ) !important;
+      }
+      #sm-login-v4 .sml-left-inner {
+        max-width:320px !important;
+        width:100% !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        transform:translateY(8px) !important;
+      }
+      #sm-login-v4 .sml-kicker {
+        font-size:10px !important;
+        letter-spacing:.14em !important;
+        margin:0 0 8px !important;
+      }
+      #sm-login-v4 .sml-left-title {
+        font-size:22px !important;
+        line-height:1.04 !important;
+        margin:0 0 8px !important;
+      }
+      #sm-login-v4 .sml-left-text {
+        font-size:12px !important;
+        line-height:1.35 !important;
+        margin:0 0 16px !important;
+        max-width:285px !important;
+      }
+      #sm-login-v4 .sml-watch-btn {
+        min-height:40px !important;
+        padding:0 18px !important;
+        font-size:12px !important;
+      }
+      #sm-login-v4 .sml-right {
+        min-height:auto !important;
+        padding:36px 20px max(34px, env(safe-area-inset-bottom)) !important;
+        align-items:flex-start !important;
+        justify-content:flex-start !important;
+        background:#101010 !important;
+        overflow:visible !important;
+      }
+      #sm-login-v4 .sml-form-box {
+        width:100% !important;
+        max-width:390px !important;
+        margin:0 auto !important;
+      }
+      #sm-login-v4 .sml-title {
+        font-size:30px !important;
+        line-height:1 !important;
+        margin:0 0 34px !important;
+      }
+      #sm-login-v4 .sml-google-btn {
+        height:62px !important;
+        border-radius:8px !important;
+        padding:0 24px !important;
+        font-size:18px !important;
+        gap:18px !important;
+        font-weight:500 !important;
+      }
+      #sm-login-v4 .sml-google-icon {
+        width:30px !important;
+        height:30px !important;
+        font-size:24px !important;
+      }
+      #sm-login-v4 .sml-or {
+        margin:34px 0 24px !important;
+        gap:26px !important;
+      }
+      #sm-login-v4 .sml-or span {
+        background:rgba(255,255,255,.72) !important;
+      }
+      #sm-login-v4 .sml-or p {
+        font-size:13px !important;
+        color:rgba(255,255,255,.88) !important;
+      }
+      #sm-login-v4 .sml-form {
+        gap:20px !important;
+      }
+      #sm-login-v4 .sml-input {
+        height:48px !important;
+        border-radius:5px !important;
+        padding:0 15px !important;
+        font-size:18px !important;
+        background:#d8d8d8 !important;
+      }
+      #sm-login-v4 .sml-input::placeholder {
+        font-size:18px !important;
+      }
+      #sm-login-v4 .sml-btn {
+        height:54px !important;
+        margin-top:22px !important;
+        font-size:20px !important;
+        letter-spacing:-.02em !important;
+      }
+      #sm-login-v4 .sml-row {
+        margin-top:20px !important;
+        font-size:12px !important;
+      }
+      #sm-login-v4 .sml-link,
+      #sm-login-v4 .sml-link-btn {
+        font-size:12px !important;
+      }
+      #sm-login-v4 .sml-error,
+      #sm-login-v4 .sml-success {
+        margin-top:16px !important;
+        padding:12px 14px !important;
+        font-size:13px !important;
+      }
+      #sm-login-v4 .sml-video-modal {
+        padding:0 !important;
+      }
+      #sm-login-v4 .sml-video-card {
+        width:100vw !important;
+        max-width:100vw !important;
+        min-height:100dvh !important;
+        border-radius:0 !important;
+      }
+    }
+    @media (max-width:390px) and (orientation:portrait) {
+      #sm-login-v4 .sml-shell {
+        grid-template-rows:31dvh auto !important;
+      }
+      #sm-login-v4 .sml-left {
+        height:31dvh !important;
+        padding-bottom:30px !important;
+      }
+      #sm-login-v4 .sml-left-text {
+        display:none !important;
+      }
+      #sm-login-v4 .sml-right {
+        padding-top:34px !important;
+      }
+      #sm-login-v4 .sml-title {
+        margin-bottom:28px !important;
+        font-size:28px !important;
+      }
+    }
+  `;
+  const oldStyle = document.getElementById("sm-login-v4-style");
+  if (oldStyle) oldStyle.remove();
+  const style = document.createElement("style");
+  style.id = "sm-login-v4-style";
+  style.textContent = css;
+  document.head.appendChild(style);
+  const root = document.getElementById("sm-login-v4");
+  if (!root) return;
+  root.innerHTML = `
+    <div class="sml-bg"></div>
+    <div class="sml-shell">
+      <div class="sml-left">
+        <video autoplay muted loop playsinline preload="auto" controlslist="nodownload noplaybackrate nofullscreen" disablepictureinpicture>
+          <source src="https://s3.amazonaws.com/webflow-prod-assets/6766d6c8fc7f71813b295766/6769a0b8ffcfd0b6b8deaf4a_1223(2).mp4" type="video/mp4">
+        </video>
+        <div class="sml-left-inner">
+          <div class="sml-kicker">SkyMotion</div>
+          <h2 class="sml-left-title">Welcome back</h2>
+          <p class="sml-left-text">
+            Continue to the drone move library and plan your next shot on location.
+          </p>
+          <button class="sml-watch-btn" type="button" id="smlWatchGuideBtn">Open guide</button>
+        </div>
+      </div>
+      <div class="sml-right">
+        <div class="sml-form-box">
+          <h1 class="sml-title">You know the way</h1>
+          <form class="sml-form" id="smlLoginForm" data-ms-form="login" data-ms-redirect="/" data-ms-social-auth-allow-signup>
+            <button
+              id="smlGoogleLoginBtn"
+              class="sml-google-btn"
+              type="button"
+              data-ms-auth-provider="google"
+            >
+              <span class="sml-google-icon">G</span>
+              <span>Continue with Google</span>
+            </button>
+            <div class="sml-or">
+              <span></span>
+              <p>OR</p>
+              <span></span>
+            </div>
+            <input
+              id="sml-email"
+              class="sml-input"
+              type="email"
+              data-ms-member="email"
+              placeholder="Email"
+              required
+              autocomplete="email"
+            >
+            <input
+              id="sml-password"
+              class="sml-input"
+              type="password"
+              data-ms-member="password"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+            >
+            <button id="smlLoginBtn" class="sml-btn" type="submit">LOG IN</button>
+          </form>
+          <div class="sml-error" id="smlLoginError"></div>
+          <div class="sml-success" id="smlLoginSuccess"></div>
+          <div class="sml-loading" id="smlLoadingNote">Opening SkyMotion...</div>
+          <div class="sml-row">
+            <button class="sml-link-btn" type="button" id="smlResetBtn">Forgot password?</button>
+            <a class="sml-link" href="/sign-up">Create account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sml-video-modal" id="smlVideoModal" aria-hidden="true">
+      <div class="sml-video-card">
+        <div class="sml-video-top">
+          <div class="sml-video-title">SkyMotion quick guide</div>
+          <button class="sml-video-close" type="button" id="smlCloseVideoModal">×</button>
+        </div>
+        <div class="sml-video-embed" id="smlVideoEmbed">
+          <video id="smlGuideVideo" controls playsinline preload="metadata">
+            <source src="https://skymotion-cdn.b-cdn.net/Skymotion.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  `;
+  if (root.parentElement !== document.body) {
+    document.body.appendChild(root);
+  }
+  const form = document.getElementById("smlLoginForm");
+  const emailInput = document.getElementById("sml-email");
+  const passwordInput = document.getElementById("sml-password");
+  const submitBtn = document.getElementById("smlLoginBtn");
+  const errorBox = document.getElementById("smlLoginError");
+  const successBox = document.getElementById("smlLoginSuccess");
+  const loadingNote = document.getElementById("smlLoadingNote");
+  const resetBtn = document.getElementById("smlResetBtn");
+  const googleBtn = document.getElementById("smlGoogleLoginBtn");
+  const watchBtn = document.getElementById("smlWatchGuideBtn");
+  const modal = document.getElementById("smlVideoModal");
+  const closeBtn = document.getElementById("smlCloseVideoModal");
+  const videoEmbed = document.getElementById("smlVideoEmbed");
+  let isSubmitting = false;
+  function showError(message) {
+    if (!errorBox) return;
+    errorBox.textContent = message || "Something went wrong. Please try again.";
+    errorBox.classList.add("is-visible");
+    if (successBox) {
+      successBox.classList.remove("is-visible");
+      successBox.textContent = "";
+    }
+    if (loadingNote) {
+      loadingNote.classList.remove("is-visible");
+    }
+  }
+  function showSuccess(message) {
+    if (!successBox) return;
+    successBox.textContent = message || "Success.";
+    successBox.classList.add("is-visible");
+    if (errorBox) {
+      errorBox.classList.remove("is-visible");
+      errorBox.textContent = "";
+    }
+  }
+  function clearMessages() {
+    if (errorBox) {
+      errorBox.classList.remove("is-visible");
+      errorBox.textContent = "";
+    }
+    if (successBox) {
+      successBox.classList.remove("is-visible");
+      successBox.textContent = "";
+    }
+    if (loadingNote) {
+      loadingNote.classList.remove("is-visible");
+    }
+  }
+  function replaceMemberstackErrorMessages() {
+    const replacements = {
+      "Please login with your email.": "This account was created with email and password. Please log in with email and password.",
+      "Please login with your email": "This account was created with email and password. Please log in with email and password."
+    };
+    function replaceTextNode(node) {
+      if (!node || node.nodeType !== Node.TEXT_NODE) return;
+      Object.keys(replacements).forEach(function (oldText) {
+        if (node.nodeValue && node.nodeValue.includes(oldText)) {
+          node.nodeValue = node.nodeValue.replace(oldText, replacements[oldText]);
+        }
+      });
+    }
+    function scanNode(node) {
+      if (!node) return;
+      if (node.nodeType === Node.TEXT_NODE) {
+        replaceTextNode(node);
+        return;
+      }
+      if (node.childNodes && node.childNodes.length) {
+        node.childNodes.forEach(scanNode);
+      }
+    }
+    scanNode(document.body);
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(scanNode);
+      });
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+  function setSubmitting(active, text) {
+    isSubmitting = active;
+    if (submitBtn) {
+      submitBtn.disabled = active;
+      submitBtn.textContent = text || "LOG IN";
+    }
+  }
+  async function waitForMemberstackDom(retries = 20, delay = 250) {
+    for (let i = 0; i < retries; i++) {
+      if (window.$memberstackDom?.loginMemberEmailPassword) {
+        return window.$memberstackDom;
+      }
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    return null;
+  }
+  function extractMember(result) {
+    return (
+      result?.data?.member ||
+      result?.data ||
+      result?.member ||
+      null
+    );
+  }
+  async function waitForMember(retries = 10, delay = 250) {
+    const memberstack = await waitForMemberstackDom();
+    if (!memberstack?.getCurrentMember) return null;
+    for (let i = 0; i < retries; i++) {
+      try {
+        const result = await memberstack.getCurrentMember();
+        const member = extractMember(result);
+        if (member) return member;
+      } catch (e) {}
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    return null;
+  }
+  function hasProPlan(member) {
+    if (!member) return false;
+    const conns = member.planConnections;
+    if (!Array.isArray(conns)) return false;
+    return conns.some(function (pc) {
+      if (!pc) return false;
+      const id = pc.planId || (pc.plan && pc.plan.id);
+      if (id !== PRO_PLAN_ID) return false;
+      if (pc.active === false) return false;
+      if (pc.status && /cancel|expired|inactive|past_due/i.test(String(pc.status))) return false;
+      return true;
+    });
+  }
+  function destFor(member) {
+    return hasProPlan(member) ? PRO_REDIRECT : FREE_REDIRECT;
+  }
+  function goHome(member) {
+    const dest = destFor(member);
+    try {
+      if (window.top && window.top !== window) {
+        window.top.location.href = dest;
+        return;
+      }
+    } catch (e) {}
+    window.location.href = dest;
+  }
+  async function redirectIfAlreadyLoggedIn() {
+    const memberstack = await waitForMemberstackDom();
+    if (!memberstack?.getCurrentMember) return false;
+    try {
+      const result = await memberstack.getCurrentMember();
+      const member = extractMember(result);
+      if (member) {
+        goHome(member);
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+  function startGoogleRedirectWatcher() {
+    let attempts = 0;
+    const maxAttempts = 60;
+    if (loadingNote) {
+      loadingNote.textContent = "Checking login...";
+      loadingNote.classList.add("is-visible");
+    }
+    const timer = setInterval(async function () {
+      attempts++;
+      const redirected = await redirectIfAlreadyLoggedIn();
+      if (redirected || attempts >= maxAttempts) {
+        clearInterval(timer);
+        if (!redirected && loadingNote) {
+          loadingNote.classList.remove("is-visible");
+        }
+      }
+    }, 500);
+  }
+  function openModal() {
+    if (!modal) return;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    const video = videoEmbed?.querySelector("video");
+    if (video) video.play().catch(() => {});
+  }
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    const video = videoEmbed?.querySelector("video");
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }
+  if (watchBtn) {
+    watchBtn.addEventListener("click", openModal);
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeModal);
+  }
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) closeModal();
+    });
+  }
+  if (googleBtn) {
+    googleBtn.addEventListener("click", function () {
+      clearMessages();
+      if (loadingNote) {
+        loadingNote.textContent = "Opening Google login...";
+        loadingNote.classList.add("is-visible");
+      }
+      setTimeout(startGoogleRedirectWatcher, 1200);
+    });
+  }
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (isSubmitting) return;
+      clearMessages();
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+      const password = passwordInput ? passwordInput.value : "";
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !password) {
+        showError("Enter your email and password.");
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        showError("Please enter a valid email, for example name@gmail.com.");
+        return;
+      }
+      try {
+        setSubmitting(true, "LOGGING IN...");
+        const memberstack = await waitForMemberstackDom();
+        if (!memberstack?.loginMemberEmailPassword) {
+          throw new Error("Memberstack is not ready. Please refresh the page.");
+        }
+        await memberstack.loginMemberEmailPassword({
+          email: email,
+          password: password
+        });
+        const member = await waitForMember();
+        if (!member) {
+          throw new Error("Login completed, but session was not detected.");
+        }
+        showSuccess("Login successful. Opening SkyMotion...");
+        if (loadingNote) {
+          loadingNote.textContent = "Opening SkyMotion...";
+          loadingNote.classList.add("is-visible");
+        }
+        if (AUTO_REDIRECT_AFTER_LOGIN) {
+          goHome(member);
+        }
+      } catch (error) {
+        console.error("SM LOGIN V4 email login error:", error);
+        showError(error?.message || "Access denied. Check your email and password.");
+        setSubmitting(false);
+      }
+    });
+  }
+  if (resetBtn) {
+    resetBtn.addEventListener("click", async function () {
+      clearMessages();
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email) {
+        showError("Enter your email first, then request a reset link.");
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        showError("Please enter a valid email, for example name@gmail.com.");
+        return;
+      }
+      try {
+        resetBtn.disabled = true;
+        resetBtn.textContent = "Sending...";
+        const memberstack = await waitForMemberstackDom();
+        if (!memberstack?.sendMemberResetPasswordEmail) {
+          throw new Error("Password reset is not available.");
+        }
+        await memberstack.sendMemberResetPasswordEmail({ email: email });
+        showSuccess("Password reset email sent. Check your inbox.");
+      } catch (error) {
+        console.error("SM LOGIN V4 reset error:", error);
+        showError(error?.message || "Could not send reset email.");
+      } finally {
+        resetBtn.disabled = false;
+        resetBtn.textContent = "Forgot password?";
+      }
+    });
+  }
+  window.addEventListener("focus", function () {
+    setTimeout(redirectIfAlreadyLoggedIn, 700);
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+      setTimeout(redirectIfAlreadyLoggedIn, 700);
+    }
+  });
+  window.addEventListener("pageshow", function () {
+    if (loadingNote) loadingNote.classList.remove("is-visible");
+    setSubmitting(false);
+    setTimeout(redirectIfAlreadyLoggedIn, 700);
+  });
+  replaceMemberstackErrorMessages();
+  setTimeout(redirectIfAlreadyLoggedIn, 1000);
+  console.log("SM LOGIN V4 rendered — final version");
+})();
+</script>

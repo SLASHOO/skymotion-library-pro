@@ -1,0 +1,1670 @@
+/* =============================================================
+   sm-skin.css — "Landing" visual skin for the Pro Library.
+
+   Loaded LAST (after library-pro.css + plan-viewer-v3.css) so it
+   only overrides the VISUAL layer. It touches NO JavaScript and
+   NO product logic — remove this single <link> to fully revert.
+
+   Goal: bring the Pro Library into the landing page's visual
+   language (Inter Tight, restrained weights, calmer tone).
+   Colour tokens already match the landing, so this is typography
+   and component polish, phase by phase.
+
+   PHASE 0 — typography foundation (font + weights + tracking).
+   ============================================================= */
+
+/* ── Font across both DOM roots (library scope + plan viewer) ── */
+#sm-library-scope,
+#sm-plan-v3-root{
+  font-family:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  letter-spacing:-.01em;
+}
+
+/* ── Headings / titles: premium restraint (was 850–950) ──────── */
+#sm-library-scope .sm-pro-title-row h1{
+  font-weight:600;
+  letter-spacing:-.035em;
+}
+
+#sm-library-scope .sm-pro-title-wrap p{
+  font-weight:450;
+  letter-spacing:-.005em;
+}
+
+/* Move + plan card titles */
+#sm-library-scope .title,
+#sm-library-scope .cardPlan .planCaption{
+  font-weight:600;
+  letter-spacing:-.015em;
+}
+
+#sm-library-scope .cardPlan .planType{
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+
+#sm-library-scope .cardPlan .planMeta{
+  font-weight:500;
+}
+
+/* Tabs (All / Moves / Plans / Packs / Saved) */
+#sm-library-scope .sm-pro-mobile-tabs button{
+  font-weight:550;
+  letter-spacing:-.01em;
+}
+
+/* ── Mono labels / pills: lighter, calmer ────────────────────── */
+#sm-library-scope .badge,
+#sm-library-scope .cardPlan .pill{
+  font-weight:500;
+  letter-spacing:0;
+}
+
+/* =============================================================
+   PHASE 1 — calm the palette to the landing language.
+   The landing is bronze-forward; purple is a rare accent, not a
+   wash. We retire the ambient purple glow and the purple links,
+   and lean on bronze (--accent) like the landing.
+   ============================================================= */
+
+/* page surface: drop the purple ambient glow → calm flat dark + faint top light */
+#sm-library-scope{
+  background:
+    radial-gradient(1100px 700px at 25% -12%, rgba(255,255,255,.045), transparent 55%),
+    #121212 !important;
+}
+
+/* filter / assistant panel: swap the purple radial wash for a soft bronze warmth */
+#sm-library-scope .assistant.sm-pro-desktop-filter,
+#sm-library-scope .assistant.sm-pro-desktop-filter.sm-pro-filter-screen,
+#sm-library-scope .assistant.sm-pro-filter-screen{
+  background:
+    radial-gradient(560px 340px at 16% 0%, rgba(201,154,110,.10), transparent 60%),
+    linear-gradient(180deg, rgba(23,23,24,.965) 0%, rgba(16,16,17,.99) 100%) !important;
+}
+
+/* progress bar: purple → bronze */
+#sm-library-scope .filterProgress__bar,
+#sm-library-scope .assistant.sm-pro-desktop-filter .filterProgress__bar{
+  background:linear-gradient(90deg, #c99a6e, #b98a5f) !important;
+  box-shadow:0 0 16px rgba(201,154,110,.24) !important;
+}
+
+/* section "View all" links: loud purple 900 → quiet bronze */
+#sm-library-scope .sm-pro-section-link{
+  color:var(--accent) !important;
+  font-weight:600 !important;
+  letter-spacing:-.01em !important;
+}
+
+/* section headings ("Featured pack", "Popular moves"…): restrained weight */
+#sm-library-scope .sm-pro-section-head h2{
+  font-weight:600 !important;
+  letter-spacing:-.025em !important;
+}
+
+/* tabs (All / Moves / Plans / Packs / Saved):
+   purple pill + filled active → calm landing underline, bronze accent */
+#sm-library-scope .sm-pro-mobile-tabs{
+  background:transparent !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.07) !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  padding:0 2px !important;
+}
+#sm-library-scope .sm-pro-mobile-tabs button{
+  background:transparent !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  color:rgba(255,255,255,.58) !important;
+  font-weight:500 !important;
+}
+#sm-library-scope .sm-pro-mobile-tabs button:hover{
+  color:var(--ink) !important;
+}
+#sm-library-scope .sm-pro-mobile-tabs button.is-active{
+  color:#fff !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+#sm-library-scope .sm-pro-mobile-tabs button.is-active::after{
+  background:var(--accent) !important;
+  box-shadow:none !important;
+}
+
+/* =============================================================
+   PHASE 2 — one accent (bronze), editorial section labels.
+   ============================================================= */
+
+/* mono/serif tokens for the Pro scope (landing has them, Pro didn't) */
+#sm-library-scope, #sm-plan-v3-root{
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+
+/* primary "Show results" button: orange → bronze solid (the landing's one accent).
+   high specificity to beat .assistant.sm-pro-desktop-filter rules in sm-desktop.css */
+#sm-library-scope .sm-pro-filter-show-bottom,
+#sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-filter-show-bottom{
+  background:var(--accent) !important;
+  color:#1a1209 !important;
+  border:0 !important;
+  box-shadow:none !important;
+  font-weight:600 !important;
+}
+#sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-filter-show-bottom:hover{ background:#d8a878 !important; }
+
+/* Previous / Reset: purple → quiet neutral ghost */
+#sm-library-scope .btn--ghost,
+#sm-library-scope .assistant.sm-pro-desktop-filter #backBtn,
+#sm-library-scope .assistant.sm-pro-desktop-filter #resetBtn{
+  color:rgba(255,255,255,.70) !important;
+  border-color:rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.03) !important;
+}
+#sm-library-scope .assistant.sm-pro-desktop-filter #backBtn:hover,
+#sm-library-scope .assistant.sm-pro-desktop-filter #resetBtn:hover{
+  color:#fff !important;
+  border-color:rgba(255,255,255,.26) !important;
+}
+
+/* top step indicator: purple → bronze */
+#sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-filter-segment{
+  background:rgba(255,255,255,.13) !important;
+  box-shadow:none !important;
+}
+#sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-filter-segment.is-active{
+  background:var(--accent) !important;
+  box-shadow:none !important;
+}
+
+/* section labels → landing "eyebrow": small mono, uppercase, bronze */
+#sm-library-scope .sm-pro-section-head h2{
+  font-family:var(--mono) !important;
+  font-size:11.5px !important;
+  font-weight:500 !important;
+  letter-spacing:.2em !important;
+  text-transform:uppercase !important;
+  color:var(--accent) !important;
+}
+
+/* heavy filter title → restrained */
+#sm-library-scope .sm-pro-filter-title{
+  font-weight:600 !important;
+  letter-spacing:-.03em !important;
+}
+
+/* heavy headings → landing restraint (was 900–950) */
+#sm-library-scope .sm-pro-step-copy h2,
+#sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-step-copy h2{
+  font-weight:600 !important;
+  letter-spacing:-.03em !important;
+}
+#sm-library-scope .sm-pro-pack-content h3,
+#sm-library-scope .sm-pro-pack-card--home-promo-real-estate .sm-pro-pack-content h3{
+  font-weight:600 !important;
+  letter-spacing:-.025em !important;
+}
+/* main brand header — wordmark feel, harmonised with badge + subtitle */
+#sm-library-scope .sm-pro-title-row h1{
+  font-weight:600 !important;
+  letter-spacing:.04em !important;
+}
+/* brand heading is a link to the landing — pure text, no hover effect */
+#sm-library-scope .sm-pro-title-row h1 .sm-skin-home-link{
+  color:inherit !important; text-decoration:none !important;
+  letter-spacing:inherit !important; transition:none !important;
+}
+/* subtitle: align tracking/colour so the block reads as one unit */
+#sm-library-scope .sm-pro-title-wrap p{
+  letter-spacing:-.01em !important;
+  color:rgba(255,255,255,.52) !important;
+}
+
+/* =============================================================
+   PHASE 3 — Moves / Plans tabs: kill the rainbow, one calm system.
+   ============================================================= */
+
+/* difficulty badges (green Basic / purple Intermediate / amber Advanced)
+   → one quiet, uniform mono tag */
+#sm-library-scope .sm-pro-difficulty-pill,
+#sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill--basic,
+#sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill--intermediate,
+#sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill--advanced,
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--basic,
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--intermediate,
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--advanced{
+  color:rgba(255,255,255,.66) !important;
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  font-family:var(--mono) !important;
+  font-weight:500 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+}
+
+/* level filter (All / Basic / Intermediate / Advanced / Saved): purple → bronze */
+#sm-library-scope .sm-pro-level-tabs button.is-active,
+#sm-library-scope .sm-pro-moves-screen .sm-pro-level-tabs button.is-active{
+  color:var(--accent) !important;
+  background:rgba(201,154,110,.12) !important;
+  box-shadow:inset 0 0 0 1px rgba(201,154,110,.22) !important;
+}
+#sm-library-scope .sm-pro-moves-screen .sm-pro-level-tabs button.is-active::after{
+  background:var(--accent) !important;
+}
+
+/* plan cards: drop the purple outline/glow → neutral (purple stays only on the "Plan" pill) */
+#sm-library-scope .cardPlan,
+#sm-library-scope .sm-pro-card-grid .cardPlan,
+#sm-library-scope .sm-pro-plans-screen .cardPlan{
+  border-color:rgba(255,255,255,.10) !important;
+  box-shadow:0 26px 72px rgba(0,0,0,.50) !important;
+}
+#sm-library-scope .sm-pro-plans-screen .cardPlan:hover{
+  border-color:rgba(201,154,110,.45) !important;
+  box-shadow:0 0 0 1px rgba(201,154,110,.20), 0 34px 90px rgba(0,0,0,.62) !important;
+}
+
+/* =============================================================
+   PHASE 4 — PACK DETAIL checklist: kill the paper + handwriting
+   skeuomorphism, rebuild as a clean landing-language card.
+   ============================================================= */
+
+/* wrapper → real card (it used to just hold a paper PNG) */
+#sm-library-scope .sm-pro-pack-sticky-checklist{
+  background:linear-gradient(180deg, rgba(255,255,255,.024), rgba(255,255,255,.006)) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:18px !important;
+  box-shadow:0 26px 64px rgba(0,0,0,.45) !important;
+  padding:22px !important;
+}
+/* remove the paper texture / tape image */
+#sm-library-scope .sm-pro-pack-checklist-paper-img{ display:none !important; }
+
+/* overlay now flows normally inside the card */
+#sm-library-scope .sm-pro-pack-checklist-overlay{
+  position:static !important;
+  inset:auto !important; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
+  overflow:visible !important;
+  color:var(--text) !important;
+  font-family:"Inter Tight", ui-sans-serif, system-ui, sans-serif !important;
+}
+
+/* title → restrained, no cursive/underline/italic */
+#sm-library-scope .sm-pro-pack-checklist-titleRow{ color:var(--text) !important; }
+#sm-library-scope .sm-pro-pack-checklist-titleText{
+  font-family:"Inter Tight", ui-sans-serif, sans-serif !important;
+  font-size:17px !important;
+  font-weight:600 !important;
+  font-style:normal !important;
+  text-decoration:none !important;
+  letter-spacing:-.02em !important;
+  color:var(--text) !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-icon{ color:var(--accent) !important; }
+#sm-library-scope .sm-pro-pack-checklist-line{ background:rgba(255,255,255,.08) !important; }
+
+/* group headings → mono eyebrow, bronze (was handwritten italic) */
+#sm-library-scope .sm-pro-pack-checklist-group{ border-bottom-color:rgba(255,255,255,.07) !important; }
+#sm-library-scope .sm-pro-pack-checklist-group h3{
+  font-family:var(--mono) !important;
+  font-size:10.5px !important;
+  font-weight:500 !important;
+  font-style:normal !important;
+  letter-spacing:.2em !important;
+  text-transform:uppercase !important;
+  color:var(--accent) !important;
+}
+
+/* items + checkboxes → clean */
+#sm-library-scope .sm-pro-pack-checklist-copy{ color:var(--muted) !important; font-size:13px !important; }
+#sm-library-scope .sm-pro-pack-checklist-box{ border-color:rgba(255,255,255,.30) !important; border-radius:4px !important; }
+#sm-library-scope .sm-pro-pack-checklist-item input:checked + .sm-pro-pack-checklist-box{
+  border-color:var(--accent) !important;
+  background:var(--accent) !important;
+  box-shadow:none !important;
+}
+
+/* "Fly safe!" → quiet mono label, not rotated cursive */
+#sm-library-scope .sm-pro-pack-checklist-safe{
+  position:static !important;
+  transform:none !important;
+  display:block !important;
+  margin-top:16px !important;
+  text-align:right !important;
+  font-family:var(--mono) !important;
+  font-size:10px !important;
+  font-weight:500 !important;
+  font-style:normal !important;
+  letter-spacing:.18em !important;
+  text-transform:uppercase !important;
+  color:var(--accent) !important;
+}
+
+/* PHASE 4b — desktop pack detail uses higher-specificity cursive rules
+   (body.sm-pack-detail-open #sm-library-scope …). Match them to win. */
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-sticky-checklist{
+  background:linear-gradient(180deg, rgba(255,255,255,.024), rgba(255,255,255,.006)) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:16px !important;
+  box-shadow:0 26px 64px rgba(0,0,0,.45) !important;
+  padding:22px !important;
+}
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-paper-img{ display:none !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay{
+  position:static !important; inset:auto !important; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
+  overflow:visible !important; color:var(--text) !important;
+  font-family:"Inter Tight",ui-sans-serif,system-ui,sans-serif !important;
+}
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow{ color:var(--text) !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleText{
+  font-family:"Inter Tight",ui-sans-serif,sans-serif !important;
+  font-size:16px !important; font-weight:600 !important; font-style:normal !important;
+  text-decoration:none !important; letter-spacing:-.02em !important; color:var(--text) !important;
+}
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:var(--accent) !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line{ background:rgba(255,255,255,.08) !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-group{ border-bottom-color:rgba(255,255,255,.07) !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-group h3{
+  font-family:var(--mono) !important; font-size:10.5px !important; font-weight:500 !important;
+  font-style:normal !important; letter-spacing:.2em !important; text-transform:uppercase !important; color:var(--accent) !important;
+}
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-copy{ color:var(--muted) !important; font-size:13px !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-box{ border-color:rgba(255,255,255,.30) !important; border-radius:4px !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-item input:checked + .sm-pro-pack-checklist-box{ background:var(--accent) !important; border-color:var(--accent) !important; box-shadow:none !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-safe{
+  position:static !important; transform:none !important; display:block !important; margin-top:14px !important; text-align:right !important;
+  font-family:var(--mono) !important; font-size:10px !important; font-weight:500 !important; font-style:normal !important;
+  letter-spacing:.18em !important; text-transform:uppercase !important; color:var(--accent) !important;
+}
+
+/* =============================================================
+   PHASE 5 — rest of PACK DETAIL into landing language:
+   restrained title, bronze creator + recommended, one calm
+   level tone (no green/purple/amber).
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-hero-copy h1,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-hero-copy h1{
+  font-weight:600 !important; letter-spacing:-.04em !important;
+}
+#sm-library-scope .sm-pro-pack-powered strong,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-powered strong{
+  color:var(--accent) !important; font-weight:600 !important;
+}
+#sm-library-scope .sm-pro-pack-plan-card__recommended,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-plan-card__recommended{
+  color:var(--accent) !important;
+}
+#sm-library-scope .sm-pro-plan-diff--basic,
+#sm-library-scope .sm-pro-plan-diff--intermediate,
+#sm-library-scope .sm-pro-plan-diff--advanced,
+#sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--basic,
+#sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--intermediate,
+#sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--advanced,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-plan-diff--basic,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-plan-diff--intermediate,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-plan-diff--advanced,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--basic,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--intermediate,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-move-card .sm-pro-difficulty-pill--advanced{
+  color:rgba(255,255,255,.62) !important;
+}
+
+/* =============================================================
+   PHASE 6 — flat background like the landing (drop the cover
+   banner) + hide the checklist for now while we sort the layout.
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-bg,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !important; }
+
+#sm-library-scope .sm-pro-pack-sticky-checklist,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-sticky-checklist{ display:none !important; }
+
+/* =============================================================
+   PHASE 7 — rebalance into one centred column. The pack was a
+   two-column layout reserving the right for the (now hidden)
+   checklist, which left the top lopsided. Centre everything to
+   a single consistent max-width and stop the level text clipping.
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-main,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-main{
+  width:auto !important;
+  max-width:1180px !important;
+  margin:0 auto !important;
+  padding:56px 30px 0 !important;
+}
+#sm-library-scope .sm-pro-pack-hero-copy,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-hero-copy{
+  width:auto !important;
+  max-width:720px !important;
+}
+#sm-library-scope .sm-pro-pack-section--start,
+#sm-library-scope .sm-pro-pack-section--plans,
+#sm-library-scope .sm-pro-pack-section--moves,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--start,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--plans,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves{
+  width:auto !important;
+  max-width:none !important;
+}
+/* level text no longer clips on the narrow plan cards */
+#sm-library-scope .sm-pro-pack-plan-card__meta,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-plan-card__meta{
+  white-space:normal !important;
+}
+
+/* =============================================================
+   PHASE 8 — pack background = landing's gray (#121212), not the
+   near-black #030404, so the pack reads like the landing.
+   ============================================================= */
+#sm-library-scope.sm-pro-pack-detail-active,
+#sm-library-scope .sm-pro-pack-detail-screen,
+body.sm-pack-detail-open #sm-library-scope.sm-pro-pack-detail-active,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen{
+  background:
+    radial-gradient(1100px 700px at 25% -12%, rgba(255,255,255,.045), transparent 55%),
+    #121212 !important;
+}
+
+/* =============================================================
+   PHASE 9 — landing-style video backdrop behind the hero
+   (video injected by the script in index.html). Fades into the
+   flat gray page below.
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-bg,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{
+  display:block !important;
+}
+#sm-library-scope .sm-pro-pack-bg video.sm-skin-hero-vid,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg video.sm-skin-hero-vid{
+  position:absolute !important; inset:0 !important;
+  width:100% !important; height:100% !important;
+  object-fit:cover !important; object-position:center 42% !important;
+  filter:saturate(1.04) contrast(1.04) brightness(.72) !important;
+}
+#sm-library-scope .sm-pro-pack-bg::before,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg::before{
+  background:
+    linear-gradient(180deg, rgba(15,15,16,.42) 0%, rgba(15,15,16,.32) 36%, rgba(15,15,16,.68) 72%, var(--bg) 100%) !important;
+}
+#sm-library-scope .sm-pro-pack-bg::after,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg::after{
+  background:linear-gradient(180deg, rgba(18,18,19,0) 0%, rgba(18,18,19,.18) 50%, rgba(18,18,19,.82) 82%, var(--bg) 100%) !important;
+}
+
+/* =============================================================
+   PHASE 10 — collapsible checklist via the product's own button
+   + modal. Show the "Open checklist" button (desktop-hidden) and
+   make the opened modal a clean landing card (no paper/handwriting).
+   ============================================================= */
+
+/* the collapsed affordance: "Open checklist" button */
+#sm-library-scope .sm-pro-pack-checklist-card,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+  width:auto !important;
+  max-width:none !important;
+  margin:46px 0 0 !important;
+  padding:18px 20px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.008)) !important;
+  color:rgba(255,255,255,.92) !important;
+  text-align:left !important;
+  cursor:pointer !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card:hover{ border-color:rgba(201,154,110,.4) !important; }
+/* move the button to the very end (after Moves), before the footer */
+#sm-library-scope .sm-pro-pack-main,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-main{
+  display:flex !important; flex-direction:column !important; align-items:stretch !important;
+}
+#sm-library-scope .sm-pro-pack-hero-copy,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-hero-copy{ align-self:flex-start !important; }
+#sm-library-scope .sm-pro-pack-checklist-card,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{ order:90 !important; }
+#sm-library-scope .sm-pro-pack-footer,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer{ order:100 !important; }
+#sm-library-scope .sm-pro-pack-checklist-card .sm-pro-pack-checklist-icon{ color:#c99a6e !important; }
+#sm-library-scope .sm-pro-pack-checklist-card strong{ font-weight:600 !important; font-size:15px !important; letter-spacing:-.01em !important; color:#fff !important; }
+#sm-library-scope .sm-pro-pack-checklist-card small{ color:rgba(255,255,255,.56) !important; font-size:12.5px !important; font-weight:400 !important; }
+#sm-library-scope .sm-pro-pack-checklist-card em{ margin-left:auto !important; color:#c99a6e !important; font-style:normal !important; }
+
+/* the opened modal (body-level) → clean dark card, no paper / cursive */
+.sm-pro-checklist-sheet{ --acc:#c99a6e; --mn:ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
+.sm-pro-checklist-sheet__panel{
+  background:linear-gradient(180deg, rgba(26,26,28,.98), rgba(16,16,17,.99)) !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-radius:16px !important;
+  box-shadow:0 40px 100px rgba(0,0,0,.6) !important;
+  padding:24px !important;
+  font-family:"Inter Tight",ui-sans-serif,system-ui,sans-serif !important;
+}
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-paper-img{ display:none !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-overlay{
+  position:static !important; inset:auto !important; left:auto !important; right:auto !important; top:auto !important; bottom:auto !important;
+  overflow:visible !important; color:rgba(255,255,255,.9) !important;
+  font-family:"Inter Tight",ui-sans-serif,system-ui,sans-serif !important;
+}
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleRow{ color:rgba(255,255,255,.92) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleText{
+  font-family:"Inter Tight",ui-sans-serif,sans-serif !important; font-size:17px !important; font-weight:600 !important;
+  font-style:normal !important; text-decoration:none !important; letter-spacing:-.02em !important; color:#fff !important;
+}
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-icon{ color:var(--acc) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-line{ background:rgba(255,255,255,.08) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group{ border-bottom-color:rgba(255,255,255,.07) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group h3{
+  font-family:var(--mn) !important; font-size:10.5px !important; font-weight:500 !important; font-style:normal !important;
+  letter-spacing:.2em !important; text-transform:uppercase !important; color:var(--acc) !important;
+}
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-copy{ color:rgba(255,255,255,.6) !important; font-size:13px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-box{ border-color:rgba(255,255,255,.3) !important; border-radius:4px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item input:checked + .sm-pro-pack-checklist-box{ background:var(--acc) !important; border-color:var(--acc) !important; box-shadow:none !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-safe{
+  position:static !important; transform:none !important; display:block !important; margin-top:14px !important; text-align:right !important;
+  font-family:var(--mn) !important; font-size:10px !important; font-weight:500 !important; font-style:normal !important;
+  letter-spacing:.18em !important; text-transform:uppercase !important; color:var(--acc) !important;
+}
+
+/* =============================================================
+   PHASE 11 — finalise: tighten the bottom, compact checklist
+   button, and bring the liked checklist (progress + checkmarks
+   + strike-through) into the opened modal.
+   ============================================================= */
+
+/* tighten the dead space at the bottom of the pack */
+#sm-library-scope .sm-pro-pack-detail-screen,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen{
+  min-height:100vh !important;
+  padding-bottom:0 !important;
+}
+#sm-library-scope .sm-pro-pack-footer,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer{
+  margin-top:50px !important;
+  padding-bottom:0 !important;
+}
+
+/* compact, deliberate checklist button (not a wide empty bar) */
+#sm-library-scope .sm-pro-pack-checklist-card,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
+  max-width:560px !important;
+  align-self:flex-start !important;
+}
+
+/* opened modal: checkmark in the box + strike-through on done */
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-box{ position:relative !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item input:checked + .sm-pro-pack-checklist-box::after{
+  content:"" !important; position:absolute !important; left:50% !important; top:46% !important;
+  width:4px !important; height:8px !important; border:2px solid #15110b !important; border-top:0 !important; border-left:0 !important;
+  transform:translate(-50%,-50%) rotate(45deg) !important;
+}
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item input:checked ~ .sm-pro-pack-checklist-copy{
+  color:rgba(255,255,255,.4) !important;
+  text-decoration:line-through !important;
+  text-decoration-color:rgba(255,255,255,.26) !important;
+}
+
+/* progress block (count + bar) injected by the script in index.html */
+.sm-pro-checklist-sheet .sm-skin-ck-prog{ margin:13px 0 2px !important; }
+.sm-pro-checklist-sheet .sm-skin-ck-count{ font-family:var(--mn) !important; font-size:11px !important; letter-spacing:.04em !important; color:rgba(255,255,255,.5) !important; }
+.sm-pro-checklist-sheet .sm-skin-ck-bar{ margin-top:8px !important; height:3px !important; border-radius:100px !important; background:rgba(255,255,255,.08) !important; overflow:hidden !important; }
+.sm-pro-checklist-sheet .sm-skin-ck-bar i{ display:block !important; height:100% !important; width:0 !important; background:var(--acc) !important; transition:width .35s cubic-bezier(.2,.7,.3,1) !important; }
+
+/* PHASE 11b — modal checklist LAYOUT (scoped rules don't reach the
+   body-level sheet, so replicate them here): small icon, stacked
+   groups, one item per row, proper checkbox. */
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleRow{ display:flex !important; align-items:center !important; gap:10px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-icon{ display:inline-grid !important; place-items:center !important; width:20px !important; height:20px !important; flex:0 0 auto !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-icon svg{ width:18px !important; height:18px !important; fill:none !important; stroke:var(--acc) !important; stroke-width:1.8 !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-groups{ display:flex !important; flex-direction:column !important; gap:16px !important; margin-top:4px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group{ padding:0 0 14px !important; border-bottom:1px solid rgba(255,255,255,.07) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group:last-child{ border-bottom:0 !important; padding-bottom:0 !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group h3{ margin:0 0 10px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-items{ display:flex !important; flex-direction:column !important; gap:3px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item{ display:grid !important; grid-template-columns:18px 1fr !important; align-items:center !important; gap:11px !important; margin:0 !important; cursor:pointer !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item input{ position:absolute !important; opacity:0 !important; pointer-events:none !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-box{ width:18px !important; height:18px !important; border-radius:4px !important; border:1px solid rgba(255,255,255,.3) !important; background:rgba(0,0,0,.2) !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-copy{ padding:6px 0 !important; }
+
+/* =============================================================
+   PHASE 12 — animate the pack signature word-by-word, like the
+   landing slogan (words rise in; last word in bronze).
+   ============================================================= */
+/* bigger signature */
+#sm-library-scope .sm-pro-pack-footer{
+  font-size:clamp(22px, 2.6vw, 34px) !important;
+  font-weight:500 !important;
+  letter-spacing:-.015em !important;
+  margin-bottom:0 !important;
+}
+
+/* ===== our footer (landing-style) at the bottom of the pack ===== */
+#sm-library-scope .sm-skin-foot{ margin-top:64px !important; border-top:1px solid rgba(255,255,255,.10); padding:46px 0 38px; }
+#sm-library-scope .sm-skin-foot__in{ max-width:1180px; margin:0 auto; padding:0 30px; }
+#sm-library-scope .sm-skin-foot__top{ display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+#sm-library-scope .sm-skin-foot__brand{ display:inline-flex; align-items:center; }
+#sm-library-scope .sm-skin-foot__logo{ height:26px; width:auto; display:block; }
+#sm-library-scope .sm-skin-foot__links{ display:flex; gap:24px; flex-wrap:wrap; }
+#sm-library-scope .sm-skin-foot__links a{ color:rgba(255,255,255,.6); font-size:14px; text-decoration:none; transition:color .2s ease; }
+#sm-library-scope .sm-skin-foot__links a:hover{ color:#fff; }
+#sm-library-scope .sm-skin-foot__bottom{ margin-top:26px; padding-top:20px; border-top:1px solid rgba(255,255,255,.06); }
+#sm-library-scope .sm-skin-foot small{ color:rgba(255,255,255,.4); font-size:13px; font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; letter-spacing:.06em; }
+@media (max-width:600px){
+  #sm-library-scope .sm-skin-foot__top{ flex-direction:column; align-items:flex-start; gap:20px; }
+  #sm-library-scope .sm-skin-foot__links{ display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; }
+}
+
+/* =============================================================
+   PHASE 15 — "Open checklist" button: professional + restrained.
+   Neutral outline, small bronze check, clean type, quiet chevron.
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-checklist-card{
+  position:relative !important;
+  background:rgba(255,255,255,.018) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:12px !important;
+  padding:16px 20px !important;
+  gap:13px !important;
+  transition:border-color .18s ease, background .18s ease !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card:hover{
+  border-color:rgba(255,255,255,.20) !important;
+  background:rgba(255,255,255,.03) !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card .sm-pro-pack-checklist-icon{
+  width:auto !important; height:auto !important; border:0 !important; background:none !important;
+  color:var(--accent) !important; font-size:15px !important; flex:0 0 auto !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card em{
+  margin-left:auto !important; color:rgba(255,255,255,.40) !important; font-size:17px !important; font-style:normal !important;
+  transition:transform .18s ease, color .18s ease !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card:hover em{
+  transform:translateX(3px) !important; color:var(--accent) !important;
+}
+
+/* =============================================================
+   PHASE 16 — Move / Plan video player: readable under sunlight,
+   restrained chrome, bronze seek, compact loop + speed controls.
+   Player lives at #sm-library-scope #modal, so the skin reaches it.
+   ============================================================= */
+/* title: drop the 950 weight to the restrained wordmark feel */
+#sm-library-scope #modal .player__title{
+  font-weight:600 !important;
+  letter-spacing:-.01em !important;
+}
+/* seek: a touch taller + bronze fill/thumb (accent-color where supported) */
+#sm-library-scope #modal .player__seek{
+  height:5px !important;
+  accent-color:var(--accent) !important;
+}
+/* controls: solid, high-contrast, sun-readable (dark chip + white text) */
+#sm-library-scope #modal .player .btn{
+  background:rgba(0,0,0,.46) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  color:#fff !important;
+  font-weight:600 !important;
+  letter-spacing:-.005em !important;
+  -webkit-backdrop-filter:blur(6px) !important;
+  backdrop-filter:blur(6px) !important;
+}
+#sm-library-scope #modal .player .btn:hover{
+  border-color:rgba(255,255,255,.4) !important;
+}
+#sm-library-scope #modal .player__time{
+  font-weight:600 !important;
+}
+/* loop + speed cluster — lives in the top bar (uncrowded, sun-reachable) */
+#sm-library-scope #modal .sm-skin-pcluster{
+  display:flex; align-items:center; gap:8px;
+  margin-left:auto; margin-right:8px;
+  pointer-events:auto;
+}
+#sm-library-scope #modal .sm-skin-pbtn{
+  height:44px; min-width:44px; padding:0 12px;
+  display:grid; place-items:center;
+  border-radius:14px; border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.40); color:#fff;
+  font-weight:600; font-size:14px; line-height:1; cursor:pointer;
+  -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  transition:border-color .15s ease, background .15s ease, color .15s ease;
+}
+#sm-library-scope #modal .sm-skin-pbtn:hover{ border-color:rgba(255,255,255,.4); }
+#sm-library-scope #modal .sm-skin-pbtn--loop{ width:44px; padding:0; font-size:19px; }
+#sm-library-scope #modal .sm-skin-pbtn--speed{ min-width:52px; font-variant-numeric:tabular-nums; }
+/* active state (loop on / slowed) → bronze */
+#sm-library-scope #modal .sm-skin-pbtn.is-on{
+  background:rgba(201,154,110,.18); border-color:rgba(201,154,110,.55); color:var(--accent);
+}
+@media (max-width:640px){
+  #sm-library-scope #modal .sm-skin-pbtn{ height:40px; font-size:13px; }
+  #sm-library-scope #modal .sm-skin-pbtn--loop{ width:40px; }
+}
+
+/* =============================================================
+   PHASE 17 — Plan montage line: kill the rainbow (violet/gold/blue
+   gradients), one calm bronze system. Lives at #sm-plan-v3-root.
+   ============================================================= */
+/* all clips → one flat dark chip, no rainbow fill, no white sheen */
+#sm-plan-v3-root .spv3TimelineFlow__clip,
+#sm-plan-v3-root .spv3TimelineFlow__clip--violet,
+#sm-plan-v3-root .spv3TimelineFlow__clip--gold,
+#sm-plan-v3-root .spv3TimelineFlow__clip--blue{
+  background:rgba(255,255,255,.045) !important;
+  box-shadow:0 8px 20px rgba(0,0,0,.22) !important;
+}
+/* active clip → bronze */
+#sm-plan-v3-root .spv3TimelineFlow__clip.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--violet.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--gold.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--blue.is-active{
+  background:rgba(201,154,110,.14) !important;
+  border-color:rgba(201,154,110,.55) !important;
+}
+/* restrained type inside clips (was 900–950) */
+#sm-plan-v3-root .spv3TimelineFlow__num,
+#sm-plan-v3-root .spv3TimelineFlow__dur{
+  font-weight:600 !important;
+  color:rgba(255,255,255,.55) !important;
+}
+#sm-plan-v3-root .spv3TimelineFlow__name{
+  font-weight:600 !important;
+  letter-spacing:-.01em !important;
+}
+/* "Video Timeline" → mono bronze eyebrow, consistent with the rest of Pro */
+#sm-plan-v3-root .spv3TimelineFlow__label{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace !important;
+  font-weight:500 !important;
+  letter-spacing:.2em !important;
+  color:var(--accent) !important;
+}
+/* transition badge active state → bronze (was green/purple gradient) */
+#sm-plan-v3-root .spv3TimelineFlow__transition{
+  font-weight:600 !important;
+}
+#sm-plan-v3-root .spv3TimelineFlow__transition.is-active{
+  color:var(--accent) !important;
+  border-color:rgba(201,154,110,.45) !important;
+  background:rgba(201,154,110,.14) !important;
+}
+
+/* =============================================================
+   PHASE 18 — montage line becomes interactive: tappable clips
+   (jump to that move) + an edit-recipe summary line.
+   ============================================================= */
+#sm-plan-v3-root .spv3TimelineFlow__clip.sm-skin-tl-tap{
+  cursor:pointer;
+  transition:transform .15s ease, border-color .15s ease, background .15s ease;
+}
+#sm-plan-v3-root .spv3TimelineFlow__clip.sm-skin-tl-tap:hover{
+  transform:translateY(-2px);
+  border-color:rgba(201,154,110,.5) !important;
+  background:rgba(201,154,110,.10) !important;
+}
+#sm-plan-v3-root .spv3TimelineFlow__clip.sm-skin-tl-tap:focus-visible{
+  outline:2px solid rgba(201,154,110,.6);
+  outline-offset:2px;
+}
+/* recipe summary under the "Video Timeline" eyebrow */
+#sm-plan-v3-root .sm-skin-tl-sum{
+  margin-top:-6px;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:11px;
+  letter-spacing:.04em;
+  color:rgba(255,255,255,.5);
+}
+
+/* =============================================================
+   PHASE 19 — seamless player → montage transition:
+   remove the rounded panel + the seam line, fade the player
+   bottom fully into the montage dark, neutralise leftover tints.
+   ============================================================= */
+/* flat dark step background (kill the green/purple radials) */
+#sm-plan-v3-root .spv3Step{
+  background:linear-gradient(180deg, rgba(9,10,13,.99), rgba(5,6,8,1)) !important;
+}
+/* drop the visible seam line between player and timeline */
+#sm-plan-v3-root .spv3Step__top{
+  border-bottom:0 !important;
+}
+/* player bottom fades gradually into the montage dark — long + soft,
+   no perceptible line, but still fully hides the edge */
+#sm-plan-v3-root .spv3Step__top::after{
+  background:linear-gradient(180deg,
+    rgba(6,7,10,0) 16%,
+    rgba(6,7,10,.16) 40%,
+    rgba(6,7,10,.42) 58%,
+    rgba(6,7,10,.72) 75%,
+    rgba(6,7,10,.92) 89%,
+    rgba(6,7,10,1) 100%) !important;
+}
+/* montage zone = the exact same flat dark → no visible line */
+#sm-plan-v3-root .spv3Step__bottom{
+  background:rgba(6,7,10,1) !important;
+}
+/* move title to the very top + a light top scrim so it stays legible */
+#sm-plan-v3-root .spv3Step__overlay{
+  top:calc(20px + env(safe-area-inset-top)) !important;
+  bottom:auto !important;
+}
+#sm-plan-v3-root .spv3Step__top::before{
+  content:"" !important;
+  position:absolute !important; inset:0 !important; z-index:3 !important;
+  pointer-events:none !important;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.52) 0%,
+    rgba(0,0,0,.22) 16%,
+    rgba(0,0,0,0) 34%) !important;
+}
+#sm-plan-v3-root .spv3Step__title{
+  font-weight:600 !important;
+  letter-spacing:-.02em !important;
+}
+#sm-plan-v3-root .spv3Step__powered{
+  font-weight:600 !important;
+}
+/* kill the rounded "pill" panel behind the timeline → flat */
+#sm-plan-v3-root .spv3Montage{
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  padding:6px 18px 14px !important;
+}
+/* rotate hint: softer weight, less shouty */
+#sm-library-scope #modal .player__rotateHint{
+  font-weight:600 !important;
+  letter-spacing:-.005em !important;
+}
+#sm-library-scope .sm-pro-pack-footer .sm-skin-w{
+  display:inline-block;
+  margin:0 .3em;
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .6s cubic-bezier(.2,.7,.3,1), transform .6s cubic-bezier(.2,.7,.3,1);
+}
+#sm-library-scope .sm-pro-pack-footer.sm-anim-in .sm-skin-w{ opacity:1; transform:none; }
+
+/* =============================================================
+   PHASE 13 — "+N more moves" tile gets real content (a darkened
+   shot behind it, like the other move tiles) + checklist comfort.
+   ============================================================= */
+#sm-library-scope .sm-pro-pack-more-moves{
+  position:relative !important;
+  overflow:hidden !important;
+  display:flex !important; flex-direction:column !important;
+  align-items:center !important; justify-content:center !important; gap:7px !important;
+  background:#0c0c0d center/cover no-repeat !important;
+  background-image:linear-gradient(180deg, rgba(10,10,11,.5), rgba(10,10,11,.84)), url("https://skymotion-cdn.b-cdn.net/thumb.jpg") !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  cursor:pointer !important;
+  transition:border-color .18s ease, transform .18s ease !important;
+}
+#sm-library-scope .sm-pro-pack-more-moves:hover{ border-color:rgba(201,154,110,.42) !important; transform:translateY(-3px) !important; }
+#sm-library-scope .sm-pro-pack-more-moves strong{ color:#fff !important; font-size:30px !important; font-weight:600 !important; letter-spacing:-.02em !important; }
+#sm-library-scope .sm-pro-pack-more-moves span{ color:rgba(255,255,255,.66) !important; font-family:var(--mono) !important; font-size:10px !important; letter-spacing:.16em !important; text-transform:uppercase !important; }
+#sm-library-scope .sm-pro-pack-more-moves em{ color:var(--accent) !important; font-style:normal !important; font-size:18px !important; line-height:1 !important; }
+
+/* =============================================================
+   PHASE 14 — checklist: side drawer (slides from the right),
+   refined interior, refined open button.
+   ============================================================= */
+
+/* form: centred modal → right-side slide-in drawer */
+.sm-pro-checklist-sheet{ display:block !important; place-items:initial !important; padding:0 !important; }
+.sm-pro-checklist-sheet__backdrop{ background:rgba(0,0,0,.55) !important; backdrop-filter:blur(8px) !important; -webkit-backdrop-filter:blur(8px) !important; }
+.sm-pro-checklist-sheet__panel{
+  position:fixed !important; top:0 !important; left:0 !important; right:auto !important;
+  width:min(450px, 92vw) !important; height:100vh !important; max-height:100vh !important;
+  border-radius:0 !important; border:0 !important; border-right:1px solid rgba(255,255,255,.10) !important;
+  padding:30px 30px 40px !important; overflow:auto !important;
+  box-shadow:30px 0 80px rgba(0,0,0,.55) !important;
+  transform:translateX(-100%) !important;
+  transition:transform .34s cubic-bezier(.2,.7,.3,1) !important;
+}
+.sm-pro-checklist-sheet.is-open .sm-pro-checklist-sheet__panel{ transform:translateX(0) !important; }
+.sm-pro-checklist-sheet__close{
+  right:16px !important; top:16px !important;
+  width:36px !important; height:36px !important;
+  border-radius:10px !important;
+  background:transparent !important;
+  border:1px solid transparent !important;
+  color:rgba(255,255,255,.5) !important;
+  font-size:22px !important; font-weight:200 !important; line-height:1 !important;
+  display:grid !important; place-items:center !important;
+  transition:color .2s ease, background .2s ease, border-color .2s ease !important;
+}
+.sm-pro-checklist-sheet__close:hover{
+  color:var(--acc) !important;
+  background:rgba(201,154,110,.10) !important;
+  border-color:rgba(201,154,110,.40) !important;
+}
+
+/* pack page: single scrollbar (product sets overflow-y:auto on BOTH html and
+   body → two scrollbars). Make body the only scroller. */
+html.sm-pack-detail-open{ overflow-x:hidden !important; overflow-y:auto !important; scrollbar-width:none !important; -ms-overflow-style:none !important; }
+html.sm-pack-detail-open::-webkit-scrollbar{ width:0 !important; height:0 !important; background:transparent !important; }
+body.sm-pack-detail-open{ overflow-x:hidden !important; overflow-y:visible !important; }
+body.sm-pack-detail-open::-webkit-scrollbar{ width:0 !important; height:0 !important; }
+/* while the drawer is closing (sliding out) hide its scrollbar so it never
+   pairs with the page's → no double-scrollbar flash */
+.sm-pro-checklist-sheet:not(.is-open) .sm-pro-checklist-sheet__panel{ overflow:hidden !important; }
+/* subtle scrollbar inside the drawer */
+.sm-pro-checklist-sheet__panel{ scrollbar-width:thin !important; scrollbar-color:rgba(255,255,255,.18) transparent !important; }
+.sm-pro-checklist-sheet__panel::-webkit-scrollbar{ width:8px !important; }
+.sm-pro-checklist-sheet__panel::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.16) !important; border-radius:8px !important; }
+.sm-pro-checklist-sheet__panel::-webkit-scrollbar-track{ background:transparent !important; }
+
+/* interior polish */
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleText{ font-size:19px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-groups{ gap:20px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group{ padding-bottom:18px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-group h3{ margin:0 0 12px !important; font-size:11px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-items{ gap:6px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-item{ padding:4px 0 !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-copy{ font-size:14px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-box{ width:20px !important; height:20px !important; }
+/* progress: clear stat in the header + a real, visible bronze bar (no double line) */
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-line{ display:none !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleRow{ padding-right:44px !important; }
+.sm-pro-checklist-sheet .sm-pro-pack-checklist-titleRow .sm-skin-ck-count{
+  margin-left:12px !important;
+  font-family:var(--mn) !important; font-size:12.5px !important; letter-spacing:.04em !important;
+  color:rgba(255,255,255,.55) !important;
+}
+.sm-pro-checklist-sheet .sm-skin-ck-bar{
+  margin:16px 0 8px !important; height:6px !important; border-radius:100px !important;
+  background:rgba(255,255,255,.10) !important; overflow:hidden !important;
+}
+.sm-pro-checklist-sheet .sm-skin-ck-bar i{
+  display:block !important; height:100% !important; width:0 !important;
+  background:var(--acc) !important; transition:width .35s cubic-bezier(.2,.7,.3,1) !important;
+}
+
+/* open button: cleaner, more deliberate */
+#sm-library-scope .sm-pro-pack-checklist-card,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
+  max-width:480px !important;
+  padding:17px 22px !important;
+  gap:15px !important;
+  border-radius:13px !important;
+}
+#sm-library-scope .sm-pro-pack-checklist-card em{ font-size:22px !important; }
+#sm-library-scope .sm-pro-pack-footer .sm-skin-w:last-of-type{ color:var(--accent) !important; }
+@media (prefers-reduced-motion:reduce){
+  #sm-library-scope .sm-pro-pack-footer .sm-skin-w{ opacity:1; transform:none; transition:none; }
+}
+
+
+/* =============================================================
+   PHASE 5 — PACK DETAIL into the Pro library language (home style).
+   ============================================================= */
+
+/* pack title → restrained (was 800–950 / huge) */
+#sm-library-scope .sm-pro-pack-hero-copy h1{
+  font-weight:600 !important;
+  letter-spacing:-.04em !important;
+}
+
+/* "powered by Creator" → bronze, not purple */
+#sm-library-scope .sm-pro-pack-powered strong{
+  color:var(--accent) !important;
+  font-weight:600 !important;
+}
+
+/* section labels (Start here / Plans / Moves) → bronze mono eyebrow, like home */
+#sm-library-scope .sm-pro-pack-section-head h2{
+  font-family:var(--mono) !important;
+  font-size:11px !important;
+  font-weight:500 !important;
+  letter-spacing:.2em !important;
+  text-transform:uppercase !important;
+  color:var(--accent) !important;
+}
+
+/* RECOMMENDED → bronze, calm */
+#sm-library-scope .sm-pro-pack-plan-card__recommended{
+  color:var(--accent) !important;
+  font-family:var(--mono) !important;
+  font-weight:500 !important;
+  letter-spacing:.14em !important;
+}
+
+/* level labels — kill the rainbow (green / purple / amber) → one neutral mono */
+#sm-library-scope .sm-pro-plan-diff--basic,
+#sm-library-scope .sm-pro-plan-diff--intermediate,
+#sm-library-scope .sm-pro-plan-diff--advanced{
+  color:rgba(255,255,255,.60) !important;
+}
+#sm-library-scope .sm-pro-pack-move-card__meta .sm-pro-difficulty-pill,
+#sm-library-scope .sm-pro-pack-move-card__meta .sm-pro-difficulty-pill--basic,
+#sm-library-scope .sm-pro-pack-move-card__meta .sm-pro-difficulty-pill--intermediate,
+#sm-library-scope .sm-pro-pack-move-card__meta .sm-pro-difficulty-pill--advanced{
+  color:rgba(255,255,255,.60) !important;
+  background:transparent !important;
+  border:0 !important;
+  font-family:var(--mono) !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+}
+
+/* pack plan cards: neutral border (purple → hairline) */
+#sm-library-scope .sm-pro-pack-plan-card{
+  border-color:rgba(255,255,255,.10) !important;
+}
+#sm-library-scope .sm-pro-pack-plan-card.is-featured{
+  border-color:rgba(201,154,110,.30) !important;
+}
+
+/* inline "Open checklist" card → clean bronze accent */
+#sm-library-scope .sm-pro-pack-checklist-icon{ color:var(--accent) !important; }
+
+/* card hover accents: purple → bronze */
+#sm-library-scope .card:hover{ border-color:rgba(201,154,110,.35) !important; }
+#sm-library-scope .cardPlan:hover{
+  border-color:rgba(201,154,110,.40) !important;
+  box-shadow:0 22px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(201,154,110,.18) !important;
+}
+
+/* =============================================================
+   PHASE 20 — filter 1:1 with the FREE library: exact font, colours
+   (incl. the purple accent), weights, chips. Scoped to .assistant,
+   overriding both the Pro filter system and the Pro skin typography.
+   ============================================================= */
+/* Pro typography inside the filter panel (Inter Tight, like the rest of Pro) */
+#sm-library-scope .assistant,
+#sm-library-scope .assistant *{
+  font-family:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif !important;
+  letter-spacing:-.01em !important;
+}
+/* panel background — calm: drop the ambient purple radial, keep a subtle
+   bronze glow. Purple stays only as a functional accent (user bubble / hover). */
+#sm-library-scope .assistant,
+#sm-library-scope .assistant.sm-pro-desktop-filter,
+#sm-library-scope .assistant.sm-pro-filter-screen{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.10)),
+    radial-gradient(600px 320px at 20% 0%, rgba(201,154,110,.08), transparent 55%),
+    #141414 !important;            /* solid — no bleed-through (esp. mobile drawer) */
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.40) !important;
+}
+/* ============================================================
+   FILTER — rebuilt 1:1 from the FREE library.
+   • Desktop: "Filters" title + "Show N moves", no Back (sidebar).
+   • Mobile : full-screen slide-in drawer, "← Back to library" + "Show N moves",
+     title hidden, solid bg, no bronze bottom button.
+   No Pro "Shoot Builder" mobile filter — this fully overrides it.
+   ============================================================ */
+/* ---- desktop: "Filters" title + "Show N moves", no Back, no bronze bottom button ---- */
+#sm-library-scope .assistant .assistant__title{ display:block !important; font-weight:950 !important; letter-spacing:.2px !important; }
+#sm-library-scope .assistant .assistant__backToResults{ display:none !important; }
+#sm-library-scope .assistant .assistant__close{ display:none !important; }
+/* count button — exact free style; inline-block (NOT flex, which collapses the spaces → "Show43moves") */
+#sm-library-scope .assistant #showResultsBtn,
+#sm-library-scope .assistant .assistant__count{
+  display:inline-block !important;
+  border:1px solid rgba(201,154,110,.28) !important;
+  background:linear-gradient(180deg, rgba(201,154,110,.16), rgba(255,255,255,.035)) !important;
+  color:rgba(255,255,255,.92) !important;
+  padding:9px 12px !important;
+  border-radius:999px !important;
+  font-size:12.5px !important;
+  font-weight:600 !important;
+  letter-spacing:-.01em !important;
+  white-space:nowrap !important;
+  width:auto !important; min-width:0 !important; height:auto !important;
+}
+#sm-library-scope .sm-pro-filter-show-bottom{ display:none !important; }
+
+/* ---- mobile drawer (free library): solid bg, FULL-SCREEN (no border-radius), back shown, title hidden ---- */
+@media (max-width:900px){
+  #sm-library-scope .assistant{
+    position:fixed !important; inset:0 !important; margin:0 !important;
+    width:auto !important; height:100dvh !important;
+    border:0 !important; border-radius:0 !important;
+    background:#121212 !important;
+  }
+  #sm-library-scope .assistant .assistant__backToResults{ display:block !important; }
+  #sm-library-scope .assistant .assistant__title{ display:none !important; }
+}
+/* ---- filter polish: no scrollbar, purple bot avatars, lighter & cleaner fonts/capsules ---- */
+#sm-library-scope .assistant .chat{ scrollbar-width:none !important; -ms-overflow-style:none !important; }
+#sm-library-scope .assistant .chat::-webkit-scrollbar{ width:0 !important; height:0 !important; display:none !important; }
+#sm-library-scope .assistant .msg .avatar{
+  background:
+    radial-gradient(circle at 30% 28%, rgba(201,154,110,.14), transparent 56%),
+    radial-gradient(circle at 76% 24%, rgba(120,59,226,.38), transparent 58%),
+    rgba(0,0,0,.36) !important;
+  border:1px solid rgba(120,59,226,.22) !important;
+}
+#sm-library-scope .assistant .msg .bubble{ font-weight:430 !important; letter-spacing:-.005em !important; }
+#sm-library-scope .assistant .options .opt{ font-weight:560 !important; letter-spacing:-.005em !important; }
+#sm-library-scope .assistant .assistant__heading .assistant__backToResults{ font-weight:600 !important; }
+#sm-library-scope .assistant .chat .msg--user .bubble{ font-weight:500 !important; }
+/* hide the Pro filter hero (brand row + progress segments) */
+#sm-library-scope .sm-pro-filter-hero{ display:none !important; }
+/* plain "Filters / Show N moves" header back (Pro hid it for the hero) */
+#sm-library-scope .assistant .assistant__header,
+#sm-library-scope .assistant.sm-pro-desktop-filter .assistant__header,
+#sm-library-scope .assistant.sm-pro-filter-screen .assistant__header{
+  position:static !important; width:auto !important; height:auto !important;
+  clip:auto !important; white-space:normal !important; overflow:visible !important;
+  padding:14px 16px !important; border:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.06) !important;
+  background:rgba(0,0,0,.10) !important;
+}
+#sm-library-scope .assistant .assistant__title{
+  font-weight:950 !important; letter-spacing:.2px !important; color:var(--text) !important;
+}
+/* count pill — exact free bronze */
+#sm-library-scope .assistant .assistant__count{
+  border:1px solid rgba(201,154,110,.28) !important;
+  background:linear-gradient(180deg, rgba(201,154,110,.16), rgba(255,255,255,.035)) !important;
+  color:rgba(255,255,255,.92) !important;
+  padding:9px 12px !important; border-radius:999px !important;
+  font-size:12px !important; font-weight:950 !important;
+}
+/* chat bubbles — exact free */
+#sm-library-scope .assistant .bubble{
+  max-width:320px !important; padding:10px 12px !important; border-radius:12px !important;
+  border:1px solid rgba(255,255,255,.09) !important; background:rgba(255,255,255,.035) !important;
+  font-size:14px !important; line-height:1.4 !important; font-weight:400 !important;
+  color:var(--text) !important;
+}
+#sm-library-scope .assistant .msg--user .bubble{
+  max-width:280px !important;
+  background:linear-gradient(180deg, rgba(120,59,226,.16), rgba(255,255,255,.04)) !important;
+  border-color:rgba(120,59,226,.20) !important; color:rgba(255,255,255,.94) !important;
+  font-size:13px !important; line-height:1.35 !important;
+}
+#sm-library-scope .assistant .avatar{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(201,154,110,.22), transparent 60%),
+    rgba(0,0,0,.35) !important;
+  border:1px solid var(--line) !important;
+}
+/* options layout — exact free */
+#sm-library-scope .assistant .options,
+#sm-library-scope .options.sm-env-visual-grid,
+#sm-library-scope .options.sm-env-visual-grid--desktop,
+#sm-library-scope .options.sm-pro-pill-grid,
+#sm-library-scope .options.sm-pro-pill-grid--desktop{
+  display:flex !important; flex-wrap:wrap !important; gap:8px !important;
+  grid-template-columns:none !important; margin:8px 0 16px 38px !important; padding:0 !important;
+}
+/* every option (env card / pill) → exact free chip */
+#sm-library-scope .assistant .opt,
+#sm-library-scope .opt.sm-env-card,
+#sm-library-scope .options.sm-pro-pill-grid--desktop .opt,
+#sm-library-scope .options.sm-pro-pill-grid .opt{
+  display:inline-flex !important; align-items:center !important;
+  width:auto !important; min-height:0 !important; height:auto !important;
+  padding:7px 12px !important; border-radius:999px !important;
+  border:1px solid var(--line) !important; background:rgba(255,255,255,.03) !important;
+  color:var(--text) !important; font-size:13px !important; font-weight:850 !important;
+  box-shadow:none !important; text-align:center !important;
+}
+#sm-library-scope .assistant .opt:hover,
+#sm-library-scope .opt.sm-env-card:hover,
+#sm-library-scope .options.sm-pro-pill-grid--desktop .opt:hover,
+#sm-library-scope .options.sm-pro-pill-grid .opt:hover{
+  transform:translateY(-1px) !important;
+  border-color:rgba(120,59,226,.45) !important;
+  background:rgba(120,59,226,.10) !important; box-shadow:none !important;
+}
+/* env cards: strip the photo/overlay, show label as plain chip text */
+#sm-library-scope .sm-env-card__img,
+#sm-library-scope .sm-env-card__paint{ display:none !important; }
+#sm-library-scope .opt.sm-env-card::after{ display:none !important; }
+#sm-library-scope .sm-env-card__label{
+  position:static !important; inset:auto !important;
+  font-size:13px !important; font-weight:850 !important;
+  text-shadow:none !important; color:var(--text) !important;
+}
+/* footer progress — exact free bronze→purple */
+#sm-library-scope .assistant .filterProgress{
+  height:5px !important; background:rgba(255,255,255,.07) !important;
+  border:1px solid rgba(255,255,255,.06) !important; border-radius:999px !important;
+}
+#sm-library-scope .assistant .filterProgress__bar{
+  background:linear-gradient(90deg, rgba(201,154,110,.95), rgba(120,59,226,.75)) !important;
+  box-shadow:0 0 18px rgba(201,154,110,.18) !important;
+}
+/* filter help — exact free bronze */
+#sm-library-scope .assistant .filterHelp{
+  border:1px solid rgba(201,154,110,.26) !important;
+  background:rgba(201,154,110,.08) !important; color:rgba(255,255,255,.82) !important;
+}
+
+/* --- switch the Pro "Shoot Builder" presentation back to the free chat --- */
+/* kill the "Shoot Builder" subtitle under the title */
+#sm-library-scope .assistant .assistant__title::after{
+  content:none !important; display:none !important;
+}
+/* header: free height/background (Pro made it tall + gradient) */
+#sm-library-scope .assistant.sm-pro-desktop-filter .assistant__header,
+#sm-library-scope .assistant.sm-pro-filter-screen .assistant__header{
+  min-height:0 !important;
+  background:rgba(0,0,0,.10) !important;
+}
+/* hide the progress segments (free uses the thin footer bar instead) */
+#sm-library-scope .sm-pro-filter-segments,
+#sm-library-scope .sm-pro-filter-segment{ display:none !important; }
+/* hide the big step-copy heading/help that replaced the chat bubbles */
+#sm-library-scope .sm-pro-desktop-step-copy,
+#sm-library-scope .sm-pro-step-copy,
+#sm-library-scope .sm-pro-step-kicker{ display:none !important; }
+/* bring back the free chat bubbles + avatars (Pro hid them in step-mode) */
+#sm-library-scope .chat.sm-pro-desktop-step-mode .msg{ display:flex !important; }
+#sm-library-scope .chat.sm-pro-desktop-step-mode .bubble{ display:block !important; }
+#sm-library-scope .chat.sm-pro-desktop-step-mode .avatar{ display:block !important; }
+/* env cards: force the true chip (beat the 132px tile box at full specificity) */
+#sm-library-scope .options.sm-env-visual-grid--desktop .opt.sm-env-card,
+#sm-library-scope .options.sm-env-visual-grid .opt.sm-env-card{
+  display:inline-flex !important; align-items:center !important;
+  width:auto !important; min-height:0 !important; height:auto !important;
+  padding:7px 12px !important; border-radius:999px !important;
+  border:1px solid var(--line) !important; background:rgba(255,255,255,.03) !important;
+  box-shadow:none !important;
+}
+#sm-library-scope .options.sm-env-visual-grid--desktop .opt.sm-env-card:hover,
+#sm-library-scope .options.sm-env-visual-grid .opt.sm-env-card:hover{
+  transform:translateY(-1px) !important;
+  border-color:rgba(120,59,226,.45) !important;
+  background:rgba(120,59,226,.10) !important;
+}
+
+/* --- exact free details: panel, bubbles, caret, footer, ghost btns, anims --- */
+#sm-library-scope .assistant{ border-radius:20px !important; }
+#sm-library-scope .assistant .chat{ padding:16px !important; }
+#sm-library-scope .assistant .msg{
+  display:flex !important; gap:10px !important; margin-bottom:12px !important; align-items:flex-end !important;
+}
+#sm-library-scope .assistant .msg--user{ justify-content:flex-end !important; }
+#sm-library-scope .assistant .avatar{ width:28px !important; height:28px !important; border-radius:999px !important; }
+#sm-library-scope .assistant .bubble{
+  box-shadow:0 6px 18px rgba(0,0,0,.28) !important; word-break:break-word !important;
+}
+#sm-library-scope .assistant .msg--user .bubble{ margin-left:auto !important; padding:9px 12px !important; }
+#sm-library-scope .assistant .bubble .caret{
+  display:inline-block !important; width:8px !important; height:14px !important;
+  margin-left:2px !important; vertical-align:-2px !important; border-radius:2px !important;
+  background:rgba(255,255,255,.50) !important; animation:smCaretBlink .9s infinite !important;
+}
+#sm-library-scope .assistant .assistant__count:hover{
+  transform:translateY(-1px) !important; border-color:rgba(201,154,110,.48) !important;
+  background:linear-gradient(180deg, rgba(201,154,110,.22), rgba(255,255,255,.045)) !important;
+}
+#sm-library-scope .assistant .assistant__footer{
+  gap:12px !important; padding:12px !important;
+  border-top:1px solid rgba(255,255,255,.06) !important; background:rgba(0,0,0,.10) !important;
+}
+#sm-library-scope .assistant .assistant__footerRow{
+  display:grid !important; grid-template-columns:1fr 1fr !important; gap:10px !important;
+}
+#sm-library-scope .assistant .btn--ghost{
+  background:rgba(255,255,255,.03) !important; border:1px solid var(--line) !important;
+  color:var(--text) !important; border-radius:12px !important; padding:10px 12px !important; font-weight:900 !important;
+}
+#sm-library-scope .assistant .btn--ghost:hover{
+  border-color:rgba(255,255,255,.16) !important; background:rgba(255,255,255,.04) !important;
+}
+#sm-library-scope .assistant .opt{
+  transition:transform .12s ease, background .12s ease, border-color .12s ease !important;
+}
+#sm-library-scope .assistant .opt:disabled{ opacity:.55 !important; cursor:not-allowed !important; }
+#sm-library-scope .assistant .opt.is-shaking{
+  animation:smShake .34s ease !important;
+  border-color:rgba(201,154,110,.62) !important; background:rgba(201,154,110,.12) !important;
+}
+#sm-library-scope .assistant .filterHelp{
+  margin:0 0 14px 38px !important; max-width:270px !important; padding:10px 12px !important;
+  border-radius:14px !important; font-size:12px !important; line-height:1.35 !important;
+}
+@keyframes smCaretBlink{ 0%,49%{ opacity:.85; } 50%,100%{ opacity:0; } }
+@keyframes smShake{
+  0%{ transform:translateX(0); } 20%{ transform:translateX(-5px); } 40%{ transform:translateX(5px); }
+  60%{ transform:translateX(-4px); } 80%{ transform:translateX(4px); } 100%{ transform:translateX(0); }
+}
+
+/* rebalance the columns: the filter no longer needs the wide Shoot-Builder
+   sidebar (was 380–420px) — narrow it so the content grid gets the room. */
+@media (min-width:901px){
+  #sm-library-scope{ --side:340px !important; }
+}
+
+/* =============================================================
+   PHASE 21 — free/Pro gating: locked cards, PRO badge, hide save
+   for free, Saved-tab message. (Injector adds .sm-locked / classes.)
+   ============================================================= */
+/* locked card: dim + centered lock + "Unlock with Pro" (style C) */
+#sm-library-scope .sm-locked{ position:relative; }
+#sm-library-scope .sm-locked::after{ content:none !important; }
+#sm-library-scope .sm-lock{
+  position:absolute; inset:0; z-index:6; pointer-events:none; border-radius:inherit;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(9,9,13,.58);
+}
+#sm-library-scope .sm-lock__c{
+  display:flex; flex-direction:column; align-items:center; gap:7px; text-align:center;
+  padding:0 10px;
+}
+#sm-library-scope .sm-lock__c svg{ width:24px; height:24px; color:var(--accent); }
+#sm-library-scope .sm-lock__c span{
+  color:#fff; font-size:13px; font-weight:600; letter-spacing:-.01em;
+  text-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+/* locked cards lift on hover like the others */
+#sm-library-scope .sm-locked:hover .sm-lock{ background:rgba(9,9,13,.5); }
+/* free users can't save → hide the bookmark buttons entirely */
+#sm-library-scope.sm-free .sm-save,
+#sm-library-scope.sm-free .sm-pro-pack-save{ display:none !important; }
+/* pack gating: keep the card bright (value visible), just a small PRO tag;
+   click opens the pack value popup, not a bare paywall */
+#sm-library-scope .sm-pack-gated{ cursor:pointer; }
+#sm-library-scope .sm-pack-tag{
+  position:absolute; top:14px; right:14px; z-index:6; pointer-events:none;
+  display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px;
+  background:rgba(0,0,0,.5); border:1px solid rgba(201,154,110,.6);
+  color:var(--accent); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:10px; letter-spacing:.12em; line-height:1;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+}
+#sm-library-scope .sm-pack-tag svg{ width:12px; height:12px; }
+#sm-library-scope .sm-pack-tag b{ font-weight:600; }
+/* Saved tab → Pro message: centered, editorial, with a faint "saved cards"
+   ghost behind it for context/desire. Neutral (no bronze), restrained CTA. */
+#sm-library-scope .sm-saved-msg{
+  grid-column:1 / -1;
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  min-height:min(56vh, 520px); padding:40px 24px; text-align:center;
+}
+#sm-library-scope .sm-saved-msg__ic{ display:none; }
+#sm-library-scope .sm-saved-msg__ghost{
+  position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.07;
+}
+/* 3 cards on a centred track; each shifts one slot right (1→2→3→1) on a loop */
+#sm-library-scope .sm-saved-msg__ghost i{
+  position:absolute; top:50%; left:50%; margin:-64px 0 0 -318px;
+  width:200px; height:128px; border-radius:16px; background:#fff;
+  will-change:opacity, transform;
+  animation:smSavedRotate 9s ease-in-out infinite;
+}
+#sm-library-scope .sm-saved-msg__ghost i:nth-child(2){ animation-delay:-3s; }
+#sm-library-scope .sm-saved-msg__ghost i:nth-child(3){ animation-delay:-6s; }
+@keyframes smSavedRotate{
+  0%    { transform:translateX(0);     opacity:1; }
+  28%   { transform:translateX(0);     opacity:1; }
+  33%   { transform:translateX(218px); opacity:1; }
+  61%   { transform:translateX(218px); opacity:1; }
+  66%   { transform:translateX(436px); opacity:1; }
+  92%   { transform:translateX(436px); opacity:1; }
+  95%   { transform:translateX(436px); opacity:0; }
+  95.5% { transform:translateX(0);     opacity:0; }
+  100%  { transform:translateX(0);     opacity:1; }
+}
+@media (prefers-reduced-motion:reduce){
+  #sm-library-scope .sm-saved-msg__ghost i{ animation:none; }
+  #sm-library-scope .sm-saved-msg__ghost i:nth-child(1){ transform:translateX(0); }
+  #sm-library-scope .sm-saved-msg__ghost i:nth-child(2){ transform:translateX(218px); }
+  #sm-library-scope .sm-saved-msg__ghost i:nth-child(3){ transform:translateX(436px); }
+}
+#sm-library-scope .sm-saved-msg__in{ position:relative; z-index:1; max-width:430px; }
+#sm-library-scope .sm-saved-msg h3{
+  margin:0 0 10px; font-size:23px; font-weight:600; letter-spacing:-.025em; color:var(--text);
+}
+#sm-library-scope .sm-saved-msg p{
+  margin:0 0 18px; font-size:14px; line-height:1.55; color:rgba(255,255,255,.58);
+}
+#sm-library-scope .sm-saved-msg__btn{
+  appearance:none; cursor:pointer; padding:0 0 3px; border:0; border-radius:0;
+  background:transparent; color:var(--text); font-size:14.5px; font-weight:500;
+  border-bottom:1px solid rgba(255,255,255,.35); transition:border-color .15s ease;
+}
+#sm-library-scope .sm-saved-msg__btn:hover{ border-bottom-color:rgba(255,255,255,.85); }
+@media (max-width:560px){
+  #sm-library-scope .sm-saved-msg__row i{ width:140px; height:92px; }
+}
+/* free users: hide the real saved content, show only the Pro message */
+#sm-library-scope.sm-saved-locked .sm-pro-saved-screen{ display:none !important; }
+/* Saved sub-tab inside Moves: hide the saved list, show the Pro ghost message */
+#sm-library-scope .sm-pro-moves-screen.sm-saved-locked .sm-pro-move-list{ display:none !important; }
+/* mobile: the sub-screen rule hides the header/tabs/filter — for the locked Saved tab keep them
+   visible so it behaves exactly like the PC page (message just sits in the content area) */
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope.sm-pro-subscreen.sm-saved-locked .sm-pro-mobile-top{ display:flex !important; }
+  #sm-library-scope.sm-pro-subscreen.sm-saved-locked .sm-pro-mobile-tabs{ display:grid !important; }
+  #sm-library-scope.sm-pro-subscreen.sm-saved-locked > .library > .mobile-open{ display:flex !important; }
+  /* match the home layout exactly (sub-screen used padding:18px 14px 22px / gap:0) */
+  #sm-library-scope.sm-pro-subscreen.sm-saved-locked .library{ padding:12px !important; gap:12px !important; }
+}
+
+/* =============================================================
+   PHASE 22 — Plans tab: compact, multi-column cards.
+   (Was 2 columns of 520px giants with a purple border.)
+   ============================================================= */
+#sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid,
+#sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid{
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap:16px !important;
+  align-items:start !important;
+}
+#sm-library-scope .sm-pro-plans-screen .cardPlan{
+  min-height:300px !important;
+  border-radius:22px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:0 14px 44px rgba(0,0,0,.38) !important;
+}
+#sm-library-scope .sm-pro-plans-screen .cardPlan:hover{
+  border-color:rgba(201,154,110,.40) !important;
+  box-shadow:0 22px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(201,154,110,.18) !important;
+}
+
+/* =============================================================
+   PHASE 23 — bronze diet. Bronze stays ONLY as a rare "Pro"
+   signal (PRO badge, pack PRO tag, upgrade CTAs). Everything
+   else that was bronze → neutral white/grey. Loaded last → wins.
+   ============================================================= */
+/* eyebrow labels + "View all" stay BRONZE (kept by request) */
+/* powered-by / recommended */
+#sm-library-scope .sm-pro-pack-powered strong{ color:rgba(255,255,255,.72) !important; }
+#sm-library-scope .sm-pro-pack-plan-card__recommended{ color:rgba(255,255,255,.55) !important; }
+/* featured-pack CARD → kill leftover purple ("POWERED BY" pill + "Best for:" line) */
+#sm-library-scope .sm-pro-pack-badge{
+  background:rgba(0,0,0,.45) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  color:rgba(255,255,255,.92) !important;
+  font-weight:700 !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22) !important;
+}
+#sm-library-scope .sm-pro-pack-content p{ color:rgba(255,255,255,.7) !important; }
+/* card / plan hovers → subtle neutral */
+#sm-library-scope .card:hover{ border-color:rgba(255,255,255,.22) !important; }
+#sm-library-scope .cardPlan:hover,
+#sm-library-scope .sm-pro-plans-screen .cardPlan:hover{
+  border-color:rgba(255,255,255,.22) !important;
+  box-shadow:0 22px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.10) !important;
+}
+#sm-library-scope .sm-pro-pack-plan-card.is-featured{ border-color:rgba(255,255,255,.20) !important; }
+#sm-library-scope .sm-pro-pack-more-moves:hover{ border-color:rgba(255,255,255,.28) !important; }
+#sm-library-scope .sm-pro-pack-more-moves em{ color:rgba(255,255,255,.75) !important; }
+/* footer signature accent word */
+#sm-library-scope .sm-pro-pack-footer .sm-skin-w:last-of-type{ color:rgba(255,255,255,.92) !important; }
+/* filter accents (count pill, progress, avatar, filterHelp) stay BRONZE (kept by request) */
+/* checklist accents */
+#sm-library-scope .sm-pro-pack-checklist-icon,
+#sm-library-scope .sm-pro-pack-checklist-card .sm-pro-pack-checklist-icon,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rgba(255,255,255,.72) !important; }
+#sm-library-scope .sm-pro-pack-checklist-card em{ color:rgba(255,255,255,.6) !important; }
+#sm-library-scope .sm-pro-pack-checklist-card:hover{ border-color:rgba(255,255,255,.2) !important; }
+.sm-pro-checklist-sheet{ --acc:rgba(255,255,255,.85) !important; }
+/* montage active clip + transition */
+#sm-plan-v3-root .spv3TimelineFlow__clip.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--violet.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--gold.is-active,
+#sm-plan-v3-root .spv3TimelineFlow__clip--blue.is-active{
+  background:rgba(255,255,255,.10) !important; border-color:rgba(255,255,255,.30) !important;
+}
+#sm-plan-v3-root .spv3TimelineFlow__transition.is-active{
+  color:#fff !important; border-color:rgba(255,255,255,.30) !important; background:rgba(255,255,255,.10) !important;
+}
+#sm-plan-v3-root .spv3TimelineFlow__clip.sm-skin-tl-tap:hover{
+  border-color:rgba(255,255,255,.3) !important; background:rgba(255,255,255,.08) !important;
+}
+/* player loop/speed active + seek */
+#sm-library-scope #modal .sm-skin-pbtn.is-on{
+  background:rgba(255,255,255,.16) !important; border-color:rgba(255,255,255,.4) !important; color:#fff !important;
+}
+#sm-library-scope #modal .player__seek{ accent-color:#fff !important; }
+/* locked card: keep corner PRO tag bronze, centre icon neutral */
+#sm-library-scope .sm-lock__c svg{ color:rgba(255,255,255,.82) !important; }
+/* free header badge → neutral "Basic" tier label (bronze reserved for PRO) */
+#sm-library-scope .sm-pro-badge.sm-badge-basic,
+#sm-library-scope .sm-pro-tool-badge.sm-badge-basic{
+  color:rgba(255,255,255,.55) !important;
+  border-color:rgba(255,255,255,.2) !important;
+  background:rgba(255,255,255,.05) !important;
+  -webkit-text-fill-color:rgba(255,255,255,.55) !important;
+}
+/* ============================================================
+   MOBILE MOVE TILE (home "Popular moves" grid) — final layout.
+   Clean rewrite: image fills the card · duration chip top-left ·
+   title + level pill stacked at the bottom (pill UNDER the title) ·
+   dark gradient so the text is always readable.
+   (The injector lifts .badge out of .meta so it can sit top-left.)
+   ============================================================ */
+@media (max-width:900px){
+  #sm-library-scope .sm-pro-card-grid .card .thumb::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(0,0,0,.84));
+  }
+  /* duration chip — dark rounded rectangle, top-left (1:1 with the mock) */
+  #sm-library-scope .sm-pro-card-grid .card > .badge{
+    position:absolute !important; z-index:4 !important;
+    top:10px !important; left:10px !important; right:auto !important; bottom:auto !important;
+    padding:3px 8px !important; border-radius:8px !important; min-height:0 !important;
+    background:rgba(0,0,0,.55) !important; border:0 !important; box-shadow:none !important;
+    color:#fff !important; font-family:inherit !important;
+    font-size:11px !important; font-weight:600 !important; letter-spacing:0 !important; line-height:1.2 !important;
+  }
+  #sm-library-scope .sm-pro-card-grid .card .meta{
+    position:absolute !important; z-index:3 !important;
+    left:14px !important; right:14px !important; bottom:14px !important;
+    top:auto !important; height:auto !important;
+    display:flex !important; flex-direction:column !important;
+    align-items:flex-start !important; gap:8px !important;
+  }
+  #sm-library-scope .sm-pro-card-grid .card .meta .title{
+    position:static !important; order:1 !important; margin:0 !important; max-width:100% !important;
+    color:#fff !important; font-size:18px !important; font-weight:700 !important;
+    line-height:1.15 !important; letter-spacing:-.02em !important;
+    display:-webkit-box !important; -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important; overflow:hidden !important;
+  }
+  /* level pill — grey rounded rectangle, uppercase (1:1 with the mock) */
+  #sm-library-scope .sm-pro-card-grid .card .meta .sm-pro-difficulty-pill{
+    position:static !important; order:2 !important;
+    align-self:flex-start !important; margin:0 !important;
+    min-width:0 !important; height:auto !important;
+    padding:4px 9px !important; border-radius:8px !important;
+    background:rgba(255,255,255,.12) !important; border:0 !important; box-shadow:none !important;
+    color:rgba(255,255,255,.80) !important; font-family:inherit !important;
+    font-size:10px !important; font-weight:600 !important;
+    letter-spacing:.05em !important; text-transform:uppercase !important; line-height:1 !important;
+  }
+}
+/* ===== move-row redesign (option A): difficulty pill inline with the title,
+   duplicate "Duration:" line removed (it's already on the thumbnail) ===== */
+#sm-library-scope .sm-pro-move-row__headline{
+  display:flex !important; align-items:center !important; gap:9px !important;
+  min-width:0; flex:1 1 auto; flex-wrap:wrap;
+}
+#sm-library-scope .sm-pro-move-row__headline h3{ flex:0 1 auto; min-width:0; }
+#sm-library-scope .sm-pro-move-row__headline .sm-pro-move-row__meta{ margin:0 !important; }
+/* move-row: compact, content-sized card with an inset 4:3 thumb centered + centered play (match mock) */
+#sm-library-scope .sm-pro-move-row{
+  grid-template-columns:112px minmax(0,1fr) !important;
+  min-height:0 !important;
+  align-items:center !important;
+  padding:4px 8px 4px 4px !important;
+  gap:10px !important;
+}
+#sm-library-scope .sm-pro-move-row__media{
+  aspect-ratio:4/3 !important;
+  height:auto !important;
+  min-height:0 !important;
+  margin:0 !important;
+  border-radius:12px !important;
+}
+#sm-library-scope .sm-pro-move-row__body{ padding:0 !important; }
+#sm-library-scope .sm-pro-move-row__play{
+  left:50% !important; top:50% !important; bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
+}
+/* desktop: the compact mobile thumb looks tiny on the wide 2-column cards →
+   give it a big, full-height thumbnail and a balanced row. */
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-move-row{
+    grid-template-columns:210px minmax(0,1fr) !important;
+    align-items:stretch !important;
+    padding:0 !important; gap:18px !important;
+    min-height:132px !important;
+  }
+  #sm-library-scope .sm-pro-move-row__media{
+    aspect-ratio:auto !important; height:auto !important; min-height:0 !important;
+    margin:0 !important; border-radius:0 !important; align-self:stretch !important;
+  }
+  #sm-library-scope .sm-pro-move-row__media img{ filter:saturate(1.05) contrast(1.04) brightness(.92) !important; }
+  #sm-library-scope .sm-pro-move-row__body{ padding:16px 20px 16px 0 !important; }
+}
+/* brand line in header (desktop only) */
+#sm-library-scope .sm-pro-quote{ display:none; }
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-mobile-top{ display:flex !important; flex-direction:row !important; align-items:center; justify-content:space-between; gap:24px; width:100%; }
+  #sm-library-scope .sm-pro-quote{
+    display:block; max-width:262px; text-align:right; flex:0 0 auto;
+    color:rgba(255,255,255,.42); font-size:13px; font-style:italic; line-height:1.45;
+    position:relative; padding-left:34px;
+  }
+  #sm-library-scope .sm-pro-quote::before{
+    content:""; position:absolute; left:0; top:.72em; width:22px; height:1px; background:rgba(201,154,110,.5);
+  }
+}
+/* "Last watched" header slot — shows the last move viewed; replaces the quote when history exists */
+#sm-library-scope .sm-last-watched{ display:none; }
+#sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-pro-quote{ display:none !important; }
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-last-watched{
+    display:inline-flex; align-items:center; gap:12px; flex:0 0 auto;
+    padding:8px 16px 8px 8px; border-radius:12px;
+    background:rgba(255,255,255,.05); border:.5px solid rgba(255,255,255,.1);
+    cursor:pointer; transition:transform .15s ease, background .15s ease;
+  }
+  #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-last-watched:hover{
+    transform:translateY(-1px); background:rgba(255,255,255,.08);
+  }
+}
+#sm-library-scope .sm-last-watched .sm-lw__th{
+  width:58px; height:38px; border-radius:8px; flex:0 0 auto; position:relative;
+  background:linear-gradient(135deg,#3a3026,#0e0e0e);
+  display:flex; align-items:center; justify-content:center;
+}
+#sm-library-scope .sm-last-watched .sm-lw__th svg{ width:18px; height:18px; fill:#fff; filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
+#sm-library-scope .sm-last-watched .sm-lw__t{ line-height:1.3; text-align:left; }
+#sm-library-scope .sm-last-watched .sm-lw__ey{ display:block; color:rgba(255,255,255,.45); font-size:10px; letter-spacing:.07em; text-transform:uppercase; }
+#sm-library-scope .sm-last-watched .sm-lw__name{ color:#fff; font-size:14px; font-weight:500; }
+/* "Plan" pill → neutral (was solid/outlined purple) */
+#sm-library-scope .cardPlan .pill--plan,
+#sm-library-scope .sm-pro-plans-screen .cardPlan .pill--plan{
+  border-color:rgba(255,255,255,.18) !important;
+  background:rgba(0,0,0,.42) !important;
+  box-shadow:none !important;
+}

@@ -1,0 +1,233 @@
+/* =============================================================
+   SkyMotion Pro Library — Move Video Player Modal
+   Full-screen video player: modal overlay, backdrop, player
+   container, controls, rotate hint, fullscreen hide state.
+   Copied from library-pro.css lines 18–218.
+   Do NOT delete from library-pro.css until verified in local
+   dev and Webflow production.
+
+   NOT included here:
+   - Plan Viewer v3          → plan-viewer-v3.css
+   - .sm-basic-plan-viewer   → future sm-pack-detail.css
+   - Pack detail CSS         → future sm-pack-detail.css
+   - @media overrides        → future sm-responsive-*.css
+   ============================================================= */
+
+
+/* ── 1. Modal overlay ────────────────────────────────────────── */
+/* Modal */
+#sm-library-scope #modal.sm-modal{
+  position:fixed;
+  inset:0;
+  z-index:var(--z-modal);
+  display:none;
+  width:100vw !important;
+  height:100dvh !important;
+  min-height:100svh !important;
+  margin:0 !important;
+}
+
+#sm-library-scope #modal .player__top,
+#sm-library-scope #modal .player__controls{
+  transition:opacity .22s ease, visibility .22s ease;
+}
+
+#sm-library-scope #modal.sm-modal[aria-hidden="false"]{
+  display:block;
+}
+
+
+/* ── 2. Backdrop and content wrapper ─────────────────────────── */
+#sm-library-scope #modal .sm-modal__backdrop{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top, rgba(255,255,255,.07), rgba(0,0,0,.90));
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+}
+
+#sm-library-scope #modal .sm-modal__content{
+  position:absolute;
+  inset:0;
+  width:100vw !important;
+  height:100dvh !important;
+  min-height:100svh !important;
+  overflow:hidden;
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+}
+
+
+/* ── 3. Player container ─────────────────────────────────────── */
+#sm-library-scope #modal .player{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:calc(var(--sm-player-vh, 1vh) * 100);
+  min-height:100svh;
+  min-height:100dvh;
+  background:#000;
+  overflow:hidden;
+}
+
+
+/* ── 4. Top bar (title + close) ──────────────────────────────── */
+#sm-library-scope #modal .player__top{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:calc(14px + env(safe-area-inset-top)) 16px 12px;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.68), rgba(0,0,0,.18), rgba(0,0,0,0));
+}
+
+#sm-library-scope #modal .player__title{
+  max-width:75%;
+  overflow:hidden;
+  color:rgba(255,255,255,.92);
+  font-size:15px;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  text-shadow:0 10px 30px rgba(0,0,0,.6);
+  pointer-events:auto;
+}
+
+#sm-library-scope #modal .player__close{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  pointer-events:auto;
+}
+
+
+/* ── 5. Video element ────────────────────────────────────────── */
+#sm-library-scope #modal .player__videoWrap,
+#sm-library-scope #modal .player video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+#sm-library-scope #modal .player video{
+  object-fit:cover !important;
+  background:#000;
+}
+
+
+/* ── 6. Rotate hint ──────────────────────────────────────────── */
+#sm-library-scope #modal .player__rotateHint{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:19;
+  transform:translate(-50%, -50%);
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,10,10,.68);
+  color:rgba(255,255,255,.92);
+  font-size:13px;
+  font-weight:850;
+  white-space:nowrap;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+#sm-library-scope #modal .player__rotateHint.is-visible{
+  opacity:1;
+  visibility:visible;
+}
+
+
+/* ── 7. Controls bar ─────────────────────────────────────────── */
+#sm-library-scope #modal .player__controls{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:18;
+  padding:0 18px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.18) 18%, rgba(0,0,0,.88));
+}
+
+#sm-library-scope #modal .player__progressWrap{
+  margin-bottom:10px;
+}
+
+#sm-library-scope #modal .player__seek{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:4px;
+  border-radius:999px;
+  outline:none;
+  cursor:pointer;
+  background:rgba(255,255,255,.16);
+}
+
+#sm-library-scope #modal .player__bar{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+}
+
+#sm-library-scope #modal .player__barLeft,
+#sm-library-scope #modal .player__barCenter,
+#sm-library-scope #modal .player__barRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+#sm-library-scope #modal .player__barCenter{
+  justify-content:center;
+}
+
+#sm-library-scope #modal .player__barRight{
+  justify-content:flex-end;
+}
+
+#sm-library-scope #modal .player__time{
+  color:rgba(255,255,255,.84);
+  font-size:14px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+#sm-library-scope #modal .player .btn{
+  min-width:88px;
+  height:44px;
+  padding:0 14px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:var(--text);
+}
+
+
+/* ── 8. Fullscreen UI hide ───────────────────────────────────── */
+#sm-library-scope #modal.is-fs-ui-hidden .player__top,
+#sm-library-scope #modal.is-fs-ui-hidden .player__controls{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}

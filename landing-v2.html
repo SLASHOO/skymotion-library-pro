@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>SkyMotion — Know your next shot</title>
+<meta name="description" content="SkyMotion tells drone pilots what to fly next — on the spot, in seconds." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#f4f1ea;        /* warm light background */
+  --paper-2:#ece7dd;
+  --card:#ffffff;
+  --ink:#16140f;
+  --muted:#6c665b;
+  --faint:#9a9388;
+  --line:rgba(22,20,15,.12);
+  --line-2:rgba(22,20,15,.07);
+  --bronze:#a9712f;       /* palette bronze, deepened for light bg */
+  --bronze-soft:#c99a6e;
+  --purple:#783be2;
+
+  --font:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --serif:"Instrument Serif", ui-serif, Georgia, serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --maxw:1080px;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--font); font-size:17px; line-height:1.6; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; overflow-x:hidden;
+}
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; }
+
+.wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 26px; }
+@media (max-width:600px){ .wrap{ padding:0 20px; } }
+
+.mono{ font-family:var(--mono); font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--bronze); font-weight:500; }
+.serif-it{ font-family:var(--serif); font-style:italic; font-weight:400; letter-spacing:0; color:var(--bronze); }
+
+/* media slot — black "no image" placeholder, ready for real footage */
+.media{ position:relative; background:#000; border-radius:14px; overflow:hidden; display:grid; place-items:center; }
+.media .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.34); border:1px dashed rgba(255,255,255,.22); border-radius:7px; padding:9px 15px; text-align:center; }
+
+/* buttons */
+.btn{ display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:100px; font-weight:600; font-size:15px; cursor:pointer; border:1px solid transparent; transition:transform .25s cubic-bezier(.2,.7,.3,1), background .2s, border-color .2s, color .2s; }
+.btn:active{ transform:translateY(1px); }
+.btn--solid{ background:var(--ink); color:var(--paper); }
+.btn--solid:hover{ background:#000; }
+.btn--line{ border-color:var(--line); color:var(--ink); }
+.btn--line:hover{ border-color:rgba(22,20,15,.3); }
+.btn .arw{ transition:transform .25s; }
+.btn:hover .arw{ transform:translateX(3px); }
+
+/* nav */
+.nav{ position:sticky; top:0; z-index:50; transition:background .3s, border-color .3s, backdrop-filter .3s; border-bottom:1px solid transparent; }
+.nav.on{ background:rgba(244,241,234,.8); backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%); border-bottom:1px solid var(--line-2); }
+.nav__in{ display:flex; align-items:center; justify-content:space-between; height:70px; }
+.brand{ display:flex; align-items:center; gap:10px; font-weight:600; font-size:18px; letter-spacing:-.02em; }
+.brand svg{ width:21px; height:21px; }
+.brand i{ color:var(--bronze); font-style:normal; font-weight:500; }
+.nav__r{ display:flex; align-items:center; gap:6px; }
+.nav__link{ color:var(--muted); font-size:14.5px; font-weight:500; padding:9px 13px; border-radius:100px; transition:color .2s; }
+.nav__link:hover{ color:var(--ink); }
+.nav__btn{ padding:9px 17px; border-radius:100px; font-size:14px; font-weight:600; background:var(--ink); color:var(--paper); }
+@media (max-width:560px){ .nav__link{ display:none; } }
+
+/* hero */
+.hero{ padding:86px 0 46px; text-align:center; }
+.hero h1{ font-weight:600; letter-spacing:-.04em; line-height:.98; margin:22px auto 0; font-size:clamp(46px,8.4vw,104px); max-width:14ch; }
+.hero__sub{ margin:24px auto 0; max-width:480px; font-size:clamp(16px,1.8vw,20px); color:var(--muted); }
+.hero__cta{ display:flex; gap:12px; justify-content:center; margin-top:34px; }
+
+/* hero media band — full width cinematic slot, the visual anchor */
+.band{ margin-top:60px; }
+.band .media{ aspect-ratio:16/7; border-radius:18px; }
+@media (max-width:600px){ .band{ margin-top:40px; } .band .media{ aspect-ratio:4/3; } }
+
+/* section */
+.sec{ padding:clamp(64px,10vw,118px) 0; }
+.sec--tight{ padding:clamp(48px,7vw,80px) 0; }
+
+/* steps — one line each, no fluff */
+.steps__h{ font-weight:500; letter-spacing:-.03em; line-height:1.05; font-size:clamp(26px,4vw,46px); max-width:16ch; }
+.steps__h .serif-it{ color:var(--bronze); }
+.steps{ margin-top:50px; display:grid; gap:0; }
+.step{ display:grid; grid-template-columns:64px 1fr auto; gap:22px; align-items:baseline; padding:26px 0; border-top:1px solid var(--line); }
+.step:last-child{ border-bottom:1px solid var(--line); }
+.step .n{ font-family:var(--mono); font-size:13px; color:var(--bronze); letter-spacing:.1em; }
+.step h3{ margin:0; font-size:clamp(20px,2.4vw,26px); font-weight:600; letter-spacing:-.02em; }
+.step p{ margin:0; color:var(--muted); font-size:15px; max-width:34ch; text-align:right; }
+@media (max-width:680px){ .step{ grid-template-columns:44px 1fr; gap:14px; } .step p{ grid-column:1 / -1; text-align:left; margin-top:8px; padding-left:58px; } }
+
+/* product frame — one clean light card */
+.show{ text-align:center; }
+.show h2{ font-weight:500; letter-spacing:-.03em; line-height:1.05; font-size:clamp(26px,4vw,46px); }
+.show h2 .serif-it{ color:var(--bronze); }
+.show p{ margin:18px auto 0; max-width:440px; color:var(--muted); font-size:16px; }
+.frame{ margin:46px auto 0; max-width:940px; background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 30px 70px rgba(22,20,15,.10); text-align:left; }
+.frame__bar{ display:flex; align-items:center; gap:12px; padding:13px 16px; border-bottom:1px solid var(--line-2); }
+.frame__dots{ display:flex; gap:7px; }
+.frame__dots i{ width:11px; height:11px; border-radius:100px; background:rgba(22,20,15,.14); }
+.frame__url{ font-family:var(--mono); font-size:11px; color:var(--faint); padding:5px 12px; border-radius:7px; background:var(--paper-2); }
+.frame__body{ display:grid; grid-template-columns:200px 1fr; gap:18px; padding:18px; }
+.rail{ border-right:1px solid var(--line-2); padding-right:18px; }
+.rail .rt{ font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); }
+.rail .bub{ margin-top:12px; background:var(--paper-2); border-radius:12px; padding:11px 13px; font-size:13.5px; color:var(--ink); }
+.rail .chips{ margin-top:14px; display:flex; flex-wrap:wrap; gap:7px; }
+.rail .chip{ font-size:12px; padding:6px 11px; border-radius:100px; border:1px solid var(--line); color:var(--muted); }
+.rail .chip.on{ background:var(--ink); color:var(--paper); border-color:var(--ink); font-weight:600; }
+.grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+.tile{ position:relative; border-radius:11px; overflow:hidden; aspect-ratio:4/3.3; }
+.tile .media{ position:absolute; inset:0; border-radius:0; }
+.tile .media .tag{ font-size:8px; padding:5px 8px; letter-spacing:.14em; }
+.tile .meta{ position:absolute; left:9px; bottom:8px; z-index:2; }
+.tile .meta b{ display:block; font-size:12px; color:#fff; font-weight:600; }
+.tile .meta em{ font-style:normal; font-family:var(--mono); font-size:9px; color:rgba(255,255,255,.6); letter-spacing:.06em; }
+.tile .pill{ position:absolute; top:8px; left:8px; z-index:2; font-size:9px; font-weight:600; padding:3px 8px; border-radius:100px; background:rgba(120,59,226,.9); color:#fff; }
+@media (max-width:680px){ .frame__body{ grid-template-columns:1fr; } .rail{ border-right:0; border-bottom:1px solid var(--line-2); padding:0 0 16px; } .grid{ grid-template-columns:repeat(2,1fr); } }
+
+/* pricing */
+.price{ text-align:center; }
+.price h2{ font-weight:500; letter-spacing:-.03em; font-size:clamp(26px,4vw,46px); }
+.price h2 .serif-it{ color:var(--bronze); }
+.plans{ margin:46px auto 0; max-width:740px; display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:left; }
+.plan{ background:var(--card); border:1px solid var(--line); border-radius:18px; padding:30px; display:flex; flex-direction:column; }
+.plan--pro{ border-color:var(--bronze); }
+.plan .pn{ font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+.plan .pp{ margin:14px 0 0; font-size:clamp(30px,4vw,40px); font-weight:600; letter-spacing:-.03em; line-height:1; }
+.plan .pp span{ font-size:14px; color:var(--faint); font-weight:400; }
+.plan ul{ list-style:none; margin:22px 0 26px; padding:0; display:grid; gap:11px; }
+.plan li{ display:flex; gap:10px; font-size:14.5px; line-height:1.4; }
+.plan li svg{ flex:0 0 auto; width:16px; height:16px; margin-top:3px; color:var(--bronze); }
+.plan .btn{ margin-top:auto; width:100%; justify-content:center; }
+@media (max-width:600px){ .plans{ grid-template-columns:1fr; } }
+
+/* final + footer */
+.final{ text-align:center; padding:clamp(70px,10vw,120px) 0; }
+.final h2{ font-weight:500; letter-spacing:-.035em; line-height:1.02; font-size:clamp(30px,6vw,68px); max-width:15ch; margin:0 auto; }
+.final h2 .serif-it{ color:var(--bronze); }
+.final .btn{ margin-top:32px; }
+.foot{ border-top:1px solid var(--line); padding:34px 0; }
+.foot__in{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; }
+.foot__links{ display:flex; gap:22px; flex-wrap:wrap; }
+.foot__links a{ color:var(--muted); font-size:14px; }
+.foot__links a:hover{ color:var(--ink); }
+.foot small{ color:var(--faint); font-family:var(--mono); font-size:12px; letter-spacing:.06em; }
+
+/* reveal */
+.r{ opacity:0; transform:translateY(20px); transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+.r.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){ .r{ opacity:1; transform:none; transition:none; } }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12l20-8-8 20-3-9-9-3z" fill="#a9712f"/></svg><span>Sky<i>Motion</i></span></a>
+    <nav class="nav__r">
+      <a class="nav__link" href="#how">How it works</a>
+      <a class="nav__link" href="#library">Library</a>
+      <a class="nav__link" href="#pricing">Pricing</a>
+      <a class="nav__btn" href="#pricing">Get Pro</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="mono r">For drone pilots</p>
+      <h1 class="r">Know your <span class="serif-it">next shot</span>.</h1>
+      <p class="hero__sub r">SkyMotion tells you what to fly next — on the spot, in seconds.</p>
+      <div class="hero__cta r">
+        <a class="btn btn--solid" href="#library">Open the library <span class="arw" aria-hidden="true">→</span></a>
+        <a class="btn btn--line" href="#how">See how</a>
+      </div>
+    </div>
+    <div class="wrap band r">
+      <div class="media"><span class="tag">No image — hero video / photo</span></div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="sec" id="how">
+    <div class="wrap">
+      <h2 class="steps__h r">Three taps from <span class="serif-it">blank to flying</span>.</h2>
+      <div class="steps">
+        <div class="step r"><div class="n">01</div><h3>Set your scene</h3><p>Where you are, what you're shooting, the conditions.</p></div>
+        <div class="step r"><div class="n">02</div><h3>Get what fits</h3><p>Only the moves and plans that work right here.</p></div>
+        <div class="step r"><div class="n">03</div><h3>Fly the shot</h3><p>Watch it, follow it, land knowing you got it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section class="sec sec--tight show" id="library">
+    <div class="wrap">
+      <h2 class="r">This is the <span class="serif-it">library</span>.</h2>
+      <p class="r">Every move has video. Plans chain them into a whole shoot.</p>
+
+      <div class="frame r">
+        <div class="frame__bar">
+          <div class="frame__dots"><i></i><i></i><i></i></div>
+          <div class="frame__url">skymotion.app / library</div>
+        </div>
+        <div class="frame__body">
+          <div class="rail">
+            <div class="rt">Assistant</div>
+            <div class="bub">Hi. Let's find your shots.</div>
+            <div class="bub">Where are you flying?</div>
+            <div class="chips">
+              <span class="chip on">Open area</span><span class="chip">City</span><span class="chip">Forest</span><span class="chip">Coastline</span>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><span class="pill">Plan</span><div class="meta"><b>Coastline Plan</b><em>0:17 · 3 SHOTS</em></div></div>
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><div class="meta"><b>Orbit</b><em>0:15 · EASY</em></div></div>
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><div class="meta"><b>Raise Up</b><em>0:21 · EASY</em></div></div>
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><div class="meta"><b>Top Down</b><em>0:21 · MED</em></div></div>
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><div class="meta"><b>Take Off</b><em>0:11 · EASY</em></div></div>
+            <div class="tile"><div class="media"><span class="tag">NO IMAGE</span></div><span class="pill">Plan</span><div class="meta"><b>City Sunrise</b><em>0:23 · 4 SHOTS</em></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="sec price" id="pricing">
+    <div class="wrap">
+      <h2 class="r">Free to start. <span class="serif-it">Pro</span> when it counts.</h2>
+      <div class="plans">
+        <div class="plan r">
+          <div class="pn">Free</div>
+          <div class="pp">$0</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Core moves with video</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Conditions assistant</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Starter plans</li>
+          </ul>
+          <a class="btn btn--line" href="#top">Open the library</a>
+        </div>
+        <div class="plan plan--pro r">
+          <div class="pn">Pro</div>
+          <div class="pp">$9 <span>/ mo</span></div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Full library, plans &amp; packs</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Step-by-step Plan Viewer</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Save moves &amp; build shoots</li>
+          </ul>
+          <a class="btn btn--solid" href="#top">Get Pro <span class="arw" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="wrap">
+      <h2 class="r">Get the shots only the <span class="serif-it">sky</span> can give.</h2>
+      <a class="btn btn--solid r" href="#library">Open the library <span class="arw" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <a class="brand" href="#top" style="font-size:16px;"><svg viewBox="0 0 24 24" fill="none" style="width:18px;height:18px;"><path d="M2 12l20-8-8 20-3-9-9-3z" fill="#a9712f"/></svg><span>Sky<i>Motion</i></span></a>
+    <nav class="foot__links">
+      <a href="#how">How it works</a><a href="#library">Library</a><a href="#pricing">Pricing</a><a href="mailto:skymotion.global@gmail.com">Contact</a>
+    </nav>
+    <small>© <span id="yr"></span> SKYMOTION</small>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var nav = document.getElementById('nav');
+  var f = function(){ nav.classList.toggle('on', window.scrollY > 20); };
+  f(); addEventListener('scroll', f, { passive:true });
+  var rs = document.querySelectorAll('.r');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold:.14, rootMargin:'0px 0px -8% 0px' });
+    rs.forEach(function(el){ io.observe(el); });
+  } else { rs.forEach(function(el){ el.classList.add('in'); }); }
+</script>
+</body>
+</html>

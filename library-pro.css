@@ -1,0 +1,1156 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #121212;
+}
+
+body {
+  color: rgba(255,255,255,.92);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========================= PRO MOBILE PORTRAIT HOME SECTIONS ONLY Keeps current header untouched. Desktop and landscape stay Free Library.
+========================= */
+@media (max-width: 900px) and (orientation: portrait) {
+  #sm-library-scope .results__grid:has(.sm-pro-mobile-home) {
+    display: block;
+  }
+
+  #sm-library-scope .sm-pro-mobile-home {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: 100%;
+    padding: 0 0 18px;
+  }
+
+  #sm-library-scope .sm-pro-section {
+    width: 100%;
+  }
+
+  #sm-library-scope .sm-pro-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 12px;
+  }
+
+  #sm-library-scope .sm-pro-section-head h2 {
+    margin: 0;
+    color: rgba(255,255,255,.94);
+    font-size: 18px;
+    line-height: 1.15;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  #sm-library-scope .sm-pro-section-link {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: rgba(173,118,255,.96);
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 900;
+    padding: 4px 0;
+    cursor: pointer;
+  }
+
+  #sm-library-scope .sm-pro-pack-card {
+    position: relative;
+    min-height: 150px;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.11);
+    background: #000;
+    box-shadow: 0 14px 34px rgba(0,0,0,.36);
+  }
+
+  #sm-library-scope .sm-pro-pack-img,
+  #sm-library-scope .sm-pro-pack-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #sm-library-scope .sm-pro-pack-img {
+    object-fit: cover;
+    object-position: center center;
+    filter: saturate(1.04) contrast(1.04) brightness(.76);
+  }
+
+  #sm-library-scope .sm-pro-pack-shade {
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.42) 48%, rgba(0,0,0,.70) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,.24) 48%, rgba(0,0,0,.78) 100%);
+    pointer-events: none;
+  }
+
+  #sm-library-scope .sm-pro-pack-content {
+    position: relative;
+    z-index: 2;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  #sm-library-scope .sm-pro-pack-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    padding: 0 11px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(120,59,226,.92), rgba(95,43,186,.92));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 950;
+    letter-spacing: .02em;
+    box-shadow: 0 10px 24px rgba(0,0,0,.24);
+  }
+
+  #sm-library-scope .sm-pro-pack-content h3 {
+    margin: 0 48px 8px 0;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.08;
+    font-weight: 950;
+    letter-spacing: -0.035em;
+    text-shadow: 0 10px 26px rgba(0,0,0,.5);
+  }
+
+  #sm-library-scope .sm-pro-pack-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: rgba(255,255,255,.78);
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 800;
+  }
+
+  #sm-library-scope .sm-pro-pack-meta span:not(:last-child)::after {
+    content: "•";
+    margin-left: 8px;
+    color: rgba(255,255,255,.48);
+  }
+
+  #sm-library-scope .sm-pro-pack-content p {
+    margin: 10px 0 0;
+    color: rgba(168,125,255,.96);
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 850;
+  }
+
+  #sm-library-scope .sm-pro-pack-save {
+    position: absolute;
+    z-index: 3;
+    top: 14px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.13);
+    background: rgba(0,0,0,.38);
+    cursor: pointer;
+  }
+
+  #sm-library-scope .sm-pro-pack-save svg {
+    width: 18px;
+    height: 18px;
+    fill: rgba(255,255,255,.92);
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,.55));
+  }
+
+  #sm-library-scope .sm-pro-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card {
+    min-height: 142px;
+    border-radius: 16px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan {
+    min-height: 160px;
+    border-radius: 16px;
+    grid-row: auto;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planMedia {
+    flex-basis: 100%;
+    height: 100%;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planBubble {
+    display: none;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption {
+    left: 14px;
+    right: 14px;
+    bottom: 28px;
+    font-size: 17px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planMedia::after {
+    background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.18) 50%, rgba(0,0,0,.78) 100%);
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planPills {
+    top: 12px;
+    left: 12px;
+    gap: 7px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .pill {
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title {
+    font-size: 16px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .badge {
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .meta {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-save {
+    width: 34px;
+    height: 34px;
+    top: 10px;
+    right: 10px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-save svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 420px) and (orientation: portrait) {
+  #sm-library-scope .sm-pro-mobile-home {
+    gap: 24px;
+  }
+
+  #sm-library-scope .sm-pro-pack-card,
+  #sm-library-scope .sm-pro-pack-content {
+    min-height: 142px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card {
+    min-height: 136px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan {
+    min-height: 152px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title,
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption {
+    font-size: 15px;
+  }
+}
+
+/* ========================= PRO MOBILE PORTRAIT — TYPE, CLEANUP, MOVE LEVEL PILLS Header stays unchanged. Portrait only. Landscape/Desktop stay Free Library.
+========================= */
+
+#sm-library-scope .sm-pro-difficulty-pill{
+  display:none;
+}
+
+#sm-library-scope .assistant__close{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-section-head{
+    margin:0 0 15px;
+  }
+
+  #sm-library-scope .sm-pro-section-head h2{
+    font-size:22px;
+    line-height:1.08;
+    font-weight:950;
+    letter-spacing:-0.035em;
+  }
+
+  #sm-library-scope .sm-pro-section-link{
+    font-size:17px;
+    font-weight:950;
+    letter-spacing:-0.02em;
+  }
+
+  #sm-library-scope .sm-pro-pack-card,
+  #sm-library-scope .sm-pro-pack-content{
+    min-height:170px;
+  }
+
+  #sm-library-scope .sm-pro-pack-content{
+    padding:18px;
+  }
+
+  #sm-library-scope .sm-pro-pack-content h3{
+    font-size:23px;
+    line-height:1.05;
+    font-weight:950;
+    letter-spacing:-0.04em;
+  }
+
+  #sm-library-scope .sm-pro-pack-meta{
+    font-size:14px;
+    font-weight:850;
+  }
+
+  #sm-library-scope .sm-pro-pack-content p{
+    font-size:15px;
+    font-weight:900;
+  }
+
+  #sm-library-scope .sm-pro-card-grid{
+    gap:14px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card{
+    min-height:178px;
+    border-radius:18px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan{
+    min-height:182px;
+    border-radius:18px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .meta{
+    left:14px;
+    right:14px;
+    bottom:14px;
+    display:block;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title{
+    display:block;
+    max-width:70%;
+    font-size:21px;
+    line-height:1.04;
+    font-weight:950;
+    letter-spacing:-0.04em;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .badge{
+    position:absolute;
+    left:0;
+    top:-126px;
+    z-index:4;
+    font-size:13px;
+    line-height:1;
+    font-weight:900;
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(0,0,0,.46);
+    border:1px solid rgba(255,255,255,.16);
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill{
+    position:absolute;
+    right:0;
+    bottom:0;
+    z-index:4;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:66px;
+    height:27px;
+    padding:0 10px;
+    border-radius:999px;
+    font-size:13px;
+    line-height:1;
+    font-weight:950;
+    letter-spacing:-0.02em;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 8px 18px rgba(0,0,0,.30);
+  }
+
+  #sm-library-scope .sm-pro-difficulty-pill--basic{
+    color:rgba(116,255,137,.94);
+    background:rgba(22,120,41,.45);
+    border:1px solid rgba(84,255,115,.22);
+  }
+
+  #sm-library-scope .sm-pro-difficulty-pill--intermediate{
+    color:rgba(178,143,255,.98);
+    background:rgba(82,44,170,.48);
+    border:1px solid rgba(174,125,255,.24);
+  }
+
+  #sm-library-scope .sm-pro-difficulty-pill--advanced{
+    color:rgba(255,197,118,.98);
+    background:rgba(156,88,28,.50);
+    border:1px solid rgba(255,184,99,.24);
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption{
+    font-size:21px;
+    line-height:1.05;
+    font-weight:950;
+    letter-spacing:-0.04em;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planPills .pill{
+    font-size:13px;
+    font-weight:950;
+    padding:7px 11px;
+  }
+}
+
+@media (max-width:420px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-section-head h2{
+    font-size:20px;
+  }
+
+  #sm-library-scope .sm-pro-section-link{
+    font-size:15px;
+  }
+
+  #sm-library-scope .sm-pro-pack-card,
+  #sm-library-scope .sm-pro-pack-content{
+    min-height:158px;
+  }
+
+  #sm-library-scope .sm-pro-pack-content h3{
+    font-size:20px;
+  }
+
+  #sm-library-scope .sm-pro-pack-meta{
+    font-size:12px;
+  }
+
+  #sm-library-scope .sm-pro-pack-content p{
+    font-size:13px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid{
+    gap:12px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card{
+    min-height:156px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan{
+    min-height:162px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title,
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption{
+    font-size:17px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill{
+    height:24px;
+    min-width:58px;
+    padding:0 8px;
+    font-size:11px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .badge{
+    top:-112px;
+    font-size:11px;
+    padding:6px 8px;
+  }
+}
+
+/* ========================= PRO MOBILE PORTRAIT — RESTRAINED TYPOGRAPHY OVERRIDE Header stays unchanged. Portrait only.
+========================= */
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope{
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+  }
+
+  /* Filter button + tabs: cleaner, less gaming-bold */
+  #sm-library-scope .mobile-open{
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:-0.015em;
+  }
+
+  #sm-library-scope .sm-pro-mobile-tabs button{
+    font-size:14px;
+    font-weight:650;
+    letter-spacing:-0.01em;
+  }
+
+  #sm-library-scope .sm-pro-mobile-tabs button.is-active{
+    font-weight:700;
+  }
+
+  /* Section headers */
+  #sm-library-scope .sm-pro-section-head{
+    margin:0 0 12px;
+  }
+
+  #sm-library-scope .sm-pro-section-head h2{
+    font-size:18px;
+    line-height:1.15;
+    font-weight:720;
+    letter-spacing:-0.02em;
+    color:rgba(255,255,255,.90);
+    text-shadow:none;
+  }
+
+  #sm-library-scope .sm-pro-section-link{
+    font-size:14px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    color:rgba(170,125,255,.94);
+  }
+
+  /* Featured pack typography */
+  #sm-library-scope .sm-pro-pack-content h3{
+    font-size:19px;
+    line-height:1.12;
+    font-weight:720;
+    letter-spacing:-0.025em;
+    text-shadow:0 8px 22px rgba(0,0,0,.38);
+  }
+
+  #sm-library-scope .sm-pro-pack-badge{
+    font-size:10px;
+    font-weight:720;
+    letter-spacing:.015em;
+  }
+
+  #sm-library-scope .sm-pro-pack-meta{
+    font-size:12px;
+    line-height:1.25;
+    font-weight:620;
+    color:rgba(255,255,255,.72);
+  }
+
+  #sm-library-scope .sm-pro-pack-content p{
+    font-size:12.5px;
+    line-height:1.25;
+    font-weight:650;
+    color:rgba(166,125,255,.92);
+  }
+
+  /* Move cards */
+  #sm-library-scope .sm-pro-card-grid .card .title{
+    max-width:68%;
+    font-size:16px;
+    line-height:1.08;
+    font-weight:720;
+    letter-spacing:-0.025em;
+    text-shadow:0 8px 22px rgba(0,0,0,.45);
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .badge{
+    font-size:10px;
+    line-height:1;
+    font-weight:650;
+    padding:5px 8px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill{
+    height:24px;
+    min-width:58px;
+    padding:0 9px;
+    font-size:11px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+
+  /* Plan cards */
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption{
+    font-size:17px;
+    line-height:1.08;
+    font-weight:720;
+    letter-spacing:-0.025em;
+    text-shadow:0 8px 22px rgba(0,0,0,.45);
+  }
+
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planPills .pill{
+    font-size:11px;
+    font-weight:700;
+    padding:6px 9px;
+  }
+}
+
+@media (max-width:420px) and (orientation:portrait){
+  #sm-library-scope .mobile-open{
+    font-size:16px;
+  }
+
+  #sm-library-scope .sm-pro-mobile-tabs button{
+    font-size:13px;
+  }
+
+  #sm-library-scope .sm-pro-section-head h2{
+    font-size:17px;
+  }
+
+  #sm-library-scope .sm-pro-section-link{
+    font-size:13px;
+  }
+
+  #sm-library-scope .sm-pro-pack-content h3{
+    font-size:18px;
+  }
+
+  #sm-library-scope .sm-pro-pack-meta,
+  #sm-library-scope .sm-pro-pack-content p{
+    font-size:11.5px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title,
+  #sm-library-scope .sm-pro-card-grid .cardPlan .planCaption{
+    font-size:15.5px;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill{
+    height:22px;
+    min-width:54px;
+    padding:0 8px;
+    font-size:10px;
+  }
+}
+
+/* ========================= PRO MOBILE PORTRAIT — CALMER HEADER TYPOGRAPHY Header only. Desktop and landscape unchanged.
+========================= */
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-mobile-top{
+    padding:0 0 12px;
+  }
+
+  #sm-library-scope .sm-pro-title-row{
+    gap:8px;
+    align-items:center;
+  }
+
+  #sm-library-scope .sm-pro-title-row h1{
+    font-size:25px !important;
+    line-height:1.08 !important;
+    font-weight:720 !important;
+    letter-spacing:-0.025em !important;
+    color:rgba(255,255,255,.93) !important;
+    text-shadow:none !important;
+  }
+
+  #sm-library-scope .sm-pro-badge{
+    height:19px !important;
+    padding:0 6px !important;
+    border-radius:6px !important;
+    font-size:10px !important;
+    font-weight:720 !important;
+    letter-spacing:.015em !important;
+    color:rgba(255,207,102,.92) !important;
+    background:rgba(0,0,0,.12) !important;
+    border-color:rgba(201,154,110,.52) !important;
+    transform:translateY(0) !important;
+  }
+
+  #sm-library-scope .sm-pro-title-wrap p{
+    margin:5px 0 0 !important;
+    font-size:13px !important;
+    line-height:1.28 !important;
+    font-weight:520 !important;
+    letter-spacing:-0.005em !important;
+    color:rgba(255,255,255,.58) !important;
+  }
+}
+
+@media (max-width:420px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-title-row h1{
+    font-size:24px !important;
+  }
+
+  #sm-library-scope .sm-pro-title-wrap p{
+    font-size:12.5px !important;
+  }
+}
+
+/* ========================= PRO MOBILE PORTRAIT — HEADER SIZE + TWO-LINE MOVE TITLES Portrait only. Landscape/Desktop unchanged.
+========================= */
+@media (max-width:900px) and (orientation:portrait){
+  /* Slightly larger but still restrained header */
+  #sm-library-scope .sm-pro-mobile-top{
+    padding:0 0 13px !important;
+  }
+
+  #sm-library-scope .sm-pro-title-row h1{
+    font-size:28px !important;
+    line-height:1.04 !important;
+    font-weight:760 !important;
+    letter-spacing:-0.032em !important;
+  }
+
+  #sm-library-scope .sm-pro-badge{
+    height:20px !important;
+    padding:0 7px !important;
+    font-size:10.5px !important;
+    font-weight:760 !important;
+  }
+
+  #sm-library-scope .sm-pro-title-wrap p{
+    margin-top:6px !important;
+    font-size:13.5px !important;
+    line-height:1.28 !important;
+    font-weight:520 !important;
+  }
+
+  /* Move title can wrap to 2 lines and will not sit under difficulty pill */
+  #sm-library-scope .sm-pro-card-grid .card .meta{
+    min-height:42px;
+    align-items:flex-end;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title{
+    max-width:calc(100% - 78px) !important;
+    padding-right:8px;
+    white-space:normal !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    line-clamp:2;
+    line-height:1.05 !important;
+    word-break:normal;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .sm-pro-difficulty-pill{
+    right:0 !important;
+    bottom:1px !important;
+    flex-shrink:0;
+  }
+}
+
+@media (max-width:420px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-title-row h1{
+    font-size:27px !important;
+  }
+
+  #sm-library-scope .sm-pro-title-wrap p{
+    font-size:13px !important;
+  }
+
+  #sm-library-scope .sm-pro-card-grid .card .title{
+    max-width:calc(100% - 70px) !important;
+    font-size:15px !important;
+  }
+}
+
+
+/* ========================= /* ========================= PRO BACKEND-SAFE SAVED ITEMS Adds visual saved state for pack buttons and Saved screen grouping.
+========================= */
+#sm-library-scope .sm-pro-pack-save.isSaved{
+  border-color:rgba(170,125,255,.58);
+  background:rgba(120,59,226,.18);
+  box-shadow:0 0 0 3px rgba(120,59,226,.10), 0 10px 24px rgba(0,0,0,.24);
+}
+
+#sm-library-scope .sm-pro-pack-save.isSaved svg{
+  fill:rgba(190,155,255,.98);
+}
+
+#sm-library-scope .sm-pro-pack-save:disabled{
+  opacity:.62;
+  pointer-events:none;
+}
+
+#sm-library-scope .sm-pro-saved-subtitle{
+  margin:18px 0 10px;
+  color:rgba(255,255,255,.72);
+  font-size:13px;
+  line-height:1;
+  font-weight:720;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+#sm-library-scope .sm-pro-saved-pack-list{
+  margin-bottom:16px;
+}
+
+
+/* Mobile portrait: one premium poster per row */
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid{
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan{
+    min-height:570px !important;
+    border-radius:30px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planPills{
+    top:18px !important;
+    left:18px !important;
+    right:18px !important;
+    gap:9px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .pill{
+    height:38px !important;
+    padding:0 13px !important;
+    font-size:13px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planCaption{
+    left:22px !important;
+    right:22px !important;
+    bottom:144px !important;
+    font-size:27px !important;
+    line-height:1.03 !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planBubble{
+    left:20px !important;
+    right:20px !important;
+    bottom:20px !important;
+    padding:18px 19px !important;
+    border-radius:22px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planType{
+    font-size:20px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planMeta{
+    font-size:14px !important;
+  }
+}
+
+@media (max-width:420px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-plans-screen .cardPlan{
+    min-height:540px !important;
+    border-radius:28px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planCaption{
+    font-size:25px !important;
+    bottom:136px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planBubble{
+    padding:16px 18px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planType{
+    font-size:18px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planMeta{
+    font-size:13px !important;
+  }
+}
+
+/* Phone landscape: keep it usable, not giant */
+@media (max-height:560px) and (orientation:landscape){
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    gap:12px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan{
+    min-height:270px !important;
+    border-radius:20px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planPills{
+    top:12px !important;
+    left:12px !important;
+    right:12px !important;
+    gap:6px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .pill{
+    height:28px !important;
+    padding:0 9px !important;
+    font-size:10px !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planCaption{
+    left:14px !important;
+    right:14px !important;
+    bottom:82px !important;
+    font-size:18px !important;
+    line-height:1.04 !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planBubble{
+    left:12px !important;
+    right:12px !important;
+    bottom:12px !important;
+    padding:11px 12px !important;
+    border-radius:16px !important;
+    gap:4px !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planType{
+    font-size:14px !important;
+  }
+
+  #sm-library-scope .sm-pro-plans-screen .cardPlan .planMeta{
+    font-size:10.5px !important;
+    line-height:1.22 !important;
+  }
+}
+
+/* ========================= PRO MOVES — DIFFICULTY PILL ALIGNMENT + COLORS v99
+   Fixes Basic / Intermediate / Advanced inside move list cards.
+   Visual-only patch. Does not affect Plans/Packs logic.
+========================= */
+#sm-library-scope .sm-pro-move-row__meta{
+  margin:2px 0 9px !important;
+  min-height:24px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  line-height:1 !important;
+}
+
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill{
+  position:static !important;
+  width:auto !important;
+  min-width:0 !important;
+  height:24px !important;
+  padding:0 10px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:999px !important;
+  backdrop-filter:blur(10px) !important;
+  -webkit-backdrop-filter:blur(10px) !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.22) !important;
+  font-size:11.5px !important;
+  font-weight:720 !important;
+  line-height:1 !important;
+  letter-spacing:-.01em !important;
+  text-transform:capitalize !important;
+  white-space:nowrap !important;
+}
+
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--basic{
+  color:rgba(128,255,148,.95) !important;
+  background:rgba(18,105,38,.42) !important;
+  border:1px solid rgba(92,255,125,.24) !important;
+}
+
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--intermediate{
+  color:rgba(190,154,255,.98) !important;
+  background:rgba(86,48,178,.46) !important;
+  border:1px solid rgba(182,130,255,.28) !important;
+}
+
+#sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill--advanced{
+  color:rgba(255,203,130,.98) !important;
+  background:rgba(162,91,30,.48) !important;
+  border:1px solid rgba(255,189,105,.28) !important;
+}
+
+#sm-library-scope .sm-pro-move-row__body p{
+  margin-top:0 !important;
+}
+
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope .sm-pro-move-row__meta{
+    margin:2px 0 8px !important;
+    min-height:22px !important;
+  }
+
+  #sm-library-scope .sm-pro-move-row__meta .sm-pro-difficulty-pill{
+    height:22px !important;
+    padding:0 9px !important;
+    font-size:10.5px !important;
+    font-weight:700 !important;
+  }
+}
+
+/* =========================
+   v124 — FILTER COLOR MATCH + NO BUTTON ARROWS
+   Desktop filters only for color matching. Arrow/icon cleanup affects filter buttons on desktop + mobile.
+========================= */
+
+/* Remove arrows/icons inside filter footer buttons on both desktop and mobile */
+#sm-library-scope .assistant #backBtn::before,
+#sm-library-scope .assistant #resetBtn::before{
+  content:none !important;
+  display:none !important;
+}
+
+#sm-library-scope .assistant .sm-pro-filter-show-bottom span[aria-hidden="true"]{
+  display:none !important;
+}
+
+/* Desktop filter palette closer to mobile Pro filter: dark purple glass, no warm brown mismatch */
+@media (min-width:901px) and (min-height:561px){
+  #sm-library-scope .assistant.sm-pro-desktop-filter.sm-pro-filter-screen,
+  #sm-library-scope .assistant.sm-pro-desktop-filter{
+    background:
+      radial-gradient(520px 320px at 18% 0%, rgba(145,84,255,.155), transparent 58%),
+      radial-gradient(520px 340px at 92% 0%, rgba(120,59,226,.105), transparent 60%),
+      linear-gradient(180deg, rgba(31,26,35,.96) 0%, rgba(20,20,21,.985) 40%, rgba(15,15,16,.995) 100%) !important;
+    border-color:rgba(255,255,255,.105) !important;
+    box-shadow:
+      0 22px 64px rgba(0,0,0,.48),
+      inset 0 1px 0 rgba(255,255,255,.055) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .assistant__header{
+    background:rgba(255,255,255,.018) !important;
+    border-bottom-color:rgba(255,255,255,.065) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .assistant__count{
+    border-color:rgba(255,255,255,.145) !important;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.024)),
+      rgba(21,20,24,.72) !important;
+    color:rgba(255,255,255,.92) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.055),
+      0 12px 28px rgba(0,0,0,.26) !important;
+    backdrop-filter:blur(14px) saturate(135%) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(135%) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .assistant__count:hover{
+    border-color:rgba(155,98,255,.42) !important;
+    background:
+      linear-gradient(180deg, rgba(120,59,226,.16), rgba(255,255,255,.035)),
+      rgba(24,22,30,.74) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .bubble{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.025)),
+      rgba(24,24,26,.70) !important;
+    border-color:rgba(255,255,255,.115) !important;
+    box-shadow:0 10px 26px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.035) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .msg--user .bubble{
+    background:
+      linear-gradient(180deg, rgba(120,59,226,.24), rgba(120,59,226,.105)),
+      rgba(23,20,31,.72) !important;
+    border-color:rgba(151,96,255,.34) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .avatar{
+    background:
+      radial-gradient(circle at 35% 35%, rgba(142,86,255,.22), transparent 58%),
+      radial-gradient(circle at 75% 20%, rgba(255,255,255,.10), transparent 55%),
+      rgba(18,18,20,.78) !important;
+    border-color:rgba(255,255,255,.11) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid .opt,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid--desktop .opt,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options .opt{
+    border-color:rgba(255,255,255,.135) !important;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.062), rgba(255,255,255,.024)),
+      rgba(20,20,22,.72) !important;
+    color:rgba(255,255,255,.84) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.040),
+      0 10px 24px rgba(0,0,0,.20) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid .opt:hover,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid--desktop .opt:hover,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options .opt:hover,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid .opt:focus-visible,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options.sm-pro-pill-grid--desktop .opt:focus-visible,
+  #sm-library-scope .assistant.sm-pro-desktop-filter .options .opt:focus-visible{
+    border-color:rgba(154,92,255,.46) !important;
+    background:
+      linear-gradient(180deg, rgba(120,59,226,.17), rgba(255,255,255,.035)),
+      rgba(24,22,30,.76) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.050),
+      0 0 0 1px rgba(120,59,226,.13),
+      0 14px 30px rgba(0,0,0,.24) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .filterProgress{
+    background:rgba(255,255,255,.075) !important;
+    border-color:rgba(255,255,255,.08) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .filterProgress__bar{
+    background:linear-gradient(90deg, rgba(187,120,255,.96), rgba(126,68,255,.92)) !important;
+    box-shadow:0 0 18px rgba(126,68,255,.28) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter #backBtn,
+  #sm-library-scope .assistant.sm-pro-desktop-filter #resetBtn{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.050), rgba(255,255,255,.018)),
+      rgba(18,18,19,.74) !important;
+    border-color:rgba(255,255,255,.12) !important;
+    color:rgba(255,255,255,.68) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter #backBtn{
+    border-color:rgba(143,82,255,.62) !important;
+    color:rgba(173,120,255,.95) !important;
+    background:
+      linear-gradient(180deg, rgba(120,59,226,.10), rgba(255,255,255,.018)),
+      rgba(18,17,22,.78) !important;
+  }
+
+  #sm-library-scope .assistant.sm-pro-desktop-filter .sm-pro-filter-show-bottom{
+    background:linear-gradient(180deg, #ffbd26, #ffaa08) !important;
+    color:rgba(0,0,0,.90) !important;
+    box-shadow:0 14px 30px rgba(255,165,20,.18) !important;
+  }
+}

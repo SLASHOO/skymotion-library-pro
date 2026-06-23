@@ -1,0 +1,390 @@
+/* =============================================================
+   SkyMotion Pro Library — Layout Shell
+   Structural layout: library grid, assistant panel, results
+   grid, buttons, chat messages, drawer backdrop, animations.
+
+   Copied from library-pro.css. Do NOT delete from library-pro.css
+   until verified working in local dev and Webflow production.
+
+   NOT included here (belong in separate future files):
+   - .options, .opt, .filterHelp  → sm-filters.css
+   - .card, .cardPlan             → sm-cards.css
+   - #modal, .player*             → sm-player.css
+   - @media queries               → sm-responsive-*.css
+   ============================================================= */
+
+
+/* ── 1. Layout grid ─────────────────────────────────────────── */
+/* Layout */
+#sm-library-scope .library{
+  display:grid;
+  grid-template-columns:var(--side) minmax(0,1fr);
+  gap:var(--gap);
+  padding:var(--pad);
+  align-items:start;
+}
+
+#sm-library-scope .results{
+  width:100%;
+  max-width:1440px;
+  min-width:0;
+  margin:0 auto;
+}
+
+
+/* ── 2. Mobile filter button ─────────────────────────────────── */
+/* Mobile filters button */
+#sm-library-scope .mobile-open{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  position:relative;
+  top:auto;
+  z-index:20;
+  width:100%;
+  margin:0 0 10px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  color:var(--text);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+  transition:transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+}
+
+#sm-library-scope .mobile-open:hover{
+  transform:translateY(-1px);
+  border-color:rgba(120,59,226,.35);
+  background:linear-gradient(180deg, rgba(120,59,226,.10), rgba(255,255,255,.02));
+  box-shadow:0 16px 36px rgba(0,0,0,.28);
+}
+
+#sm-library-scope .mobile-open.is-attention{
+  animation:smAttentionShake 1.6s ease;
+}
+
+#sm-library-scope .filterIcon{
+  width:16px;
+  height:16px;
+  display:inline-block;
+  position:relative;
+  background:
+    radial-gradient(circle at 6px 5px, rgba(201,154,110,.95) 0 2px, transparent 3px),
+    radial-gradient(circle at 11px 11px, rgba(120,59,226,.85) 0 2px, transparent 3px);
+}
+
+#sm-library-scope .filterIcon::before,
+#sm-library-scope .filterIcon::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:2px;
+  border-radius:999px;
+  background:rgba(255,255,255,.85);
+}
+
+#sm-library-scope .filterIcon::before{ top:4px; }
+#sm-library-scope .filterIcon::after{ top:10px; }
+
+
+/* ── 3. Assistant panel ──────────────────────────────────────── */
+/* Assistant */
+#sm-library-scope .assistant{
+  position:sticky;
+  top:var(--pad);
+  display:flex;
+  flex-direction:column;
+  height:calc(100dvh - (var(--pad) * 2));
+  overflow:hidden;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.10)),
+    radial-gradient(600px 320px at 20% 0%, rgba(201,154,110,.08), transparent 55%),
+    radial-gradient(600px 320px at 100% 0%, rgba(120,59,226,.10), transparent 55%),
+    rgba(20,20,20,.86);
+  box-shadow:0 10px 24px rgba(0,0,0,.40);
+}
+
+#sm-library-scope .assistant__header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line-soft);
+  background:rgba(0,0,0,.10);
+}
+
+#sm-library-scope .assistant__heading{
+  min-width:0;
+}
+
+#sm-library-scope .assistant__backToResults{
+  display:none;
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.58);
+  font-size:12px;
+  font-weight:850;
+  padding:0 0 4px;
+  cursor:pointer;
+}
+
+#sm-library-scope .assistant__backToResults:hover{
+  color:rgba(255,255,255,.9);
+}
+
+#sm-library-scope .assistant__title{
+  font-weight:950;
+  letter-spacing:.2px;
+}
+
+#sm-library-scope .assistant__right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+#sm-library-scope .assistant__count{
+  appearance:none;
+  border:1px solid rgba(201,154,110,.28);
+  background:linear-gradient(180deg, rgba(201,154,110,.16), rgba(255,255,255,.035));
+  color:rgba(255,255,255,.92);
+  padding:9px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:950;
+  white-space:nowrap;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+  transition:transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+}
+
+#sm-library-scope .assistant__count:hover{
+  transform:translateY(-1px);
+  border-color:rgba(201,154,110,.48);
+  background:linear-gradient(180deg, rgba(201,154,110,.22), rgba(255,255,255,.045));
+}
+
+#sm-library-scope .assistant__count:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+#sm-library-scope .assistant__close{
+  display:none;
+  width:40px;
+  height:40px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.92);
+  font-size:22px;
+  font-weight:950;
+  line-height:1;
+  cursor:pointer;
+  transition:transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+#sm-library-scope .assistant__close:hover{
+  transform:translateY(-1px);
+  border-color:rgba(120,59,226,.40);
+  background:rgba(120,59,226,.12);
+}
+
+#sm-library-scope .chat{
+  flex:1;
+  padding:16px;
+  overflow:auto;
+  scroll-behavior:smooth;
+}
+
+#sm-library-scope .assistant__footer{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:12px;
+  border-top:1px solid var(--line-soft);
+  background:rgba(0,0,0,.10);
+}
+
+#sm-library-scope .assistant__footerRow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+#sm-library-scope .filterProgress{
+  height:5px;
+  width:100%;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+#sm-library-scope .filterProgress__bar{
+  width:20%;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(201,154,110,.95), rgba(120,59,226,.75));
+  box-shadow:0 0 18px rgba(201,154,110,.18);
+  transition:width .22s ease;
+}
+
+
+/* ── 4. Chat messages (assistant body) ───────────────────────── */
+/* Chat */
+#sm-library-scope .msg{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+  align-items:flex-end;
+}
+
+#sm-library-scope .msg--user{
+  justify-content:flex-end;
+}
+
+#sm-library-scope .avatar{
+  width:28px;
+  height:28px;
+  flex-shrink:0;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(201,154,110,.20), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(120,59,226,.18), transparent 55%),
+    rgba(0,0,0,.35);
+}
+
+#sm-library-scope .bubble{
+  max-width:320px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.035);
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+  font-size:14px;
+  line-height:1.4;
+  word-break:break-word;
+}
+
+#sm-library-scope .msg--user .bubble{
+  max-width:280px;
+  margin-left:auto;
+  padding:9px 12px;
+  background:linear-gradient(180deg, rgba(120,59,226,.16), rgba(255,255,255,.04));
+  border-color:rgba(120,59,226,.20);
+  color:rgba(255,255,255,.94);
+  font-size:13px;
+  line-height:1.35;
+}
+
+#sm-library-scope .bubble .caret{
+  display:inline-block;
+  width:8px;
+  height:14px;
+  margin-left:2px;
+  vertical-align:-2px;
+  border-radius:2px;
+  background:rgba(255,255,255,.50);
+  animation:smCaretBlink .9s infinite;
+}
+
+
+/* ── 5. Buttons ──────────────────────────────────────────────── */
+/* Buttons */
+#sm-library-scope .btn{
+  appearance:none;
+  border:none;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:900;
+  cursor:pointer;
+  transition:transform .12s ease, filter .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+#sm-library-scope .btn:hover{
+  transform:translateY(-1px);
+}
+
+#sm-library-scope .btn:active{
+  transform:translateY(0) scale(.99);
+}
+
+#sm-library-scope .btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+#sm-library-scope .btn--ghost{
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line);
+  color:var(--text);
+}
+
+#sm-library-scope .btn--ghost:hover{
+  border-color:rgba(255,255,255,.16);
+  background:rgba(255,255,255,.04);
+}
+
+
+/* ── 6. Results ──────────────────────────────────────────────── */
+/* Results */
+#sm-library-scope .results__head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin:6px 0 14px;
+  padding:0 2px;
+}
+
+#sm-library-scope .results__grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 320px));
+  justify-content:center;
+  gap:16px;
+  grid-auto-rows:220px;
+  align-content:start;
+}
+
+#sm-library-scope .results__more{
+  display:block;
+  margin:24px auto 0;
+}
+
+
+/* ── 7. Drawer backdrop + layout animations ──────────────────── */
+/* Drawer backdrop */
+#sm-library-scope .assistantBackdrop{
+  display:none;
+}
+
+/* Animations used by layout elements only.
+   smShake       → belongs to sm-filters.css (.opt.is-shaking)
+   smSkeletonShift → belongs to sm-cards.css (skeleton cards) */
+@keyframes smCaretBlink{
+  0%,49%{ opacity:.85; }
+  50%,100%{ opacity:0; }
+}
+
+@keyframes smAttentionShake{
+  0%{ transform:translateX(0); }
+  10%{ transform:translateX(-4px); }
+  20%{ transform:translateX(4px); }
+  30%{ transform:translateX(-3px); }
+  40%{ transform:translateX(3px); }
+  50%{ transform:translateX(0); }
+  100%{ transform:translateX(0); }
+}

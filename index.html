@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Pro Library</title>
+
+  <script>
+    window.SM_API_BASE = "https://skymotion.onrender.com";
+    // LOCAL TEST DATA (33 moves + 10 plans). For production set this to the CDN
+    // index URL, or remove this line to fall back to videos_index_v16.json.
+    window.SM_LIBRARY_DATA_URL = "./library-data-pro.json";
+    window.SM_CHECKLIST_PAPER_ASSET_URL = "https://skymotion-cdn.b-cdn.net/checklist.png";
+
+    // Pro upgrade. Logged-in Free users buy Pro via Memberstack in-app checkout.
+    // Set this to the Pro plan's PRICE id (starts with "prc_") from Memberstack.
+    // While empty, logged-in Free users fall back to the sign-up URL.
+    window.SM_PRO_PRICE_ID = "";
+    window.SM_PRO_SIGNUP_URL = "https://skymotion.cloud/sign-up";
+
+    // Optional pack copy/assets. Edit these values when the final pack is ready.
+    window.SM_PRO_PACK_TITLE = "Test Pack";
+    window.SM_PRO_PACK_CREATOR = "Creator Name";
+    window.SM_PRO_PACK_DESCRIPTION = "A test shooting pack for SkyMotion Premium. Final name, creator, content and pack direction will be updated after we choose the first official pack.";
+    // window.SM_REAL_ESTATE_PACK_COVER_URL = "https://your-cover-image-url.jpg";
+  </script>
+
+  <link rel="icon" href="data:,">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@0,400;0,450;0,500;0,550;0,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./css/sm-tokens.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-layout.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-cards.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-filters.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-player-modal.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-responsive-mobile.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-filter-mobile.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-subscreens.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-desktop.css?v=1" />
+  <link rel="stylesheet" href="./css/sm-pack-detail.css?v=1" />
+  <link rel="stylesheet" href="./library-pro.css?v=128" />
+  <link rel="stylesheet" href="./plan-viewer-v3.css?v=1" />
+  <!-- "Landing" visual skin — must load LAST. Visual-only, zero logic. -->
+  <link rel="stylesheet" href="./css/sm-skin.css?v=86" />
+</head>
+<body>
+<!-- SkyMotion logo (inline, referenced via <use>) -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+  <symbol id="sm-logo" viewBox="0 0 690 147">
+    <path d="M525.943 67.1271C526.21 67.1259 526.477 67.1247 526.751 67.1235C527.643 67.1203 528.534 67.1215 529.426 67.1227C530.072 67.1213 530.718 67.1197 531.365 67.1178C533.14 67.1133 534.915 67.1128 536.69 67.113C538.605 67.1125 540.519 67.1084 542.434 67.1048C546.402 67.098 550.37 67.0954 554.337 67.0939C554.553 67.0938 554.768 67.0937 554.99 67.0936C555.314 67.0935 555.314 67.0935 555.644 67.0934C558.04 67.0924 560.434 67.0904 562.829 67.0883C570.063 67.0822 577.297 67.0771 584.531 67.0762C584.762 67.0761 584.994 67.0761 585.232 67.0761C586.169 67.076 587.106 67.0759 588.043 67.0757C588.749 67.0757 589.454 67.0756 590.159 67.0755C590.393 67.0755 590.626 67.0754 590.866 67.0754C598.192 67.0745 605.519 67.0676 612.844 67.0563C621.076 67.0436 629.309 67.0362 637.541 67.0361C638.418 67.0361 639.296 67.036 640.174 67.0359C640.498 67.0359 640.498 67.0359 640.829 67.0359C644.307 67.0356 647.784 67.0301 651.262 67.0229C654.757 67.0158 658.251 67.0146 661.746 67.019C663.639 67.0213 665.533 67.021 667.425 67.0139C669.158 67.0075 670.891 67.0083 672.624 67.0148C673.251 67.0159 673.878 67.0143 674.504 67.0099C680.609 66.9694 680.609 66.9694 682.707 68.7685C687.645 73.7843 689.838 86.5714 689.776 93.2926C689.638 94.4142 689.161 95.0779 688.416 95.9157C687.167 96.7349 686.105 96.626 684.656 96.6183C684.364 96.6192 684.072 96.6201 683.771 96.621C682.784 96.6233 681.796 96.6211 680.809 96.619C680.098 96.6197 679.386 96.6207 678.675 96.622C676.712 96.6246 674.75 96.6233 672.787 96.6213C670.89 96.6201 668.994 96.6217 667.097 96.6233C662.977 96.6266 658.856 96.6263 654.736 96.6245C651.13 96.6229 647.523 96.6225 643.917 96.6233C643.679 96.6233 643.439 96.6234 643.193 96.6234C642.224 96.6236 641.254 96.6238 640.284 96.624C631.181 96.6259 622.078 96.6242 612.974 96.6208C604.883 96.6179 596.79 96.6181 588.698 96.6211C579.612 96.6245 570.527 96.6258 561.441 96.6239C560.472 96.6237 559.504 96.6235 558.536 96.6233C558.179 96.6232 558.179 96.6232 557.813 96.6231C554.21 96.6224 550.606 96.6232 547.002 96.6248C542.905 96.6266 538.808 96.6262 534.71 96.6228C532.618 96.6211 530.526 96.6205 528.434 96.6225C526.521 96.6244 524.608 96.6234 522.695 96.6201C522.001 96.6194 521.307 96.6197 520.613 96.6212C519.674 96.6231 518.735 96.6212 517.795 96.6183C517.522 96.6197 517.249 96.6212 516.967 96.6227C515.695 96.6148 514.765 96.5794 513.678 95.9157C512.34 93.8675 512.742 91.9808 513.045 89.6749C513.072 89.4656 513.099 89.2563 513.127 89.0407C513.842 83.7698 515.205 78.5807 517.048 73.5855C517.136 73.3462 517.224 73.1069 517.315 72.8604C518.045 70.9606 518.998 69.101 520.656 67.8323C522.457 67.2939 524.069 67.1179 525.943 67.1271Z" fill="#F08417"/>
+    <path d="M598.758 14.004C599.87 14.0073 600.984 14.004 602.097 14C606.019 13.9978 609.805 14.1725 613.688 14.7094C614.495 14.7886 615.301 14.8557 616.107 14.9239C619.268 15.3057 622.237 16.3168 625.257 17.2756C625.954 17.4867 626.647 17.6686 627.357 17.8334C628.8 18.1741 630.177 18.6666 631.566 19.1754C631.834 19.273 632.101 19.3706 632.377 19.4711C634.251 20.1667 636.022 20.9592 637.79 21.8863C638.169 22.0715 638.548 22.2555 638.929 22.4384C643.166 24.4804 647.298 26.624 651.11 29.3752C651.461 29.6192 651.814 29.8625 652.166 30.1053C658.206 34.2732 658.206 34.2732 660.306 36.864C660.844 37.3052 660.844 37.3052 661.397 37.6441C665.133 40.0324 668.202 44.295 670.771 47.7853C671.297 48.4764 671.828 49.1644 672.357 49.8526C674.176 52.2206 674.176 52.2206 673.943 54.0261C673.547 55.2317 673.043 56.0307 672.04 56.8344C670.174 57.2698 668.325 57.2042 666.416 57.1763C665.828 57.178 665.24 57.1809 664.652 57.1849C663.036 57.1924 661.421 57.1824 659.804 57.1695C658.062 57.1587 656.319 57.164 654.577 57.1674C651.163 57.1715 647.749 57.1607 644.335 57.145C640.361 57.1274 636.387 57.1251 632.414 57.1236C625.325 57.1205 618.237 57.1044 611.148 57.0806C604.266 57.0574 597.383 57.0419 590.501 57.0358C590.289 57.0356 590.077 57.0354 589.858 57.0352C588.152 57.0336 586.447 57.0321 584.741 57.0306C577.579 57.0244 570.419 57.012 563.257 56.9985C561.672 56.9955 560.087 56.9927 558.502 56.9902C554.334 56.9833 550.168 56.9746 546.001 56.96C544.278 56.9541 542.554 56.949 540.831 56.9466C539.255 56.9444 537.678 56.9392 536.102 56.9317C535.53 56.9295 534.959 56.9283 534.388 56.9283C533.613 56.9281 532.838 56.9241 532.064 56.9191C531.84 56.9199 531.617 56.9207 531.386 56.9216C530.143 56.9089 529.164 56.7952 528.064 56.2103C527.105 54.9923 526.682 54.1707 526.777 52.6219C527.03 51.1053 527.68 50.1825 528.699 49.0335C528.909 49.0335 529.118 49.0335 529.333 49.0335C529.408 48.8086 529.483 48.5838 529.562 48.3521C530.031 47.3355 530.613 46.7009 531.394 45.8936C532.267 44.9886 532.905 44.2215 533.456 43.1048C533.908 42.743 534.361 42.3821 534.818 42.0285C535.459 41.4544 535.935 40.8268 536.449 40.1404C537.435 38.8421 538.43 38.0644 539.798 37.1761C539.903 36.9701 540.008 36.7642 540.116 36.552C540.325 36.552 540.534 36.552 540.75 36.552C540.907 36.0886 540.907 36.0886 541.067 35.6159C541.544 35.1783 541.544 35.1783 542.197 34.6993C542.451 34.511 542.706 34.3228 542.967 34.1288C543.281 33.8988 543.597 33.6687 543.921 33.4316C544.338 33.1215 544.756 32.8111 545.172 32.5004C545.621 32.1671 546.068 31.834 546.517 31.5009C546.732 31.3415 546.947 31.182 547.168 31.0177C550.661 28.439 550.661 28.439 551.532 28.439C551.532 28.2331 551.532 28.0272 551.532 27.815C551.84 27.6448 552.147 27.4747 552.464 27.2994C552.768 27.1309 552.768 27.1309 553.079 26.959C553.533 26.7074 553.988 26.4562 554.443 26.2051C555.612 25.5596 556.779 24.9104 557.939 24.2497C560.399 22.8543 562.835 21.655 565.486 20.6381C565.938 20.4486 566.39 20.258 566.841 20.0665C572.188 17.83 577.757 16.3801 583.443 15.236C583.671 15.19 583.899 15.1441 584.134 15.0967C584.893 14.9534 585.653 14.8291 586.416 14.7094C586.752 14.6539 587.089 14.5983 587.435 14.5411C591.203 13.9926 594.954 13.9904 598.758 14.004Z" fill="#FABB4A"/>
+    <path d="M656.372 108.085L656.202 109.19L640.752 109.335C630.413 109.383 625.244 109.623 625.244 109.96C625.244 110.825 626.38 112.267 627.459 112.796C628.254 113.132 632.515 112.988 641.774 112.315C657.735 111.161 656.485 111.161 656.485 112.363C656.485 113.084 656.77 113.325 657.792 113.181C658.474 113.084 659.042 112.7 659.042 112.315C659.042 111.69 661.2 111.594 674.55 111.45C689.545 111.354 690 111.306 690 110.392C690 109.863 689.489 108.998 688.864 108.469C687.444 107.267 686.137 107.267 670.97 108.421C664.722 108.902 659.44 109.19 659.212 109.094C658.928 108.998 658.758 108.469 658.758 107.94C658.758 106.594 656.6 106.739 656.372 108.085Z" fill="#AF3C07"/>
+    <path d="M557.647 108.469C548.332 109.19 547.026 109.19 546.174 108.565C545.264 107.94 545.037 107.94 544.129 108.613C543.219 109.335 541.231 109.431 527.939 109.431C511.409 109.431 511.353 109.431 514.079 112.075L515.329 113.325L528.905 112.363C536.403 111.786 542.651 111.354 542.879 111.354C543.106 111.354 543.447 111.786 543.617 112.315C543.787 112.892 544.412 113.277 545.094 113.277C545.889 113.277 546.287 112.988 546.287 112.315C546.287 111.354 546.684 111.354 561.908 111.354C577.131 111.354 577.529 111.354 577.529 110.392C577.529 109.863 577.017 108.998 576.392 108.469C574.972 107.267 572.587 107.267 557.647 108.469Z" fill="#AF3C07"/>
+    <path d="M589.629 110.152C580.994 111.257 579.234 112.267 579.234 116.017C579.234 118.469 579.29 118.565 580.426 118.084C581.051 117.748 581.676 117.603 581.789 117.699C582.074 117.94 579.915 126.353 579.46 126.689C579.119 126.978 579.46 124.238 580.142 120.632L580.482 119.094L577.415 119.767C575.769 120.151 565.6 122.218 554.807 124.334C541.97 126.93 534.983 128.516 534.529 129.045C533.677 129.958 533.563 132.795 534.358 133.228C534.699 133.372 534.926 133.997 534.926 134.622C534.926 136.4 536.631 137.314 539.868 137.314C542.254 137.314 542.822 137.458 543.049 138.275C543.276 138.997 543.844 139.237 545.378 139.237C547.026 139.237 547.423 139.045 547.423 138.275C547.423 137.458 547.821 137.314 550.149 137.314C553.729 137.314 554.807 136.593 555.432 133.708C555.716 132.458 556.001 131.353 556.114 131.257C556.171 131.208 560.829 130.487 566.452 129.67C572.076 128.853 577.245 128.084 577.927 127.939C579.119 127.699 579.687 128.42 583.891 135.631C587.81 142.266 588.832 143.66 590.026 143.852C590.821 143.996 591.9 144.285 592.412 144.573C593.775 145.15 609.737 145.15 610.191 144.525C610.362 144.237 611.1 144.044 611.839 144.044C612.52 144.044 613.542 143.756 614.054 143.419C614.565 143.131 616.95 139.477 619.28 135.391C623.312 128.228 623.54 127.939 625.074 128.084C625.925 128.18 631.038 128.901 636.32 129.67C641.66 130.439 646.147 131.064 646.375 131.064C646.715 131.064 647.511 133.372 647.682 135.102C647.852 136.497 649.612 137.314 652.567 137.314C654.725 137.314 655.293 137.506 655.52 138.275C655.747 138.997 656.315 139.237 657.849 139.237C659.497 139.237 659.894 139.045 659.894 138.275C659.894 137.458 660.292 137.314 662.62 137.314C665.802 137.314 667.847 136.304 667.847 134.67C667.847 134.045 668.13 133.372 668.415 133.228C669.21 132.795 669.097 129.958 668.301 129.045C667.79 128.564 661.03 126.978 649.102 124.574C638.934 122.555 628.765 120.488 626.494 120.007L622.347 119.142L622.631 120.392C623.199 122.94 623.654 126.737 623.369 126.737C623.199 126.737 622.631 125.055 622.12 122.988C621.609 120.969 621.04 118.901 620.927 118.421C620.643 117.699 620.87 117.603 622.063 117.892C623.483 118.18 623.54 118.132 623.54 115.825C623.54 112.988 622.802 112.315 618.712 111.161C612.35 109.431 598.717 108.95 589.629 110.152ZM614.905 122.555L615.076 126.257L601.557 126.161L588.037 126.016L587.867 122.94C587.754 121.257 587.81 119.574 587.981 119.19C588.265 118.661 590.707 118.565 601.5 118.661L614.735 118.805L614.905 122.555ZM603.942 131.353C609.169 131.93 611.839 134.67 610.532 138.323C609.737 140.631 607.919 141.689 603.999 142.218C596.331 143.227 596.444 143.227 594.4 142.169C592.355 141.112 590.594 138.66 590.594 136.881C590.594 135.006 592.184 132.555 594.116 131.545C596.047 130.535 596.274 130.487 603.942 131.353Z" fill="#AF3C07"/>
+    <path d="M595.309 132.603C593.547 133.324 592.127 136.064 592.582 137.795C592.809 138.564 593.775 139.766 594.74 140.487C598.376 143.083 603.659 140.871 603.659 136.785C603.659 133.131 599.285 130.968 595.309 132.603ZM601.272 134.045C602.352 134.958 602.068 136.737 600.762 137.314C599.342 137.987 598.262 137.698 597.467 136.449C596.274 134.574 599.512 132.554 601.272 134.045Z" fill="#AF3C07"/>
+    <path d="M536.744 115.296C536.289 115.68 536.062 117.699 536.062 121.305V126.737L537.653 126.401C538.504 126.209 542.481 125.391 546.571 124.574L553.956 123.132L554.126 119.622C554.296 117.363 554.126 115.873 553.671 115.44C552.762 114.478 537.823 114.382 536.744 115.296Z" fill="#AF3C07"/>
+    <path d="M649.329 115.248C649.102 115.584 648.932 117.459 648.932 119.478L648.988 123.132L656.259 124.622C660.292 125.439 664.268 126.209 665.177 126.401L666.71 126.737V121.305C666.71 117.699 666.483 115.68 666.029 115.296C665.12 114.527 649.897 114.478 649.329 115.248Z" fill="#AF3C07"/>
+    <path d="M24.4799 110.917C20.4 110.917 16.7024 110.102 13.3875 108.472C10.1235 106.843 7.52246 104.856 5.58447 102.514L8.10896 91.9722C9.53696 94.8242 11.6789 97.3959 14.535 99.6875C17.3909 101.979 20.8079 103.125 24.7859 103.125C28.4069 103.125 31.3904 101.979 33.7364 99.6875C36.1334 97.3959 37.3319 94.5694 37.3319 91.2083C37.3319 88.7639 36.7453 86.7523 35.5723 85.1736C34.3993 83.5949 33.0734 82.3473 31.5944 81.4307C30.1154 80.514 28.9424 79.8519 28.0754 79.4444L19.6604 75.1668C18.3345 74.4538 16.677 73.4607 14.688 72.1875C12.75 70.9144 11.0415 69.1575 9.56246 66.9168C8.08346 64.676 7.34396 61.7732 7.34396 58.2084C7.34396 54.7455 8.13447 51.6645 9.71546 48.9654C11.3474 46.2663 13.5915 44.1528 16.4474 42.625C19.3544 41.0972 22.6694 40.3334 26.3924 40.3334C30.0644 40.3334 33.3029 40.9955 36.1079 42.3195C38.9129 43.5927 41.1059 44.9167 42.6869 46.2917L40.1624 56.8334C38.8873 54.6945 37.0004 52.6829 34.5014 50.7986C32.0024 48.9143 29.1719 47.9722 26.0099 47.9722C22.95 47.9722 20.5019 48.8889 18.6659 50.7222C16.83 52.5046 15.9119 54.7199 15.9119 57.3681C15.9119 59.4051 16.3709 61.0856 17.2889 62.4097C18.258 63.7338 19.3289 64.7779 20.5019 65.5418C21.7259 66.3057 22.7204 66.8912 23.4854 67.2986L32.0533 71.5765C33.0734 72.0857 34.3484 72.7987 35.8784 73.7154C37.4594 74.632 39.0148 75.8542 40.5448 77.3819C42.0749 78.8588 43.3498 80.6921 44.3699 82.8819C45.3899 85.0208 45.8998 87.6181 45.8998 90.6736C45.8998 94.5949 44.9563 98.0834 43.0693 101.139C41.2333 104.194 38.7089 106.588 35.4958 108.319C32.2829 110.051 28.6109 110.917 24.4799 110.917ZM87.7093 110L66.978 84.7918L84.0374 64.1668H93.5998L76.8464 84.1807L98.1898 110H87.7093ZM57.798 110V36.6667H66.0599V110H57.798ZM99.4544 132.917L114.372 103.278L94.941 64.1668H104.274L114.066 84.0279C114.933 85.8102 115.775 87.5672 116.59 89.2986C117.406 91.0301 118.222 93.1181 119.039 95.5625C119.906 93.1181 120.721 91.0301 121.486 89.2986C122.302 87.5163 123.169 85.7593 124.088 84.0279L134.032 64.1668H142.83L108.405 132.917H99.4544ZM153.363 110V38.9584L185.34 82.9583L216.705 38.9584V110H207.983V78.2222C207.983 76.1343 208.009 73.8681 208.061 71.4236C208.112 68.9282 208.29 66.1019 208.595 62.9445C207.015 65.7455 205.459 68.2154 203.93 70.3543C202.45 72.4422 201.098 74.3773 199.875 76.1597L185.034 97.1668L169.734 76.1597C168.459 74.3773 167.082 72.4422 165.603 70.3543C164.175 68.2154 162.645 65.7455 161.013 62.9445C161.319 66.1019 161.497 68.9282 161.548 71.4236C161.599 73.8681 161.625 76.1343 161.625 78.2222V110H153.363ZM254.649 110.917C250.212 110.917 246.157 109.847 242.485 107.708C238.813 105.569 235.881 102.692 233.688 99.0765C231.546 95.4607 230.475 91.463 230.475 87.0833C230.475 82.6528 231.546 78.6552 233.688 75.0904C235.881 71.4746 238.813 68.5972 242.485 66.4583C246.157 64.3194 250.212 63.25 254.649 63.25C259.137 63.25 263.191 64.3194 266.812 66.4583C270.484 68.5972 273.391 71.4746 275.533 75.0904C277.725 78.6552 278.822 82.6528 278.822 87.0833C278.822 91.463 277.725 95.4607 275.533 99.0765C273.391 102.692 270.484 105.569 266.812 107.708C263.191 109.847 259.137 110.917 254.649 110.917ZM254.649 103.125C257.606 103.125 260.284 102.412 262.681 100.986C265.078 99.5094 266.991 97.5742 268.419 95.1807C269.846 92.7362 270.56 90.037 270.56 87.0833C270.56 84.1296 269.846 81.4561 268.419 79.0625C266.991 76.6181 265.078 74.6829 262.681 73.2569C260.284 71.7801 257.606 71.0418 254.649 71.0418C251.691 71.0418 249.013 71.7801 246.616 73.2569C244.219 74.6829 242.306 76.6181 240.879 79.0625C239.451 81.4561 238.737 84.1296 238.737 87.0833C238.737 90.037 239.451 92.7362 240.879 95.1807C242.306 97.5742 244.219 99.5094 246.616 100.986C249.013 102.412 251.691 103.125 254.649 103.125ZM293.369 110V71.0418H282.965V64.1668H293.599V48.889H301.402V64.1668H312.8V71.0418H301.631V110H293.369ZM322.439 110V64.1668H330.701V110H322.439ZM326.57 55.9167C325.04 55.9167 323.74 55.382 322.669 54.3125C321.598 53.2431 321.062 51.9444 321.062 50.4167C321.062 48.838 321.598 47.5395 322.669 46.5209C323.74 45.4515 325.04 44.9167 326.57 44.9167C328.152 44.9167 329.451 45.4515 330.472 46.5209C331.543 47.5395 332.078 48.838 332.078 50.4167C332.078 51.9444 331.543 53.2431 330.472 54.3125C329.451 55.382 328.152 55.9167 326.57 55.9167ZM366.314 110.917C361.877 110.917 357.823 109.847 354.151 107.708C350.479 105.569 347.547 102.692 345.354 99.0765C343.211 95.4607 342.141 91.463 342.141 87.0833C342.141 82.6528 343.211 78.6552 345.354 75.0904C347.547 71.4746 350.479 68.5972 354.151 66.4583C357.823 64.3194 361.877 63.25 366.314 63.25C370.802 63.25 374.857 64.3194 378.478 66.4583C382.15 68.5972 385.057 71.4746 387.199 75.0904C389.391 78.6552 390.488 82.6528 390.488 87.0833C390.488 91.463 389.391 95.4607 387.199 99.0765C385.057 102.692 382.15 105.569 378.478 107.708C374.857 109.847 370.802 110.917 366.314 110.917ZM366.314 103.125C369.272 103.125 371.95 102.412 374.346 100.986C376.744 99.5094 378.656 97.5742 380.084 95.1807C381.512 92.7362 382.226 90.037 382.226 87.0833C382.226 84.1296 381.512 81.4561 380.084 79.0625C378.656 76.6181 376.744 74.6829 374.346 73.2569C371.95 71.7801 369.272 71.0418 366.314 71.0418C363.357 71.0418 360.679 71.7801 358.282 73.2569C355.885 74.6829 353.972 76.6181 352.544 79.0625C351.116 81.4561 350.403 84.1296 350.403 87.0833C350.403 90.037 351.116 92.7362 352.544 95.1807C353.972 97.5742 355.885 99.5094 358.282 100.986C360.679 102.412 363.357 103.125 366.314 103.125ZM401.94 110V64.1668H409.59V71.5765C411.272 68.8773 413.44 66.8148 416.092 65.389C418.795 63.9631 421.702 63.25 424.813 63.25C428.076 63.25 431.086 64.0648 433.84 65.6944C436.645 67.2731 438.914 69.5903 440.649 72.6458C442.382 75.6505 443.249 79.3171 443.249 83.6458V110H434.987V84.7918C434.987 81.176 433.891 77.9932 431.698 75.2432C429.556 72.4422 426.521 71.0418 422.594 71.0418C419.381 71.0418 416.5 72.2131 413.95 74.5557C411.45 76.8473 410.201 80.1829 410.201 84.5625V110H401.94Z" fill="#fff"/>
+  </symbol>
+</svg>
+<div id="sm-library-scope" class="sm">
+  <div class="library" id="smLibrary">
+
+    <div class="sm-pro-mobile-top" aria-label="Pro Library header">
+      <div class="sm-pro-title-wrap">
+        <div class="sm-pro-title-row">
+          <h1><a class="sm-skin-home-link" href="https://skymotion.cloud">SkyMotion</a></h1>
+          <span class="sm-pro-badge">PRO</span>
+        </div>
+        <p>Moves, plans and packs for your shoot.</p>
+      </div>
+      <div class="sm-pro-quote">Built for the days when you can't afford to waste a battery.</div>
+    </div>
+
+    <button class="mobile-open" id="openAssistantBtn" type="button" aria-label="Open assistant">
+      <span class="filterIcon" aria-hidden="true"></span>
+      <span>Assistant</span>
+    </button>
+
+    <nav class="sm-pro-mobile-tabs" aria-label="Pro Library tabs">
+      <button class="is-active" type="button">All</button>
+      <button type="button">Moves</button>
+      <button type="button">Plans</button>
+      <button type="button">Packs</button>
+      <button type="button">Saved</button>
+    </nav>
+
+    <div class="assistantBackdrop" id="assistantBackdrop" aria-hidden="true"></div>
+
+    <aside class="assistant" aria-label="Filters panel">
+      <div class="assistant__header">
+        <div class="assistant__heading">
+          <button class="assistant__backToResults" id="backToResultsBtn" type="button">
+            ← Back to library
+          </button>
+          <div class="assistant__title">Filters</div>
+        </div>
+
+        <div class="assistant__right">
+          <button class="assistant__count assistant__showTopBtn" id="showResultsBtn" type="button">
+            Show <span id="matchCount">—</span> moves
+          </button>
+
+          <button class="assistant__close" id="closeAssistantBtn" type="button" aria-label="Close filters">
+            ×
+          </button>
+        </div>
+      </div>
+
+      <div class="chat" id="chat" aria-live="polite"></div>
+
+      <div class="assistant__footer">
+        <div class="filterProgress" aria-hidden="true">
+          <div class="filterProgress__bar" id="filterProgressBar"></div>
+        </div>
+
+        <div class="assistant__footerRow">
+          <button class="btn btn--ghost" id="resetBtn" type="button">Reset</button>
+          <button class="btn btn--ghost" id="backBtn" type="button" disabled>Previous</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="results" aria-label="Video results">
+      <div class="results__head" id="resultsHead" style="display:none;"></div>
+      <div class="results__grid" id="resultsGrid"></div>
+      <button class="btn btn--ghost results__more" id="moreBtn" type="button">Load more</button>
+    </main>
+  </div>
+
+  <div class="sm-modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="sm-modal__backdrop" id="modalBackdrop"></div>
+    <div class="sm-modal__content" id="modalContent"></div>
+  </div>
+</div>
+
+<script src="./library-pro.js?v=126"></script>
+
+<div id="sm-plan-v3-root">
+  <div class="spv3" id="spv3Modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="spv3__backdrop" id="spv3Backdrop"></div>
+    <div class="spv3__dialog">
+      <button class="spv3__close" id="spv3Close" type="button" aria-label="Close">✕</button>
+      <div class="spv3__viewport" id="spv3Viewport">
+        <div class="spv3__track" id="spv3Track"></div>
+      </div>
+      <div class="spv3__dots" id="spv3Dots"></div>
+    </div>
+  </div>
+</div>
+
+<script src="./plan-viewer-v3.js?v=1"></script>
+
+<!-- Skin: inject the landing hero video as the pack-detail backdrop (visual only, no product logic) -->
+<script>
+(function(){
+  var VID = "https://s3.amazonaws.com/webflow-prod-assets/6766d6c8fc7f71813b295766/691f1934d921d227354db34f_1120(6).mp4";
+  // single page scrollbar: the product sets overflow-y:auto inline on BOTH html
+  // and body → two scrollbars. Force one scroller (html), or lock both.
+  function pageScroll(mode){
+    var h = document.documentElement, b = document.body;
+    if (mode === "lock"){
+      h.style.setProperty("overflow","hidden","important");
+      b.style.setProperty("overflow","hidden","important");
+    } else { // "single"
+      h.style.removeProperty("overflow");
+      b.style.removeProperty("overflow");
+      h.style.setProperty("overflow-x","hidden","important");
+      h.style.setProperty("overflow-y","auto","important");
+      b.style.setProperty("overflow-x","hidden","important");
+      b.style.setProperty("overflow-y","visible","important");  // body doesn't scroll → no 2nd bar
+    }
+  }
+  function inject(bg){
+    if(!bg || bg.querySelector("video.sm-skin-hero-vid")) return;
+    var v = document.createElement("video");
+    v.className = "sm-skin-hero-vid";
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true;
+    v.setAttribute("muted",""); v.setAttribute("playsinline",""); v.setAttribute("autoplay","");
+    v.playsInline = true; v.preload = "auto"; v.src = VID;
+    bg.insertBefore(v, bg.firstChild);
+    var img = bg.querySelector("img"); if (img) img.style.display = "none";
+    var p = v.play(); if (p && p.catch) p.catch(function(){});
+    setTimeout(function(){ pageScroll("single"); }, 0);   // pack open → single scrollbar
+  }
+  // animate the pack signature word-by-word (like the landing slogan)
+  function animFooter(f){
+    if (!f || f.__smAnim) return; f.__smAnim = true;
+    var txt = (f.textContent || "").trim(); if (!txt) return;
+    var parts = txt.split(/\s+/);
+    f.textContent = "";
+    parts.forEach(function(w, i){
+      var s = document.createElement("span");
+      s.className = "sm-skin-w"; s.textContent = w;
+      s.style.transitionDelay = (i * 0.2) + "s";   // word-by-word stagger
+      f.appendChild(s);
+    });
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches){
+      f.classList.add("sm-anim-in"); return;
+    }
+    // reveal word-by-word when the signature scrolls into view; replays each time
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(es){
+        es.forEach(function(e){ f.classList.toggle("sm-anim-in", e.isIntersecting); });
+      }, { threshold:0.5 }).observe(f);
+    } else {
+      f.classList.add("sm-anim-in");
+    }
+  }
+
+  // our footer (landing-style) at the bottom of the pack page
+  function injectFooter(screen){
+    if (!screen || screen.querySelector(".sm-skin-foot")) return;
+    var f = document.createElement("footer");
+    f.className = "sm-skin-foot";
+    f.innerHTML =
+      '<div class="sm-skin-foot__in">' +
+        '<div class="sm-skin-foot__top">' +
+          '<a class="sm-skin-foot__brand" href="https://skymotion.cloud" aria-label="SkyMotion"><svg class="sm-skin-foot__logo" viewBox="0 0 690 147" role="img" aria-label="SkyMotion"><use href="#sm-logo"/></svg></a>' +
+          '<nav class="sm-skin-foot__links">' +
+            '<a href="https://skymotion.cloud/library">Open Library</a>' +
+            '<a href="https://skymotion.cloud/pro-library">Pro</a>' +
+            '<a href="https://skymotion.cloud/log-in">Log In</a>' +
+            '<a href="https://skymotion.cloud/privacy-policy">Privacy</a>' +
+            '<a href="https://skymotion.cloud/terms-of-use">Terms</a>' +
+            '<a href="https://skymotion.cloud/contact">Contact</a>' +
+          '</nav>' +
+        '</div>' +
+        '<div class="sm-skin-foot__bottom"><small>© ' + new Date().getFullYear() + ' SkyMotion</small></div>' +
+      '</div>';
+    screen.appendChild(f);
+  }
+
+  // Move/Plan video player: loop ON by default + speed (1x / 0.5x) toggle.
+  // Additive only — the <video>.loop / .playbackRate are standard DOM APIs;
+  // product JS (event bridge, fullscreen, analytics, prev/next) is untouched.
+  function enhancePlayer(v){
+    if (!v || v.__smEnh) return; v.__smEnh = true;
+    var root = v.closest(".player");
+    var top = root && root.querySelector(".player__top");
+    var closeBtn = top && top.querySelector(".player__close");
+    if (!top || !closeBtn) return;
+    v.loop = true;                                  // loop by default (study on location)
+    var cluster = document.createElement("div");
+    cluster.className = "sm-skin-pcluster";
+    // speed toggle (1× / 0.5×)
+    var speeds = [1, 0.5], si = 0;
+    var spd = document.createElement("button");
+    spd.type = "button"; spd.className = "sm-skin-pbtn sm-skin-pbtn--speed";
+    spd.setAttribute("aria-label", "Playback speed");
+    spd.textContent = "1×";
+    spd.addEventListener("click", function(){
+      si = (si + 1) % speeds.length;
+      try { v.playbackRate = speeds[si]; } catch (_) {}
+      spd.textContent = (speeds[si] === 1 ? "1" : String(speeds[si])) + "×";
+      spd.classList.toggle("is-on", speeds[si] !== 1);
+    });
+    // loop toggle (on by default)
+    var lp = document.createElement("button");
+    lp.type = "button"; lp.className = "sm-skin-pbtn sm-skin-pbtn--loop is-on";
+    lp.setAttribute("aria-label", "Loop");
+    lp.setAttribute("aria-pressed", "true");
+    lp.innerHTML = "↻";
+    lp.addEventListener("click", function(){
+      v.loop = !v.loop;
+      lp.classList.toggle("is-on", v.loop);
+      lp.setAttribute("aria-pressed", v.loop ? "true" : "false");
+    });
+    cluster.appendChild(spd);
+    cluster.appendChild(lp);
+    top.insertBefore(cluster, closeBtn);
+  }
+
+  // Plan montage line: make each clip a navigation target + an edit recipe.
+  // Navigates via the plan's own dots (#spv3Dots .spv3Dot[data-slide]) → goTo.
+  // Additive only — plan-viewer-v3.js logic and the event bridge are untouched.
+  function centerActiveClip(track){
+    var scroller = track.closest(".spv3TimelineFlow__scroller");
+    var active = track.querySelector(".spv3TimelineFlow__clip.is-active");
+    if (!scroller || !active || !scroller.clientWidth) return;
+    var target = active.offsetLeft - (scroller.clientWidth - active.clientWidth) / 2;
+    target = Math.max(0, target);
+    try { scroller.scrollTo({ left:target, behavior:"smooth" }); }
+    catch (_) { scroller.scrollLeft = target; }
+  }
+  function wireMontage(track){
+    if (!track || track.__smWired) return; track.__smWired = true;
+    var clips = Array.prototype.slice.call(track.querySelectorAll(".spv3TimelineFlow__clip"));
+    if (!clips.length) return;
+    clips.forEach(function(clip, i){
+      clip.classList.add("sm-skin-tl-tap");
+      clip.setAttribute("role", "button");
+      clip.setAttribute("tabindex", "0");
+      var go = function(){
+        var dot = document.querySelector('#spv3Dots .spv3Dot[data-slide="' + (i + 1) + '"]');
+        if (dot) dot.click();
+      };
+      clip.addEventListener("click", go);
+      clip.addEventListener("keydown", function(e){
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+      });
+    });
+    // edit-recipe summary: N shots · M cuts · ~Xs
+    var flow = track.closest(".spv3TimelineFlow");
+    var label = flow && flow.querySelector(".spv3TimelineFlow__label");
+    if (label && !flow.querySelector(".sm-skin-tl-sum")){
+      var total = 0, parsed = 0;
+      clips.forEach(function(clip){
+        var d = clip.querySelector(".spv3TimelineFlow__dur");
+        var mm = d && d.textContent.match(/([\d.]+)/);
+        if (mm){ total += parseFloat(mm[1]); parsed++; }
+      });
+      var cuts = clips.length - 1;
+      var txt = clips.length + (clips.length === 1 ? " shot" : " shots")
+              + " · " + cuts + (cuts === 1 ? " cut" : " cuts");
+      if (parsed === clips.length && total > 0) txt += " · ~" + Math.round(total) + "s";
+      var sum = document.createElement("span");
+      sum.className = "sm-skin-tl-sum";
+      sum.textContent = txt;
+      label.insertAdjacentElement("afterend", sum);
+    }
+    centerActiveClip(track);
+  }
+
+  var scope = document.getElementById("sm-library-scope") || document.body;
+  document.querySelectorAll(".sm-pro-pack-bg").forEach(inject);
+  document.querySelectorAll(".sm-pro-pack-footer").forEach(animFooter);
+  document.querySelectorAll(".sm-pro-pack-detail-screen").forEach(injectFooter);
+  document.querySelectorAll("#playerVideo").forEach(enhancePlayer);
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      (m.addedNodes || []).forEach(function(n){
+        if (n.nodeType !== 1) return;
+        if (n.classList && n.classList.contains("sm-pro-pack-bg")) inject(n);
+        var inner = n.querySelector && n.querySelector(".sm-pro-pack-bg");
+        if (inner) inject(inner);
+        if (n.classList && n.classList.contains("sm-pro-pack-footer")) animFooter(n);
+        var foot = n.querySelector && n.querySelector(".sm-pro-pack-footer");
+        if (foot) animFooter(foot);
+        var screen = (n.classList && n.classList.contains("sm-pro-pack-detail-screen")) ? n
+                   : (n.querySelector && n.querySelector(".sm-pro-pack-detail-screen"));
+        if (screen) injectFooter(screen);
+        var vid = (n.id === "playerVideo") ? n
+                : (n.querySelector && n.querySelector("#playerVideo"));
+        if (vid) enhancePlayer(vid);
+      });
+    });
+  }).observe(scope, { childList:true, subtree:true });
+
+  // plan montage line lives in its own root (#sm-plan-v3-root)
+  var planRoot = document.getElementById("sm-plan-v3-root");
+  if (planRoot){
+    function scanTracks(n){
+      if (n.classList && n.classList.contains("spv3TimelineFlow__track")) wireMontage(n);
+      if (n.querySelectorAll) n.querySelectorAll(".spv3TimelineFlow__track").forEach(wireMontage);
+    }
+    planRoot.querySelectorAll(".spv3TimelineFlow__track").forEach(wireMontage);
+    new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        (m.addedNodes || []).forEach(function(n){
+          if (n.nodeType !== 1) return;
+          scanTracks(n);
+        });
+      });
+    }).observe(planRoot, { childList:true, subtree:true });
+  }
+
+  // checklist modal: add the liked progress bar + count, wired to the checkboxes
+  function enhanceSheet(sheet){
+    if (!sheet || sheet.__smEnh) return; sheet.__smEnh = true;
+    var boxes = sheet.querySelectorAll('input[type="checkbox"]');
+    if (!boxes.length) return;
+    var titleRow = sheet.querySelector(".sm-pro-pack-checklist-titleRow");
+    var anchor = titleRow
+              || sheet.querySelector(".sm-pro-pack-checklist-line")
+              || sheet.querySelector(".sm-pro-pack-checklist-overlay");
+    if (!anchor || !anchor.parentNode) return;
+    // count → into the title row (clear stat, right-aligned)
+    var countEl = document.createElement("span");
+    countEl.className = "sm-skin-ck-count";
+    countEl.textContent = "0 / " + boxes.length;
+    if (titleRow) titleRow.appendChild(countEl);
+    else anchor.parentNode.insertBefore(countEl, anchor.nextSibling);
+    // a real progress bar below the header
+    var barWrap = document.createElement("div");
+    barWrap.className = "sm-skin-ck-bar"; barWrap.innerHTML = "<i></i>";
+    anchor.parentNode.insertBefore(barWrap, anchor.nextSibling);
+    var bar = barWrap.querySelector("i");
+    function upd(){
+      var d = 0; boxes.forEach(function(b){ if (b.checked) d++; });
+      countEl.textContent = d + " / " + boxes.length;
+      bar.style.width = (d / boxes.length * 100) + "%";
+    }
+    boxes.forEach(function(b){ b.addEventListener("change", upd); });
+    upd();
+  }
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      (m.addedNodes || []).forEach(function(n){
+        if (n.nodeType !== 1) return;
+        var s = (n.classList && n.classList.contains("sm-pro-checklist-sheet")) ? n
+              : (n.querySelector && n.querySelector(".sm-pro-checklist-sheet"));
+        if (s){ enhanceSheet(s); pageScroll("lock"); }
+      });
+      (m.removedNodes || []).forEach(function(n){
+        if (n.nodeType !== 1) return;
+        var was = (n.classList && n.classList.contains("sm-pro-checklist-sheet"))
+               || (n.querySelector && n.querySelector(".sm-pro-checklist-sheet"));
+        if (was && !document.querySelector(".sm-pro-checklist-sheet")){
+          pageScroll("single");   // restore single scrollbar (not double) after closing
+        }
+      });
+    });
+  }).observe(document.body, { childList:true, subtree:true });
+
+  // restore the single scrollbar the instant a close is triggered (no flash of the double)
+  document.addEventListener("click", function(e){
+    if (e.target && e.target.closest && e.target.closest("[data-pro-close-checklist]")) pageScroll("single");
+  }, true);
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && document.querySelector(".sm-pro-checklist-sheet")) pageScroll("single");
+  }, true);
+})();
+</script>
+
+<!-- ===== Feedback widget (ported from the free library) ===== -->
+<div id="sm-feedback-widget">
+  <button class="smfb-floating-btn" id="smfbOpen" type="button">
+    Give us feedback
+  </button>
+  <div class="smfb-modal" id="smfbModal" aria-hidden="true">
+    <div class="smfb-bg"></div>
+    <div class="smfb-dark-layer"></div>
+    <button class="smfb-back" id="smfbClose" type="button" aria-label="Close feedback">
+      ‹
+    </button>
+    <form id="smfbForm" class="smfb-form">
+      <input type="hidden" name="access_key" value="493ab0e6-b35f-4b50-bc4a-6ae362e2ffeb">
+      <input type="hidden" name="subject" value="New SkyMotion feedback">
+      <input type="hidden" name="from_name" value="SkyMotion Feedback">
+      <input type="hidden" name="usefulness" id="smfbUsefulness">
+      <input type="hidden" name="usage_time" id="smfbUsageTime">
+      <input type="hidden" name="problems" id="smfbProblems">
+      <input type="hidden" name="page_url" id="smfbPageUrl">
+      <input type="checkbox" name="botcheck" class="smfb-botcheck" tabindex="-1" autocomplete="off">
+      <div class="smfb-progress">
+        <div class="smfb-progress__bar" id="smfbProgressBar"></div>
+      </div>
+      <div class="smfb-step is-active" data-step="1">
+        <h1>Help us improve SkyMotion</h1>
+        <p>
+          You’re not just testing the platform — you’re helping shape the tool we’re building for real drone pilots.
+        </p>
+        <p>
+          SkyMotion is designed to make shooting easier on location, especially in that moment when you’re not sure what to film next.
+        </p>
+      </div>
+      <div class="smfb-step" data-step="2">
+        <h1>Did SkyMotion help during your flight?</h1>
+        <p>Choose the option that best describes your experience.</p>
+        <div class="smfb-rating-row" data-group="usefulness">
+          <button type="button" class="smfb-rating smfb-red" data-value="Not useful">
+            <span></span>
+            Not useful
+          </button>
+          <button type="button" class="smfb-rating smfb-orange" data-value="A bit useful">
+            <span></span>
+            A bit
+          </button>
+          <button type="button" class="smfb-rating smfb-lime" data-value="Useful">
+            <span></span>
+            Useful
+          </button>
+          <button type="button" class="smfb-rating smfb-green" data-value="Very useful">
+            <span></span>
+            Very useful
+          </button>
+        </div>
+      </div>
+      <div class="smfb-step" data-step="3">
+        <h1>When did you use it?</h1>
+        <p>This helps us understand how SkyMotion fits into a real shooting workflow.</p>
+        <div class="smfb-choice-list" data-group="usage">
+          <button type="button" class="smfb-choice" data-value="Before flight">Before flight</button>
+          <button type="button" class="smfb-choice" data-value="During flight">During flight</button>
+          <button type="button" class="smfb-choice" data-value="After flight">After flight</button>
+          <button type="button" class="smfb-choice" data-value="Just exploring">Just exploring</button>
+        </div>
+      </div>
+      <div class="smfb-step" data-step="4">
+        <h1>What felt unclear or missing?</h1>
+        <p>Select anything that matches your experience.</p>
+        <div class="smfb-check-list">
+          <label>
+            <input type="checkbox" value="Hard to understand what to do">
+            <span>Hard to understand what to do</span>
+          </label>
+          <label>
+            <input type="checkbox" value="Not enough relevant shots">
+            <span>Not enough relevant shots</span>
+          </label>
+          <label>
+            <input type="checkbox" value="UI was confusing">
+            <span>UI was confusing</span>
+          </label>
+          <label>
+            <input type="checkbox" value="Took too long to find something">
+            <span>Took too long to find something</span>
+          </label>
+          <label>
+            <input type="checkbox" value="Did not need it in the moment">
+            <span>Didn’t need it in the moment</span>
+          </label>
+          <label>
+            <input type="checkbox" value="Nothing — worked well">
+            <span>Nothing — worked well</span>
+          </label>
+        </div>
+      </div>
+      <div class="smfb-step" data-step="5">
+        <h1>Anything else?</h1>
+        <p>Optional, but if something specific came to mind, this is the most useful part for us.</p>
+        <textarea name="message" placeholder="What should we improve, add, or remove?"></textarea>
+        <input type="email" name="email" placeholder="Email optional">
+      </div>
+      <div class="smfb-step smfb-thanks" data-step="thanks">
+        <h1>Thank you</h1>
+        <p>Your feedback helps us make SkyMotion better for real shooting situations.</p>
+      </div>
+      <div class="smfb-actions" id="smfbActions">
+        <button class="smfb-prev" id="smfbPrev" type="button">Previous</button>
+        <button class="smfb-next" id="smfbNext" type="button">Next</button>
+      </div>
+      <div class="smfb-error" id="smfbError"></div>
+    </form>
+  </div>
+</div>
+<style>
+#sm-feedback-widget,
+#sm-feedback-widget *{
+  box-sizing:border-box;
+}
+#sm-feedback-widget{
+  font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+#sm-feedback-widget .smfb-botcheck{
+  display:none !important;
+}
+/* FLOATING BUTTON */
+#sm-feedback-widget .smfb-floating-btn{
+  position:fixed;
+  right:18px;
+  bottom:calc(22px + env(safe-area-inset-bottom));
+  z-index:9000;
+  height:42px;
+  padding:0 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.055)),
+    rgba(14,14,14,.72);
+  color:rgba(255,255,255,.92);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  cursor:pointer;
+  overflow:hidden;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:
+    0 16px 42px rgba(0,0,0,.36),
+    0 0 0 1px rgba(255,255,255,.04);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(10px) scale(.98);
+  transition:
+    opacity .45s ease,
+    visibility .45s ease,
+    transform .45s ease,
+    background .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease;
+}
+#sm-feedback-widget .smfb-floating-btn.is-visible{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0) scale(1);
+  animation:smfbFloatBreath 4.8s ease-in-out infinite;
+}
+#sm-feedback-widget .smfb-floating-btn::after{
+  content:"";
+  position:absolute;
+  top:-40%;
+  bottom:-40%;
+  left:-70%;
+  width:55%;
+  transform:rotate(18deg);
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.22),
+    transparent
+  );
+  animation:smfbButtonShine 6.5s ease-in-out infinite;
+  pointer-events:none;
+}
+#sm-feedback-widget .smfb-floating-btn:hover{
+  transform:translateY(-2px);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.07)),
+    rgba(18,18,18,.78);
+  border-color:rgba(255,255,255,.30);
+  box-shadow:
+    0 20px 52px rgba(0,0,0,.42),
+    0 0 0 1px rgba(255,255,255,.08);
+}
+/* MODAL */
+#sm-feedback-widget .smfb-modal{
+  position:fixed;
+  inset:0;
+  z-index:100010;
+  display:none;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  min-height:100dvh;
+  color:#fff;
+}
+#sm-feedback-widget .smfb-modal[aria-hidden="false"]{
+  display:block;
+}
+#sm-feedback-widget .smfb-bg{
+  position:fixed;
+  inset:0;
+  background:
+    url("https://skymotion-cdn.b-cdn.net/thumb.jpg")
+    center center / cover no-repeat;
+  transform:scale(1.04);
+  filter:saturate(.92) contrast(1.05) brightness(.78);
+}
+#sm-feedback-widget .smfb-dark-layer{
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.74) 0%, rgba(0,0,0,.50) 38%, rgba(0,0,0,.74) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.22) 42%, rgba(0,0,0,.80) 100%);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+#sm-feedback-widget .smfb-back{
+  position:fixed;
+  left:26px;
+  top:22px;
+  z-index:5;
+  width:44px;
+  height:44px;
+  border:0;
+  background:transparent;
+  color:rgba(255,255,255,.84);
+  font-size:54px;
+  line-height:36px;
+  font-weight:200;
+  cursor:pointer;
+  opacity:.92;
+  transition:opacity .15s ease, transform .15s ease;
+}
+#sm-feedback-widget .smfb-back:hover{
+  opacity:1;
+  transform:translateX(-2px);
+}
+/* FORM */
+#sm-feedback-widget .smfb-form{
+  position:relative;
+  z-index:3;
+  width:min(660px, calc(100vw - 32px));
+  min-height:100dvh;
+  margin:0 auto;
+  padding:72px 0 calc(110px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+#sm-feedback-widget .smfb-progress{
+  width:min(460px, 100%);
+  height:2px;
+  margin-bottom:34px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.18);
+}
+#sm-feedback-widget .smfb-progress__bar{
+  width:20%;
+  height:100%;
+  background:rgba(255,255,255,.9);
+  border-radius:999px;
+  transition:width .22s ease;
+}
+#sm-feedback-widget .smfb-step{
+  display:none;
+  width:100%;
+  animation:smfbFade .2s ease;
+}
+#sm-feedback-widget .smfb-step.is-active{
+  display:block;
+}
+/* TEXT */
+#sm-feedback-widget h1{
+  margin:0 auto 16px;
+  max-width:660px;
+  color:#fff;
+  font-size:clamp(30px, 3.1vw, 42px);
+  line-height:1.08;
+  font-weight:740;
+  letter-spacing:-.04em;
+  text-shadow:0 14px 34px rgba(0,0,0,.42);
+}
+#sm-feedback-widget p{
+  margin:0 auto 11px;
+  max-width:560px;
+  color:rgba(255,255,255,.73);
+  font-size:clamp(14px, 1.15vw, 17px);
+  line-height:1.48;
+  font-weight:500;
+  text-shadow:0 10px 24px rgba(0,0,0,.34);
+}
+/* RATING */
+#sm-feedback-widget .smfb-rating-row{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+  width:min(660px, 100%);
+  margin:34px auto 0;
+}
+#sm-feedback-widget .smfb-rating{
+  min-height:70px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:16px;
+  background:rgba(255,255,255,.115);
+  color:#fff;
+  font-size:13px;
+  font-weight:660;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 14px 32px rgba(0,0,0,.20);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+#sm-feedback-widget .smfb-rating:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.17);
+  border-color:rgba(255,255,255,.30);
+}
+#sm-feedback-widget .smfb-rating span{
+  width:14px;
+  height:14px;
+  border-radius:999px;
+  background:rgba(255,255,255,.5);
+  box-shadow:0 0 0 6px rgba(255,255,255,.07);
+}
+#sm-feedback-widget .smfb-red span{ background:#ef4444; }
+#sm-feedback-widget .smfb-orange span{ background:#f59e0b; }
+#sm-feedback-widget .smfb-lime span{ background:#a3e635; }
+#sm-feedback-widget .smfb-green span{ background:#22c55e; }
+#sm-feedback-widget .smfb-rating.is-selected{
+  background:rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.48);
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+/* CHOICES */
+#sm-feedback-widget .smfb-choice-list{
+  width:min(580px, 100%);
+  margin:34px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+#sm-feedback-widget .smfb-choice{
+  height:56px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:15px;
+  background:rgba(255,255,255,.115);
+  color:#fff;
+  font-size:15px;
+  font-weight:660;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+}
+#sm-feedback-widget .smfb-choice:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.17);
+  border-color:rgba(255,255,255,.30);
+}
+#sm-feedback-widget .smfb-choice.is-selected{
+  background:rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.48);
+}
+/* CHECKLIST */
+#sm-feedback-widget .smfb-check-list{
+  width:min(650px, 100%);
+  margin:30px auto 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+#sm-feedback-widget .smfb-check-list label{
+  min-height:52px;
+  padding:0 14px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;
+  background:rgba(255,255,255,.11);
+  color:rgba(255,255,255,.88);
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-align:left;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:background .15s ease, border-color .15s ease;
+}
+#sm-feedback-widget .smfb-check-list label:hover{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(255,255,255,.28);
+}
+#sm-feedback-widget .smfb-check-list input{
+  width:17px;
+  height:17px;
+  flex:0 0 auto;
+  accent-color:#fff;
+}
+#sm-feedback-widget .smfb-check-list span{
+  font-size:13px;
+  font-weight:600;
+  line-height:1.25;
+}
+/* INPUTS */
+#sm-feedback-widget textarea,
+#sm-feedback-widget input[type="email"]{
+  display:block;
+  width:min(580px, 100%);
+  margin:22px auto 0;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:15px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  outline:none;
+  font:inherit;
+  font-size:15px;
+  font-weight:560;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 15px 34px rgba(0,0,0,.18);
+  transition:background .15s ease, border-color .15s ease;
+}
+#sm-feedback-widget textarea{
+  min-height:135px;
+  padding:16px 18px;
+  resize:vertical;
+}
+#sm-feedback-widget input[type="email"]{
+  height:56px;
+  padding:0 18px;
+}
+#sm-feedback-widget textarea::placeholder,
+#sm-feedback-widget input::placeholder{
+  color:rgba(255,255,255,.68);
+}
+#sm-feedback-widget textarea:focus,
+#sm-feedback-widget input[type="email"]:focus{
+  background:rgba(255,255,255,.17);
+  border-color:rgba(255,255,255,.38);
+}
+/* ACTIONS */
+#sm-feedback-widget .smfb-actions{
+  width:min(560px, 100%);
+  margin:36px auto calc(20px + env(safe-area-inset-bottom));
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+#sm-feedback-widget .smfb-prev,
+#sm-feedback-widget .smfb-next{
+  height:54px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.17);
+  font-size:15px;
+  font-weight:680;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+}
+#sm-feedback-widget .smfb-prev{
+  width:145px;
+  background:rgba(255,255,255,.10);
+  color:rgba(255,255,255,.84);
+}
+#sm-feedback-widget .smfb-next{
+  flex:1;
+  background:rgba(255,255,255,.20);
+  color:#fff;
+}
+#sm-feedback-widget .smfb-prev:hover,
+#sm-feedback-widget .smfb-next:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.25);
+  border-color:rgba(255,255,255,.34);
+}
+#sm-feedback-widget .smfb-prev:disabled,
+#sm-feedback-widget .smfb-next:disabled{
+  opacity:.42;
+  cursor:not-allowed;
+  transform:none;
+}
+#sm-feedback-widget .smfb-error{
+  min-height:20px;
+  margin-top:14px;
+  color:rgba(255,175,175,.96);
+  font-size:13px;
+  font-weight:600;
+}
+#sm-feedback-widget .smfb-thanks{
+  padding-top:7vh;
+}
+/* ANIMATIONS */
+@keyframes smfbFade{
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+@keyframes smfbFloatBreath{
+  0%, 100%{
+    box-shadow:
+      0 16px 42px rgba(0,0,0,.36),
+      0 0 0 1px rgba(255,255,255,.04);
+  }
+  50%{
+    box-shadow:
+      0 22px 56px rgba(0,0,0,.44),
+      0 0 0 1px rgba(255,255,255,.08),
+      0 0 24px rgba(201,154,110,.13);
+  }
+}
+@keyframes smfbButtonShine{
+  0%, 58%{ left:-80%; opacity:0; }
+  66%{ opacity:1; }
+  78%{ left:125%; opacity:0; }
+  100%{ left:125%; opacity:0; }
+}
+/* MOBILE */
+@media (max-width:720px){
+  #sm-feedback-widget .smfb-floating-btn{
+    right:14px;
+    bottom:calc(64px + env(safe-area-inset-bottom));
+    height:40px;
+    padding:0 15px;
+    font-size:12px;
+  }
+ #sm-feedback-widget .smfb-form{
+    width:calc(100vw - 32px);
+    min-height:100dvh;
+    padding-top:72px;
+    padding-bottom:calc(120px + env(safe-area-inset-bottom));
+    justify-content:center;
+  }
+  #sm-feedback-widget .smfb-progress{ width:100%; margin-bottom:30px; }
+  #sm-feedback-widget h1{ font-size:clamp(28px, 8.8vw, 38px); letter-spacing:-.045em; }
+  #sm-feedback-widget p{ font-size:14px; max-width:92%; }
+  #sm-feedback-widget .smfb-rating-row{ grid-template-columns:1fr 1fr; gap:10px; margin-top:30px; }
+  #sm-feedback-widget .smfb-rating{ min-height:68px; font-size:13px; }
+  #sm-feedback-widget .smfb-choice-list{ grid-template-columns:1fr; gap:10px; margin-top:30px; }
+  #sm-feedback-widget .smfb-choice{ height:54px; font-size:14px; }
+  #sm-feedback-widget .smfb-check-list{ grid-template-columns:1fr; gap:9px; margin-top:26px; padding-bottom:20px; }
+  #sm-feedback-widget .smfb-check-list label{ min-height:58px; padding:0 14px; border-radius:17px; }
+  #sm-feedback-widget .smfb-check-list span{ font-size:14px; line-height:1.22; }
+  #sm-feedback-widget .smfb-check-list input{ width:18px; height:18px; }
+  #sm-feedback-widget textarea{ min-height:125px; }
+  #sm-feedback-widget input[type="email"]{ height:54px; }
+  #sm-feedback-widget .smfb-actions{ margin-top:32px; margin-bottom:calc(34px + env(safe-area-inset-bottom)); }
+  #sm-feedback-widget .smfb-prev,
+  #sm-feedback-widget .smfb-next{ height:54px; font-size:14px; }
+  #sm-feedback-widget .smfb-prev{ width:120px; }
+  #sm-feedback-widget .smfb-back{ left:15px; top:14px; }
+}
+/* SMALL MOBILE */
+@media (max-width:390px){
+  #sm-feedback-widget .smfb-check-list label{ min-height:54px; }
+  #sm-feedback-widget .smfb-check-list span{ font-size:13px; }
+}
+/* SMALL HEIGHT MOBILE */
+@media (max-width:720px) and (max-height:760px){
+ #sm-feedback-widget .smfb-form{
+    min-height:100dvh;
+    padding-top:58px;
+    padding-bottom:calc(110px + env(safe-area-inset-bottom));
+    justify-content:center;
+  }
+  #sm-feedback-widget h1{ font-size:clamp(26px, 8vw, 34px); }
+  #sm-feedback-widget p{ font-size:13px; }
+  #sm-feedback-widget .smfb-progress{ margin-bottom:26px; }
+}
+/* LANDSCAPE PHONE */
+@media (max-height:560px) and (orientation:landscape){
+  #sm-feedback-widget .smfb-form{
+    width:min(760px, calc(100vw - 80px));
+    padding:10vh 0 calc(90px + env(safe-area-inset-bottom));
+  }
+  #sm-feedback-widget .smfb-progress{ margin-bottom:20px; }
+  #sm-feedback-widget h1{ font-size:clamp(26px, 3.5vw, 36px); margin-bottom:10px; }
+  #sm-feedback-widget p{ font-size:13px; max-width:560px; }
+  #sm-feedback-widget .smfb-rating-row{ margin-top:22px; }
+  #sm-feedback-widget .smfb-rating{ min-height:60px; }
+  #sm-feedback-widget .smfb-choice-list{ grid-template-columns:repeat(4, 1fr); margin-top:24px; }
+  #sm-feedback-widget .smfb-choice{ height:52px; font-size:13px; }
+  #sm-feedback-widget .smfb-check-list{ grid-template-columns:1fr 1fr 1fr; margin-top:20px; }
+  #sm-feedback-widget .smfb-check-list label{ min-height:46px; padding:0 12px; }
+  #sm-feedback-widget .smfb-check-list span{ font-size:12px; }
+  #sm-feedback-widget textarea{ min-height:86px; margin-top:16px; }
+  #sm-feedback-widget input[type="email"]{ height:50px; margin-top:12px; }
+  #sm-feedback-widget .smfb-actions{ margin-top:20px; }
+  #sm-feedback-widget .smfb-prev,
+  #sm-feedback-widget .smfb-next{ height:50px; font-size:14px; }
+}
+</style>
+<script>
+(() => {
+  "use strict";
+  if (window.__SM_FEEDBACK_WIDGET_PRODUCTION__) return;
+  window.__SM_FEEDBACK_WIDGET_PRODUCTION__ = true;
+  const root = document.getElementById("sm-feedback-widget");
+  if (!root) return;
+  const openBtn = root.querySelector("#smfbOpen");
+  const modal = root.querySelector("#smfbModal");
+  const closeBtn = root.querySelector("#smfbClose");
+  const form = root.querySelector("#smfbForm");
+  const steps = Array.from(root.querySelectorAll(".smfb-step"));
+  const prevBtn = root.querySelector("#smfbPrev");
+  const nextBtn = root.querySelector("#smfbNext");
+  const actions = root.querySelector("#smfbActions");
+  const errorBox = root.querySelector("#smfbError");
+  const progressBar = root.querySelector("#smfbProgressBar");
+  const usefulnessInput = root.querySelector("#smfbUsefulness");
+  const usageInput = root.querySelector("#smfbUsageTime");
+  const problemsInput = root.querySelector("#smfbProblems");
+  const pageUrlInput = root.querySelector("#smfbPageUrl");
+  let currentStep = 1;
+  const totalSteps = 5;
+  let selectedUsefulness = "";
+  let selectedUsage = "";
+  const SHOW_FLOATING_BUTTON_DELAY = 2500;
+  window.setTimeout(() => {
+    if (!openBtn) return;
+    openBtn.classList.add("is-visible");
+  }, SHOW_FLOATING_BUTTON_DELAY);
+  function setBodyLock(locked) {
+    document.documentElement.style.overflow = locked ? "hidden" : "";
+    document.body.style.overflow = locked ? "hidden" : "";
+  }
+  function openModal() {
+    modal.setAttribute("aria-hidden", "false");
+    openBtn.classList.remove("is-visible");
+    setBodyLock(true);
+    errorBox.textContent = "";
+    pageUrlInput.value = window.location.href;
+    updateUI();
+  }
+  function closeModal() {
+    modal.setAttribute("aria-hidden", "true");
+    setBodyLock(false);
+    window.setTimeout(() => {
+      if (modal.getAttribute("aria-hidden") === "true") {
+        openBtn.classList.add("is-visible");
+      }
+    }, 700);
+  }
+  function showStep(step) {
+    steps.forEach((item) => {
+      item.classList.toggle("is-active", String(item.dataset.step) === String(step));
+    });
+  }
+  function updateUI() {
+    showStep(currentStep);
+    if (progressBar) {
+      progressBar.style.width = `${(currentStep / totalSteps) * 100}%`;
+    }
+    prevBtn.disabled = currentStep === 1;
+    nextBtn.textContent = currentStep === totalSteps ? "Submit" : "Next";
+    errorBox.textContent = "";
+  }
+  function getCheckedProblems() {
+    return Array.from(root.querySelectorAll(".smfb-check-list input:checked"))
+      .map((input) => input.value);
+  }
+  function validateStep() {
+    if (currentStep === 2 && !selectedUsefulness) {
+      errorBox.textContent = "Please choose one option.";
+      return false;
+    }
+    if (currentStep === 3 && !selectedUsage) {
+      errorBox.textContent = "Please choose when you used SkyMotion.";
+      return false;
+    }
+    return true;
+  }
+  function goNext() {
+    if (!validateStep()) return;
+    if (currentStep < totalSteps) {
+      currentStep += 1;
+      updateUI();
+      requestAnimationFrame(() => {
+        modal.scrollTo({ top:0, behavior:"smooth" });
+      });
+      return;
+    }
+    submitForm();
+  }
+  function goPrev() {
+    if (currentStep <= 1) return;
+    currentStep -= 1;
+    updateUI();
+    requestAnimationFrame(() => {
+      modal.scrollTo({ top:0, behavior:"smooth" });
+    });
+  }
+  async function submitForm() {
+    const checkedProblems = getCheckedProblems();
+    usefulnessInput.value = selectedUsefulness;
+    usageInput.value = selectedUsage;
+    problemsInput.value = checkedProblems.length ? checkedProblems.join(", ") : "No problem selected";
+    pageUrlInput.value = window.location.href;
+    const formData = new FormData(form);
+    nextBtn.disabled = true;
+    prevBtn.disabled = true;
+    nextBtn.textContent = "Sending...";
+    errorBox.textContent = "";
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method:"POST",
+        body:formData
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.message || "Could not send feedback.");
+      }
+      actions.style.display = "none";
+      if (progressBar) progressBar.style.width = "100%";
+      steps.forEach((item) => item.classList.remove("is-active"));
+      const thanks = root.querySelector('[data-step="thanks"]');
+      if (thanks) thanks.classList.add("is-active");
+      window.setTimeout(() => {
+        closeModal();
+        resetForm();
+      }, 1700);
+    } catch (err) {
+      nextBtn.disabled = false;
+      prevBtn.disabled = false;
+      nextBtn.textContent = "Submit";
+      errorBox.textContent = "Feedback was not sent. Please try again.";
+      console.error("[SkyMotion Feedback]", err);
+    }
+  }
+  function resetForm() {
+    currentStep = 1;
+    selectedUsefulness = "";
+    selectedUsage = "";
+    usefulnessInput.value = "";
+    usageInput.value = "";
+    problemsInput.value = "";
+    form.reset();
+    root.querySelectorAll(".is-selected").forEach((el) => {
+      el.classList.remove("is-selected");
+    });
+    actions.style.display = "";
+    nextBtn.disabled = false;
+    prevBtn.disabled = false;
+    nextBtn.textContent = "Next";
+    updateUI();
+  }
+  root.querySelectorAll('[data-group="usefulness"] .smfb-rating').forEach((btn) => {
+    btn.addEventListener("click", () => {
+      root.querySelectorAll('[data-group="usefulness"] .smfb-rating').forEach((item) => {
+        item.classList.remove("is-selected");
+      });
+      btn.classList.add("is-selected");
+      selectedUsefulness = btn.dataset.value || "";
+      usefulnessInput.value = selectedUsefulness;
+      errorBox.textContent = "";
+    });
+  });
+  root.querySelectorAll('[data-group="usage"] .smfb-choice').forEach((btn) => {
+    btn.addEventListener("click", () => {
+      root.querySelectorAll('[data-group="usage"] .smfb-choice').forEach((item) => {
+        item.classList.remove("is-selected");
+      });
+      btn.classList.add("is-selected");
+      selectedUsage = btn.dataset.value || "";
+      usageInput.value = selectedUsage;
+      errorBox.textContent = "";
+    });
+  });
+  openBtn.addEventListener("click", openModal);
+  closeBtn.addEventListener("click", closeModal);
+  nextBtn.addEventListener("click", goNext);
+  prevBtn.addEventListener("click", goPrev);
+  window.addEventListener("keydown", (e) => {
+    if (modal.getAttribute("aria-hidden") !== "false") return;
+    if (e.key === "Escape") closeModal();
+  });
+})();
+</script>
+
+<!-- ===== Pro pricing modal (ported from landing; opens in-place) ===== -->
+<div class="sm-pmodal" id="sm-pro-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Plans">
+  <div class="sm-pmodal__bd" data-sm-pclose></div>
+  <button class="sm-pmodal__x" type="button" data-sm-pclose aria-label="Close">✕</button>
+  <div class="sm-pplans">
+    <div class="sm-pplan">
+      <div class="nm">Free</div>
+      <div class="pr">$0</div>
+      <p class="ds">Enough to feel how it changes a flight.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 7 essential moves, each with video</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 2 starter shooting plans</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> The conditions assistant</li>
+      </ul>
+      <button class="sm-pbtn sm-pbtn--line" type="button" data-sm-pclose>Continue on Free</button>
+    </div>
+    <div class="sm-pplan sm-pplan--pro">
+      <div class="nm">Pro</div>
+      <div class="pr">$9 <span>/ month</span></div>
+      <p class="ds">The full kit, for when you fly to deliver.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> First 33 moves</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> 10 full shooting plans</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Every creator pack included</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> The upgraded assistant</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Save moves &amp; build your own shoots</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> New content added regularly</li>
+      </ul>
+      <a class="sm-pbtn sm-pbtn--solid" href="https://skymotion.cloud/sign-up">Get Pro</a>
+      <p class="sm-pmodal__note">You'll need a free account to buy Pro.</p>
+    </div>
+    <div class="sm-pplan sm-pplan--soon">
+      <span class="flag flag--soon">In development</span>
+      <div class="nm">Packs</div>
+      <div class="pr">Soon</div>
+      <p class="ds">One-time packs built by SkyMotion partners — buy only the ones you want, no subscription.</p>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Themed packs (real estate, travel, events…)</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Pay once, keep forever</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Made with creator partners</li>
+      </ul>
+      <button class="sm-pbtn sm-pbtn--line" type="button" aria-disabled="true">Coming soon</button>
+    </div>
+  </div>
+</div>
+<style>
+#sm-pro-modal{
+  --ink:rgba(255,255,255,.92); --muted:rgba(255,255,255,.60); --faint:rgba(255,255,255,.40);
+  --line:rgba(255,255,255,.10); --accent:#c99a6e;
+  --mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  position:fixed; inset:0; z-index:2147483000; display:none; overflow:auto; padding:64px 24px; color:var(--ink);
+}
+#sm-pro-modal.is-open{ display:flex; }
+#sm-pro-modal *{ box-sizing:border-box; }
+#sm-pro-modal .sm-pmodal__bd{ position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); }
+#sm-pro-modal .sm-pmodal__x{ position:fixed; top:20px; right:24px; z-index:3; width:40px; height:40px; border-radius:100px; display:grid; place-items:center; font-size:16px; color:var(--ink); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); cursor:pointer; transition:background .2s ease, border-color .2s ease; }
+#sm-pro-modal .sm-pmodal__x:hover{ background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.3); }
+#sm-pro-modal .sm-pplans{ position:relative; z-index:1; margin:auto; width:100%; max-width:920px; display:grid; grid-template-columns:repeat(3,1fr); gap:14px; animation:smPmIn .4s cubic-bezier(.2,.7,.3,1); }
+#sm-pro-modal .sm-pplan{ position:relative; display:flex; flex-direction:column; padding:24px; border-radius:18px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(26px) saturate(1.3); -webkit-backdrop-filter:blur(26px) saturate(1.3); box-shadow:0 24px 60px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.09); }
+#sm-pro-modal .sm-pplan--pro{ background:rgba(255,255,255,.085); border-color:rgba(255,255,255,.18); }
+#sm-pro-modal .sm-pplan--soon{ opacity:.78; }
+#sm-pro-modal .sm-pplan--soon .sm-pbtn{ opacity:.55; pointer-events:none; }
+#sm-pro-modal .flag{ position:absolute; top:14px; right:14px; font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); border:1px solid rgba(201,154,110,.4); border-radius:100px; padding:4px 8px; }
+#sm-pro-modal .flag--soon{ color:var(--muted); border-color:var(--line); }
+#sm-pro-modal .nm{ font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+#sm-pro-modal .pr{ margin:12px 0 0; font-size:clamp(28px,4vw,38px); font-weight:600; letter-spacing:-.02em; line-height:1; }
+#sm-pro-modal .pr span{ font-size:14px; color:var(--faint); font-weight:400; letter-spacing:0; }
+#sm-pro-modal .ds{ margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
+#sm-pro-modal ul{ list-style:none; margin:18px 0 22px; padding:0; display:grid; gap:10px; }
+#sm-pro-modal li{ display:flex; gap:9px; font-size:13.5px; line-height:1.4; color:var(--ink); }
+#sm-pro-modal li svg{ flex:0 0 auto; width:16px; height:16px; margin-top:2px; color:var(--accent); }
+#sm-pro-modal .sm-pbtn{ display:inline-flex; align-items:center; justify-content:center; gap:9px; margin-top:auto; width:100%; padding:13px 22px; border-radius:100px; font-weight:600; font-size:14.5px; cursor:pointer; border:1px solid transparent; text-decoration:none; transition:background .2s ease, border-color .2s ease, transform .2s ease; }
+#sm-pro-modal .sm-pbtn:hover{ transform:translateY(-1px); }
+#sm-pro-modal .sm-pbtn--solid{ background:rgba(255,255,255,.92); color:#141414; }
+#sm-pro-modal .sm-pbtn--solid:hover{ background:#fff; }
+#sm-pro-modal .sm-pbtn--line{ border-color:var(--line); color:var(--ink); }
+#sm-pro-modal .sm-pbtn--line:hover{ border-color:rgba(255,255,255,.3); }
+#sm-pro-modal .sm-pmodal__note{ margin:9px 0 0; text-align:center; font-size:11px; color:var(--faint); }
+@keyframes smPmIn{ from{ opacity:0; transform:translateY(16px) scale(.98); } to{ opacity:1; transform:none; } }
+@media (max-width:760px){ #sm-pro-modal .sm-pplans{ grid-template-columns:1fr; max-width:420px; } #sm-pro-modal .sm-pplan{ padding:22px; } }
+@media (max-width:520px){ #sm-pro-modal{ padding:54px 16px 28px; } #sm-pro-modal .sm-pmodal__x{ top:14px; right:16px; } }
+</style>
+<script>
+(function(){
+  var modal = document.getElementById("sm-pro-modal");
+  if (!modal) return;
+  function open(){ modal.classList.add("is-open"); modal.setAttribute("aria-hidden","false"); }
+  function close(){ modal.classList.remove("is-open"); modal.setAttribute("aria-hidden","true"); }
+  window.smOpenProModal = open;
+  window.smCloseProModal = close;
+  modal.addEventListener("click", function(e){ if (e.target.closest("[data-sm-pclose]")) close(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) close(); });
+})();
+</script>
+
+<!-- ===== Pack value popup (free users: describe the pack before upsell) ===== -->
+<div class="sm-pkmodal" id="sm-pack-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Pack">
+  <div class="sm-pkmodal__bd" data-sm-pkclose></div>
+  <div class="sm-pkmodal__card">
+    <button class="sm-pkmodal__x" type="button" data-sm-pkclose aria-label="Close">✕</button>
+    <div class="sm-pkmodal__cover">
+      <img id="smPkCover" alt="">
+      <span class="sm-pkmodal__pro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.4" fill="currentColor"/></svg>PRO</span>
+    </div>
+    <div class="sm-pkmodal__body">
+      <span class="sm-pkmodal__by" id="smPkBy"></span>
+      <h3 class="sm-pkmodal__title" id="smPkTitle"></h3>
+      <div class="sm-pkmodal__chips" id="smPkChips"></div>
+      <p class="sm-pkmodal__desc" id="smPkDesc"></p>
+      <ul class="sm-pkmodal__list">
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Step-by-step lessons — intro, camera settings, editing</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Ready-made cinematic plans</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Pre-flight checklist for the shoot</li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Camera settings for every shot</li>
+      </ul>
+      <button class="sm-pkmodal__cta" type="button" id="smPkUnlock">Unlock with Pro</button>
+      <button class="sm-pkmodal__later" type="button" data-sm-pkclose>Maybe later</button>
+    </div>
+  </div>
+</div>
+<style>
+#sm-pack-modal{
+  --ink:rgba(255,255,255,.92); --muted:rgba(255,255,255,.60); --faint:rgba(255,255,255,.40);
+  --line:rgba(255,255,255,.10); --accent:#c99a6e;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-family:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  position:fixed; inset:0; z-index:2147483001; display:none; overflow:auto; padding:48px 20px; color:var(--ink);
+}
+#sm-pack-modal.is-open{ display:flex; }
+#sm-pack-modal *{ box-sizing:border-box; }
+#sm-pack-modal .sm-pkmodal__bd{ position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
+#sm-pack-modal .sm-pkmodal__card{ position:relative; z-index:1; margin:auto; width:min(440px,100%); border-radius:20px; overflow:hidden; background:#141414; border:1px solid rgba(255,255,255,.10); box-shadow:0 30px 80px rgba(0,0,0,.6); animation:smPkIn .35s cubic-bezier(.2,.7,.3,1); }
+#sm-pack-modal .sm-pkmodal__x{ position:absolute; top:12px; right:12px; z-index:3; width:36px; height:36px; border-radius:100px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.4); color:#fff; font-size:15px; cursor:pointer; }
+#sm-pack-modal .sm-pkmodal__cover{ position:relative; height:180px; background:#000; }
+#sm-pack-modal .sm-pkmodal__cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+#sm-pack-modal .sm-pkmodal__cover::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,20,20,0) 38%, rgba(20,20,20,.92)); }
+#sm-pack-modal .sm-pkmodal__pro{ position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px; padding:5px 9px; border-radius:999px; background:rgba(0,0,0,.45); border:1px solid rgba(201,154,110,.55); color:var(--accent); font-family:var(--mono); font-size:10px; letter-spacing:.12em; }
+#sm-pack-modal .sm-pkmodal__pro svg{ width:11px; height:11px; }
+#sm-pack-modal .sm-pkmodal__body{ position:relative; z-index:2; padding:18px 22px 22px; }
+#sm-pack-modal .sm-pkmodal__by{ font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+#sm-pack-modal .sm-pkmodal__title{ margin:8px 0 0; font-size:24px; font-weight:600; letter-spacing:-.03em; color:#fff; }
+#sm-pack-modal .sm-pkmodal__chips{ display:flex; flex-wrap:wrap; gap:7px; margin:12px 0 0; }
+#sm-pack-modal .sm-pkmodal__chips span{ padding:5px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); font-size:12px; color:rgba(255,255,255,.82); }
+#sm-pack-modal .sm-pkmodal__desc{ margin:14px 0 0; font-size:13.5px; line-height:1.5; color:var(--muted); }
+#sm-pack-modal .sm-pkmodal__list{ list-style:none; margin:16px 0 0; padding:0; display:grid; gap:9px; }
+#sm-pack-modal .sm-pkmodal__list li{ display:flex; gap:9px; font-size:13.5px; line-height:1.4; color:var(--ink); }
+#sm-pack-modal .sm-pkmodal__list svg{ flex:0 0 auto; width:16px; height:16px; margin-top:2px; color:var(--accent); }
+#sm-pack-modal .sm-pkmodal__cta{ width:100%; margin:20px 0 0; height:48px; border:0; border-radius:100px; background:rgba(255,255,255,.92); color:#141414; font-weight:600; font-size:14.5px; cursor:pointer; transition:transform .15s ease, background .15s ease; }
+#sm-pack-modal .sm-pkmodal__cta:hover{ transform:translateY(-1px); background:#fff; }
+#sm-pack-modal .sm-pkmodal__later{ width:100%; margin:10px 0 0; height:42px; border:0; background:transparent; color:var(--muted); font-size:13px; cursor:pointer; }
+#sm-pack-modal .sm-pkmodal__later:hover{ color:#fff; }
+@keyframes smPkIn{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
+@media (max-width:520px){ #sm-pack-modal{ padding:20px 14px; } }
+</style>
+<script>
+(function(){
+  var modal = document.getElementById("sm-pack-modal");
+  if (!modal) return;
+  window.smPackModal = {
+    open: function(d){
+      d = d || {};
+      var cov = document.getElementById("smPkCover"); if (cov) cov.src = d.cover || "";
+      var by  = document.getElementById("smPkBy");    if (by)  by.textContent = d.by || "";
+      var t   = document.getElementById("smPkTitle"); if (t)   t.textContent = d.title || "Creator pack";
+      var ch  = document.getElementById("smPkChips");
+      if (ch){ ch.innerHTML = ""; (d.chips || []).forEach(function(c){ var s = document.createElement("span"); s.textContent = c; ch.appendChild(s); }); }
+      var ds  = document.getElementById("smPkDesc");  if (ds)  ds.textContent = d.desc || "";
+      modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false");
+    },
+    close: function(){ modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
+  };
+  modal.addEventListener("click", function(e){ if (e.target.closest("[data-sm-pkclose]")) window.smPackModal.close(); });
+  var unlock = document.getElementById("smPkUnlock");
+  if (unlock) unlock.addEventListener("click", function(){ window.smPackModal.close(); if (window.smOpenProModal) window.smOpenProModal(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) window.smPackModal.close(); });
+})();
+</script>
+
+<!-- ===== Free/Pro gating (injector — no player/plan/API/event-bridge changes) ===== -->
+<script>
+(function(){
+  var scopeEl = document.getElementById("sm-library-scope");
+  if (!scopeEl) return;
+
+  var PRO_PLAN_ID = "pln_skymotion-pro-beta-r8ai0gbb";
+  var CDN_INDEX  = (window.SM_LIBRARY_DATA_URL || "https://skymotion-cdn.b-cdn.net/videos_index_v16.json");
+  var FREE_MOVES = 7, FREE_PLANS = 2;
+
+  var IS_PRO = false;       // default locked/free until proven Pro
+  var IS_AUTHED = false;    // logged in (Memberstack member exists) — distinct from Pro
+  var FREE_SET = null;      // id -> 1 (null until data loaded)
+  var SIGNUP_URL = window.SM_PRO_SIGNUP_URL || "https://skymotion.cloud/sign-up";
+  // NOTE: real Pro checkout (Memberstack price id / Stripe) is intentionally deferred.
+  // Until billing is configured, "Get Pro" is a placeholder (see the click handler below).
+
+  function updateProBadge(){
+    var want = IS_PRO ? "PRO" : "Basic";
+    scopeEl.querySelectorAll(".sm-pro-badge, .sm-pro-tool-badge").forEach(function(badge){
+      // only touch the DOM when something actually changes (avoids feedback loops with the observer)
+      if (badge.textContent !== want) badge.textContent = want;
+      if (badge.classList.contains("sm-badge-basic") === IS_PRO) badge.classList.toggle("sm-badge-basic", !IS_PRO);
+    });
+  }
+  function updateProCTA(){
+    var modal = document.getElementById("sm-pro-modal");
+    if (!modal) return;
+    var note = modal.querySelector(".sm-pmodal__note");
+    // the "need a free account" line only applies to anonymous users;
+    // don't clobber the "checkout coming soon" placeholder once it's shown
+    if (note && !note.hasAttribute("data-sm-soon")) note.style.display = IS_AUTHED ? "none" : "";
+  }
+  function setTierClass(){
+    scopeEl.classList.toggle("sm-pro", IS_PRO);
+    scopeEl.classList.toggle("sm-free", !IS_PRO);
+    scopeEl.classList.toggle("sm-authed", IS_AUTHED);
+    scopeEl.classList.toggle("sm-anon", !IS_AUTHED);
+    updateProBadge();
+    updateProCTA();
+  }
+  setTierClass();
+
+  function isPlanItem(it){ return String((it && it.kind) || "").toLowerCase() === "plan"; }
+  function idCandidates(it){
+    var c = [];
+    ["id","slug","videoUrl","video_url"].forEach(function(k){ if (it[k]) c.push(String(it[k])); });
+    if (it.title){ c.push(String(it.title)); c.push(String(it.title) + "|" + (it.duration || "")); }
+    return c;
+  }
+  function buildFreeSet(items){
+    var set = Object.create(null);
+    var flagged = items.filter(function(i){ return i && i.free === true; });   // future: explicit free flag
+    var freeItems;
+    if (flagged.length){
+      freeItems = flagged;
+    } else {
+      var plans = items.filter(isPlanItem);
+      var moves = items.filter(function(i){ return !isPlanItem(i); });
+      freeItems = moves.slice(0, FREE_MOVES).concat(plans.slice(0, FREE_PLANS));
+    }
+    freeItems.forEach(function(i){ idCandidates(i).forEach(function(c){ set[c] = 1; }); });
+    return set;
+  }
+  function cardIsFree(card){
+    if (card.hasAttribute("data-pro-pack")) return false;      // packs are always Pro
+    var id = card.getAttribute("data-item-id");
+    if (!id) return true;                                       // unknown → don't lock
+    return FREE_SET ? !!FREE_SET[id] : false;                  // moves + plans: first-N free, rest locked-but-visible
+  }
+  var LOCK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.4" fill="currentColor"/></svg>';
+  function ensureBadge(card, isPack){
+    if (card.querySelector(".sm-lock, .sm-pack-tag")) return;
+    if (isPack){
+      var t = document.createElement("span");
+      t.className = "sm-pack-tag";
+      t.innerHTML = LOCK_SVG + '<b>PRO</b>';
+      card.appendChild(t);
+    } else {
+      var o = document.createElement("div");
+      o.className = "sm-lock";
+      o.innerHTML = '<span class="sm-lock__c">' + LOCK_SVG + '<span>Unlock with Pro</span></span>';
+      card.appendChild(o);
+    }
+  }
+  function removeBadge(card){
+    var x = card.querySelector(".sm-lock, .sm-pack-tag");
+    if (x) x.remove();
+  }
+  function openPackModal(card){
+    var img  = card.querySelector(".sm-pro-pack-img");
+    var by   = card.querySelector(".sm-pro-pack-badge");
+    var ttl  = card.querySelector("h3");
+    var meta = card.querySelector(".sm-pro-pack-meta");
+    var desc = card.querySelector(".sm-pro-pack-content p");
+    var chips = meta ? Array.prototype.map.call(meta.querySelectorAll("span"), function(s){ return s.textContent.trim(); }) : [];
+    if (window.smPackModal) window.smPackModal.open({
+      cover: img ? img.getAttribute("src") : "",
+      by:    by ? by.textContent.trim() : "",
+      title: ttl ? ttl.textContent.trim() : "Creator pack",
+      chips: chips,
+      desc:  desc ? desc.textContent.trim() : ""
+    });
+  }
+  function processCard(card){
+    if (!FREE_SET) return;
+    var isPack = card.hasAttribute("data-pro-pack");
+    if (!(card.hasAttribute("data-item-id") || isPack)) return;
+    var lock = !IS_PRO && !cardIsFree(card);
+    if (isPack) card.classList.toggle("sm-pack-gated", lock);
+    else card.classList.toggle("sm-locked", lock);
+    if (lock) ensureBadge(card, isPack); else removeBadge(card);
+  }
+  function processAll(){
+    if (!FREE_SET) return;
+    scopeEl.querySelectorAll("[data-item-id], [data-pro-pack]").forEach(processCard);
+  }
+
+  // move tile: lift the duration chip out of .meta so CSS can pin it to the card's top-left
+  function liftBadges(){
+    scopeEl.querySelectorAll(".sm-pro-card-grid .card > .meta > .badge").forEach(function(badge){
+      var card = badge.closest(".card");
+      if (card) card.appendChild(badge);   // becomes a direct child of .card
+    });
+  }
+
+  // Saved tab → Pro-only message for free users
+  function syncSavedMsg(){
+    var savedScreen = scopeEl.querySelector(".sm-pro-saved-screen");
+    var show = !IS_PRO && !!savedScreen;
+    scopeEl.classList.toggle("sm-saved-locked", show);   // CSS hides the real saved content
+    var host = (savedScreen && savedScreen.parentNode) || document.getElementById("resultsGrid");
+    if (!host) return;
+    // only manage the MAIN saved message — never the Moves-screen one (distinct class)
+    var existing = host.querySelector(".sm-saved-msg:not(.sm-saved-msg--moves)");
+    if (show && !existing){
+      var el = document.createElement("div");
+      el.className = "sm-saved-msg";
+      el.innerHTML =
+        '<div class="sm-saved-msg__ghost" aria-hidden="true"><i></i><i></i><i></i></div>' +
+        '<div class="sm-saved-msg__in">' +
+          '<h3>Save your moves with Pro</h3>' +
+          '<p>Bookmark moves and plans, and build your own shoots on location.</p>' +
+          '<button type="button" class="sm-saved-msg__btn">Unlock Pro →</button>' +
+        '</div>';
+      host.appendChild(el);
+      var btn = el.querySelector(".sm-saved-msg__btn");
+      if (btn) btn.addEventListener("click", function(){ if (window.smOpenProModal) window.smOpenProModal(); });
+    } else if (!show && existing){
+      existing.remove();
+    }
+  }
+
+  // Saved sub-tab INSIDE the Moves screen → same Pro-only ghost message for free users
+  function syncMovesSavedLock(){
+    var movesScreen = scopeEl.querySelector(".sm-pro-moves-screen");
+    if (!movesScreen) return;
+    var savedActive = false;
+    movesScreen.querySelectorAll(".sm-pro-level-tabs button.is-active").forEach(function(b){
+      if (String(b.textContent || "").trim().toLowerCase() === "saved") savedActive = true;
+    });
+    var show = !IS_PRO && savedActive;
+    movesScreen.classList.toggle("sm-saved-locked", show);
+    var existing = movesScreen.querySelector(".sm-saved-msg--moves");
+    if (show && !existing){
+      var el = document.createElement("div");
+      el.className = "sm-saved-msg sm-saved-msg--moves";
+      el.innerHTML =
+        '<div class="sm-saved-msg__ghost" aria-hidden="true"><i></i><i></i><i></i></div>' +
+        '<div class="sm-saved-msg__in">' +
+          '<h3>Save your moves with Pro</h3>' +
+          '<p>Bookmark moves and plans, and build your own shoots on location.</p>' +
+          '<button type="button" class="sm-saved-msg__btn">Unlock Pro →</button>' +
+        '</div>';
+      movesScreen.appendChild(el);
+      var btn = el.querySelector(".sm-saved-msg__btn");
+      if (btn) btn.addEventListener("click", function(){ if (window.smOpenProModal) window.smOpenProModal(); });
+    } else if (!show && existing){
+      existing.remove();
+    }
+  }
+
+  // build the free set from the same CDN index the library uses
+  fetch(CDN_INDEX, { cache:"no-store" })
+    .then(function(r){ return r.json(); })
+    .then(function(json){ FREE_SET = buildFreeSet(Array.isArray(json) ? json : []); processAll(); })
+    .catch(function(){ /* if data fails, leave cards unlocked to avoid false locks */ });
+
+  // resolve Memberstack member → authed? + Pro? (re-runnable so we can update live)
+  function applyMember(res){
+    var m = (res && res.data && res.data.member) || (res && res.data) || (res && res.member) || res || null;
+    IS_AUTHED = !!m;
+    var conns = m && m.planConnections;
+    IS_PRO = Array.isArray(conns) && conns.some(function(pc){
+      if (!pc) return false;
+      var id = pc.planId || (pc.plan && pc.plan.id);
+      if (id !== PRO_PLAN_ID) return false;
+      if (pc.active === false) return false;
+      if (pc.status && /cancel|expired|inactive|past_due/i.test(String(pc.status))) return false;
+      return true;
+    });
+    setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();
+  }
+  function checkMember(){
+    var ms = window.$memberstackDom || window.$memberstack;
+    if (ms && ms.getCurrentMember){
+      ms.getCurrentMember().then(applyMember).catch(function(){
+        IS_AUTHED = false; setTierClass(); processAll(); syncSavedMsg();
+      });
+      return true;
+    }
+    return false;
+  }
+  (function resolve(tries){
+    if (checkMember()) return;
+    if (tries > 0){ setTimeout(function(){ resolve(tries - 1); }, 250); }
+    else { IS_AUTHED = false; setTierClass(); processAll(); syncSavedMsg(); }   // no Memberstack → anonymous
+  })(40);
+
+  // "Get Pro" — placeholder until Memberstack billing is configured.
+  //  • anonymous      → follow the <a href="/sign-up"> link (create a free account first)
+  //  • logged-in Free → keep the pricing modal open as upgrade intent only; no real checkout yet
+  (function(){
+    var modal = document.getElementById("sm-pro-modal");
+    if (!modal) return;
+    modal.addEventListener("click", function(e){
+      var cta = e.target.closest && e.target.closest(".sm-pbtn--solid");
+      if (!cta) return;
+      if (!IS_AUTHED) return;                  // anonymous → let the sign-up link proceed
+      e.preventDefault();                      // logged-in Free → no checkout yet (billing deferred)
+      var note = modal.querySelector(".sm-pmodal__note");
+      if (note){
+        note.setAttribute("data-sm-soon", "1");
+        note.style.display = "";
+        note.textContent = "Pro checkout is coming soon — you’ll be able to upgrade right here.";
+      }
+    });
+  })();
+
+  // process cards as they render + keep the saved message in sync
+  new MutationObserver(function(muts){
+    var touched = false;
+    muts.forEach(function(m){
+      (m.addedNodes || []).forEach(function(n){
+        if (n.nodeType !== 1) return;
+        touched = true;
+        if (n.matches && n.matches("[data-item-id], [data-pro-pack]")) processCard(n);
+        if (n.querySelectorAll) n.querySelectorAll("[data-item-id], [data-pro-pack]").forEach(processCard);
+      });
+    });
+    if (touched){ syncSavedMsg(); updateProBadge(); syncMovesSavedLock(); liftBadges(); }
+  }).observe(scopeEl, { childList:true, subtree:true });
+
+  // Moves level-tab clicks → re-check the Saved lock (backup to the observer)
+  scopeEl.addEventListener("click", function(e){
+    if (e.target.closest && e.target.closest(".sm-pro-level-tabs button")){
+      setTimeout(syncMovesSavedLock, 30);
+      setTimeout(syncMovesSavedLock, 220);
+    }
+  }, false);
+
+  // intercept clicks on locked cards → open the Pro modal (capture phase, before product handlers)
+  scopeEl.addEventListener("click", function(e){
+    var pack = e.target.closest && e.target.closest(".sm-pack-gated");
+    if (pack && scopeEl.contains(pack)){
+      e.preventDefault(); e.stopPropagation();
+      openPackModal(pack);
+      return;
+    }
+    var locked = e.target.closest && e.target.closest(".sm-locked");
+    if (locked && scopeEl.contains(locked)){
+      e.preventDefault(); e.stopPropagation();
+      if (window.smOpenProModal) window.smOpenProModal();
+    }
+  }, true);
+
+  // re-sync the Saved message shortly after any tab switch (backup to the observer)
+  scopeEl.addEventListener("click", function(e){
+    if (e.target.closest && e.target.closest("[data-pro-tab]")){
+      setTimeout(syncSavedMsg, 60);
+      setTimeout(syncSavedMsg, 300);
+    }
+  });
+})();
+</script>
+
+<!-- Last-watched header slot (additive; reads localStorage, no DB, no danger-zone edits) -->
+<script>
+(function(){
+  var KEY = "sm_last_move";
+  var scopeEl = document.getElementById("sm-library-scope") || document.body;
+
+  function getLast(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(_) { return null; }
+  }
+  function setLast(obj){
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch(_) {}
+  }
+
+  function findMoveCard(id){
+    var cards = document.querySelectorAll('[data-kind="move"]');
+    for (var i=0;i<cards.length;i++){
+      if (String(cards[i].dataset.itemId) === String(id)) return cards[i];
+    }
+    return null;
+  }
+
+  function reopenLast(){
+    var last = getLast();
+    if (!last || !last.id) return;
+    var card = findMoveCard(last.id);
+    if (card){ card.click(); return; }
+    // fallback: jump to the Moves tab, then open the card once it renders
+    var movesTab = null;
+    scopeEl.querySelectorAll(".sm-pro-mobile-tabs button").forEach(function(b){
+      var k = String(b.dataset.proTab || b.textContent || "").trim().toLowerCase();
+      if (k === "moves") movesTab = b;
+    });
+    if (movesTab){
+      movesTab.click();
+      setTimeout(function(){ var c = findMoveCard(last.id); if (c) c.click(); }, 90);
+    }
+  }
+
+  function buildSlot(){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "sm-last-watched";
+    b.setAttribute("aria-label", "Reopen last watched move");
+    b.innerHTML =
+      '<span class="sm-lw__th"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>' +
+      '<span class="sm-lw__t"><span class="sm-lw__ey">Last watched</span><span class="sm-lw__name"></span></span>';
+    b.addEventListener("click", reopenLast);
+    return b;
+  }
+
+  function renderSlot(){
+    var top = scopeEl.querySelector(".sm-pro-mobile-top");
+    if (!top) return;
+    var last = getLast();
+    var slot = top.querySelector(".sm-last-watched");
+    if (last && last.id){
+      if (!slot){ slot = buildSlot(); top.appendChild(slot); }
+      slot.querySelector(".sm-lw__name").textContent = last.title || "Move";
+      top.classList.add("sm-has-last");   // CSS hides the quote, shows the slot (desktop only)
+    } else {
+      top.classList.remove("sm-has-last");
+    }
+  }
+
+  // capture every move open (fires from both card opens and plan opens)
+  window.addEventListener("sm:move_opened", function(e){
+    var d = e.detail || {};
+    if (!d.item_id) return;
+    if (String(d.item_type || "move") !== "move") return;
+    setLast({ id: String(d.item_id), title: d.title || "Move" });
+    renderSlot();
+  });
+
+  // initial paint (in case a move was watched in a previous session)
+  renderSlot();
+  setTimeout(renderSlot, 400);
+})();
+</script>
+
+<!-- Mobile filter drawer open helper: some setups don't repaint the
+     .assistant.active{transform:translateX(0)} rule when the class toggles,
+     so we mirror it as an inline style. CSS still drives the slide transition. -->
+<script>
+(function(){
+  var a = document.querySelector("#sm-library-scope .assistant");
+  if (!a) return;
+  function sync(){
+    if (window.matchMedia("(max-width:900px)").matches && a.classList.contains("active"))
+      a.style.setProperty("transform", "translateX(0)", "important");
+    else
+      a.style.removeProperty("transform");
+  }
+  new MutationObserver(sync).observe(a, { attributes:true, attributeFilter:["class"] });
+  window.addEventListener("resize", sync);
+  sync();
+})();
+</script>
+</body>
+</html>
