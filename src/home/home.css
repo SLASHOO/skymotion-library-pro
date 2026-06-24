@@ -22,6 +22,28 @@ body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font);
 a{ color:inherit; text-decoration:none; }
 button{ font:inherit; color:inherit; }
 
+/* ===== WEBFLOW ISOLATION (Home only) =====
+   On the live Webflow Home page the chain is:
+     html → body.body2.body-2 → div.w-embed → #sm-home
+   Webflow's .body2/.body-2 (class selectors, specificity 0,1,0) beat home.css's
+   plain `body` (tag, 0,0,1) regardless of load order, leaking background #090909,
+   text color #090909 and overflow:visible onto Home. The loader adds .sm-home-page
+   on <html> and <body>; html.sm-home-page body.sm-home-page = (0,2,2) re-asserts
+   our values over even .body2.no-scroll (0,2,0) without !important.
+   No transform/filter/contain/perspective here — #nav, #proModal and #contactModal
+   (moved to <body>) must keep position:fixed anchored to the viewport. */
+html.sm-home-page{ background-color:var(--bg); }
+html.sm-home-page body.sm-home-page{
+  margin:0;
+  background-color:var(--bg);   /* beats .body2/.body-2 #090909 */
+  color:var(--ink);             /* beats .body-2 color:#090909 */
+  font-family:var(--font);
+  overflow-x:hidden;            /* beats .body2 overflow:visible */
+}
+/* mount + its single Webflow wrapper: full-width, no Webflow max-width/margin/padding */
+.sm-home-page .sm-home-host,
+.sm-home-page #sm-home{ display:block; width:100%; max-width:none; margin:0; padding:0; }
+
 .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 28px; }
 @media (max-width:600px){ .wrap{ padding:0 22px; } }
 .eyebrow{ font-family:var(--mono); font-size:11.5px; letter-spacing:.24em; text-transform:uppercase; color:var(--accent); }

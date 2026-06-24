@@ -17,6 +17,16 @@
   if (window.__SM_HOME_LOADER__) return;
   window.__SM_HOME_LOADER__ = true;
 
+  // --- Webflow isolation scope (Home only) ---------------------------------
+  // Mark <html> immediately and <body> as soon as it exists, so home.css's
+  // scoped .sm-home-page rules can re-assert background/color/overflow over
+  // Webflow's .body2/.body-2 (class selectors that otherwise win over `body`).
+  // Runs only on Home (this loader loads nowhere else), so no other page is
+  // affected. No layout/containing-block properties are touched here.
+  document.documentElement.classList.add("sm-home-page");
+  function tagBody() { if (document.body) document.body.classList.add("sm-home-page"); }
+  tagBody();
+
   // --- Resolve the immutable asset base from this script's own URL ---------
   // Webflow references one pinned URL:
   //   https://cdn.jsdelivr.net/gh/SLASHOO/skymotion-library-pro@<commit>/webflow/home-loader.js
@@ -70,6 +80,9 @@
       console.error("[sm-home-loader] mount #" + MOUNT_ID + " not found; aborting.");
       return Promise.reject(new Error("mount-not-found"));
     }
+    // Tag the single Webflow wrapper around the mount so home.css can keep it
+    // full-width without a global .w-* reset.
+    if (mount.parentElement) mount.parentElement.classList.add("sm-home-host");
     return fetch(BASE + TEMPLATE_URL)
       .then(function (r) {
         if (!r.ok) throw new Error("template HTTP " + r.status);
@@ -113,8 +126,9 @@
 
   injectCss();
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+    document.addEventListener("DOMContentLoaded", function () { tagBody(); boot(); });
   } else {
+    tagBody();
     boot();
   }
 })();
