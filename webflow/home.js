@@ -226,6 +226,35 @@
     })(40);
   })();
 
+  // LOGOUT — real Memberstack logout, then land on "/" in guest state.
+  // No dedicated logout page/route; the SDK clears the session in place.
+  (function(){
+    var btn = document.querySelector('[data-sm-logout]');
+    if (!btn) return;
+    var LABEL = btn.textContent;
+    var busy = false;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      if (busy) return;
+      var ms = window.$memberstackDom || window.$memberstack;
+      if (!ms || typeof ms.logout !== 'function'){
+        console.error('[sm-home] Logout unavailable: Memberstack SDK not found; staying on the page.');
+        return;
+      }
+      busy = true;
+      btn.textContent = 'Logging out…';
+      btn.setAttribute('aria-busy', 'true');
+      Promise.resolve(ms.logout()).then(function(){
+        window.location.replace('/');   // landing in guest state
+      }).catch(function(err){
+        console.error('[sm-home] Logout failed:', err);
+        busy = false;
+        btn.textContent = LABEL;        // restore "Log out"; do not redirect
+        btn.removeAttribute('aria-busy');
+      });
+    });
+  })();
+
   // CONTACT POPUP — Web3Forms (recipient email never appears in the page)
   (function(){
     var cm = document.getElementById('contactModal');
