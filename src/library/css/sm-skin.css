@@ -90,9 +90,9 @@
   box-shadow:0 0 16px rgba(201,154,110,.24) !important;
 }
 
-/* section "View all" links: loud purple 900 → quiet bronze */
+/* section "View all" links: muted white on mobile (was bronze → looked like a Pro CTA) */
 #sm-library-scope .sm-pro-section-link{
-  color:var(--accent) !important;
+  color:rgba(255,255,255,.55) !important;
   font-weight:600 !important;
   letter-spacing:-.01em !important;
 }
