@@ -3216,8 +3216,8 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-mobile-home";
 
-    const popularMoves = moves.slice(0, 10);
-    const cinematicPlans = plans.slice(0, 6);
+    const popularMoves = moves.slice(0, 14);
+    const cinematicPlans = plans.slice(0, 10);
 
     wrap.innerHTML = `
       <section class="sm-pro-section sm-pro-section--pack">
@@ -3278,7 +3278,7 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = plans.slice(0, 6).map((item) => {
+    const planCards = plans.slice(0, 10).map((item) => {
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
@@ -3306,7 +3306,7 @@
     `;
 
     const moveStack = wrap.querySelector('[data-pro-desktop-section="moves"]');
-    moves.slice(0, 10).forEach((item) => {
+    moves.slice(0, 14).forEach((item) => {
       const idx = getItemFilteredIndex(item);
       moveStack.appendChild(renderMoveCard(item, idx));
     });
