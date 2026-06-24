@@ -345,20 +345,20 @@ html.sm-home-page body.sm-home-page{
 .pro__lead{ position:absolute; left:6%; top:48%; max-width:42%; margin:0; color:rgba(255,255,255,.94); font-size:clamp(15px,1.45vw,20px); line-height:1.5; text-shadow:0 2px 16px rgba(0,0,0,.6); }
 .pro__sub{ position:relative; z-index:2; margin:6px 0 0; color:rgba(255,255,255,.5); font-size:clamp(15px,1.4vw,20px); font-weight:400; letter-spacing:.01em; }
 /* glowing Get Pro button — rotating conic border (loop) */
-.glowing-wrapper{ position:relative; display:inline-flex; border-radius:999px; }
-.glowing-wrapper-animations{ position:absolute; inset:0; border-radius:999px; overflow:hidden; opacity:0; pointer-events:none; transition:opacity .4s ease; }
-.glowing-wrapper-active .glowing-wrapper-animations{ opacity:1; }
-.glowing-wrapper-borders-masker{ position:absolute; inset:0; border-radius:999px; padding:1.5px;
+.sm-pro-cta-wrap{ position:relative; display:inline-flex; border-radius:999px; }
+.sm-pro-cta-anim{ position:absolute; inset:0; border-radius:999px; overflow:hidden; opacity:0; pointer-events:none; transition:opacity .4s ease; }
+.sm-pro-cta-wrap--active .sm-pro-cta-anim{ opacity:1; }
+.sm-pro-cta-bordersmask{ position:absolute; inset:0; border-radius:999px; padding:1.5px;
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude; }
-.glowing-wrapper-borders{ position:absolute; left:50%; top:50%; width:170%; aspect-ratio:1; transform:translate(-50%,-50%);
+.sm-pro-cta-borders{ position:absolute; left:50%; top:50%; width:170%; aspect-ratio:1; transform:translate(-50%,-50%);
   background:conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.7) 360deg);
   animation:borderTurn 2.5s linear infinite; }
 @keyframes borderTurn{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
-.glowing-wrapper-button{ position:relative; z-index:1; padding:10px 32px; border-radius:999px; background:rgba(20,20,20,.5); border:1px solid rgba(255,255,255,.14); color:rgba(255,255,255,.94); font-weight:500; font-size:13.5px; letter-spacing:.05em; cursor:pointer; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); transition:background .25s ease; }
-.glowing-wrapper-button:hover{ background:rgba(42,42,42,.6); }
-.glowing-wrapper-button:after{ content:""; position:absolute; left:-2px; top:-2px; width:calc(100% + 4px); height:calc(100% + 4px); border-radius:999px; background:radial-gradient(85% 120% at 50% 120%, rgba(255,255,255,.24) 0%, rgba(255,255,255,0) 100%); opacity:0; transition:1s all; pointer-events:none; }
-.glowing-wrapper-button:hover:after{ opacity:.7; }
+.sm-pro-cta-button{ position:relative; z-index:1; padding:10px 32px; border-radius:999px; background:rgba(20,20,20,.5); border:1px solid rgba(255,255,255,.14); color:rgba(255,255,255,.94); font-weight:500; font-size:13.5px; letter-spacing:.05em; cursor:pointer; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); transition:background .25s ease; }
+.sm-pro-cta-button:hover{ background:rgba(42,42,42,.6); }
+.sm-pro-cta-button:after{ content:""; position:absolute; left:-2px; top:-2px; width:calc(100% + 4px); height:calc(100% + 4px); border-radius:999px; background:radial-gradient(85% 120% at 50% 120%, rgba(255,255,255,.24) 0%, rgba(255,255,255,0) 100%); opacity:0; transition:1s all; pointer-events:none; }
+.sm-pro-cta-button:hover:after{ opacity:.7; }
 
 /* SLOGAN section — separate element, word-by-word on its own scroll */
 .pro__sloganSec{ position:relative; height:150vh; }
@@ -393,7 +393,7 @@ html.sm-home-page body.sm-home-page{
   .pro__sloganSec{ height:auto; }
   .pro__sloganStage{ position:static; height:auto; padding:36px 0 clamp(60px,8vw,100px); }
   .pro__slogan .w{ opacity:1; transform:none; }
-  .glowing-wrapper-borders{ animation:none; }
+  .sm-pro-cta-borders{ animation:none; }
 }
 
 /* ===== PRICING POPUP (Free vs Pro) ===== */
