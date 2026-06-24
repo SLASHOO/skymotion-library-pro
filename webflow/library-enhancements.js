@@ -781,79 +781,145 @@
   });
 })();
 
-/* [6/7] Last-watched header slot (index.html 1694-1768) */
+/* [6/7] Last-watched header slot — real last opened move / plan / pack */
 (function(){
-  var KEY = "sm_last_move";
+  // New storage key. We intentionally do NOT migrate or read the old "sm_last_move"
+  // (move-only / possibly stale) — start clean.
+  var KEY = "sm_last_item";
+  var TYPES = { move: "MOVE", plan: "PLAN", pack: "PACK" };
   var scopeEl = document.getElementById("sm-library-scope") || document.body;
 
   function getLast(){
-    try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch(_) { return null; }
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (v && v.id && TYPES[v.type]) return v;
+    } catch(_) {}
+    return null;
   }
   function setLast(obj){
     try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch(_) {}
   }
+  function clearLast(){
+    try { localStorage.removeItem(KEY); } catch(_) {}
+  }
+  function esc(s){ try { return (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/["\\]/g,"\\$&"); } catch(_){ return String(s); } }
 
-  function findMoveCard(id){
-    var cards = document.querySelectorAll('[data-kind="move"]');
+  function findCard(type, id){
+    if (type === "pack") return scopeEl.querySelector('[data-pro-pack="' + esc(id) + '"]');
+    var kind = (type === "plan") ? "plan" : "move";
+    var cards = scopeEl.querySelectorAll('[data-kind="' + kind + '"]');
     for (var i=0;i<cards.length;i++){
       if (String(cards[i].dataset.itemId) === String(id)) return cards[i];
     }
     return null;
   }
+  function tabFor(type){ return type === "plan" ? "plans" : type === "pack" ? "packs" : "moves"; }
+  function tabButton(name){
+    var found = null;
+    scopeEl.querySelectorAll(".sm-pro-mobile-tabs button").forEach(function(b){
+      var k = String(b.dataset.proTab || b.textContent || "").trim().toLowerCase();
+      if (k === name) found = b;
+    });
+    return found;
+  }
+
+  // Empty-state action (desktop only — the slot never shows on mobile): focus the
+  // Assistant panel. Never opens fake content.
+  function openAssistant(){
+    var panel = scopeEl.querySelector(".assistant");
+    if (panel){
+      if (!panel.hasAttribute("tabindex")) panel.setAttribute("tabindex","-1");
+      try { panel.focus(); } catch(_){}
+      try { panel.scrollIntoView({ block:"nearest" }); } catch(_){}
+    }
+  }
 
   function reopenLast(){
     var last = getLast();
-    if (!last || !last.id) return;
-    var card = findMoveCard(last.id);
+    if (!last){ openAssistant(); return; }   // empty state → Assistant
+    var card = findCard(last.type, last.id);
     if (card){ card.click(); return; }
-    // fallback: jump to the Moves tab, then open the card once it renders
-    var movesTab = null;
-    scopeEl.querySelectorAll(".sm-pro-mobile-tabs button").forEach(function(b){
-      var k = String(b.dataset.proTab || b.textContent || "").trim().toLowerCase();
-      if (k === "moves") movesTab = b;
-    });
-    if (movesTab){
-      movesTab.click();
-      setTimeout(function(){ var c = findMoveCard(last.id); if (c) c.click(); }, 90);
+    // not on screen → switch to its tab, then open once rendered
+    var tb = tabButton(tabFor(last.type));
+    if (tb){
+      tb.click();
+      setTimeout(function(){
+        var c = findCard(last.type, last.id);
+        if (c){ c.click(); }
+        else { clearLast(); renderSlot(); }   // stale (no longer in data) → empty state, no error
+      }, 140);
     }
   }
 
-  function buildSlot(){
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "sm-last-watched";
-    b.setAttribute("aria-label", "Reopen last watched move");
-    b.innerHTML =
-      '<span class="sm-lw__th"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>' +
-      '<span class="sm-lw__t"><span class="sm-lw__ey">Last watched</span><span class="sm-lw__name"></span></span>';
-    b.addEventListener("click", reopenLast);
-    return b;
+  function ensureSlot(){
+    var top = scopeEl.querySelector(".sm-pro-mobile-top");
+    if (!top) return null;
+    var slot = top.querySelector(".sm-last-watched");
+    if (!slot){
+      slot = document.createElement("button");
+      slot.type = "button";
+      slot.className = "sm-last-watched";
+      slot.innerHTML =
+        '<span class="sm-lw__th"><img class="sm-lw__img" alt="" />' +
+          '<svg class="sm-lw__ph" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>' +
+        '</span>' +
+        '<span class="sm-lw__t"><span class="sm-lw__ey"></span><span class="sm-lw__name"></span></span>';
+      slot.addEventListener("click", reopenLast);
+      top.appendChild(slot);
+    }
+    return slot;
   }
 
   function renderSlot(){
-    var top = scopeEl.querySelector(".sm-pro-mobile-top");
-    if (!top) return;
+    var slot = ensureSlot();
+    if (!slot) return;
     var last = getLast();
-    var slot = top.querySelector(".sm-last-watched");
-    if (last && last.id){
-      if (!slot){ slot = buildSlot(); top.appendChild(slot); }
-      slot.querySelector(".sm-lw__name").textContent = last.title || "Move";
-      top.classList.add("sm-has-last");   // CSS hides the quote, shows the slot (desktop only)
+    // Preserve the prior header behavior: .sm-has-last toggles the mobile quote.
+    // (The slot itself is desktop-only via CSS; this keeps mobile identical to before.)
+    var top = scopeEl.querySelector(".sm-pro-mobile-top");
+    if (top) top.classList.toggle("sm-has-last", !!last);
+    var img = slot.querySelector(".sm-lw__img");
+    var ey = slot.querySelector(".sm-lw__ey");
+    var name = slot.querySelector(".sm-lw__name");
+
+    if (last){
+      slot.classList.remove("sm-lw--empty");
+      slot.setAttribute("aria-label", "Reopen last opened " + (last.type || "item"));
+      var cover = last.cover || "";
+      if (cover){ img.src = cover; img.style.display = ""; }
+      else { img.removeAttribute("src"); img.style.display = "none"; }
+      img.onerror = function(){ img.style.display = "none"; };   // graceful: bad cover → hide img
+      ey.textContent = TYPES[last.type] || "";
+      name.textContent = last.title || "";
     } else {
-      top.classList.remove("sm-has-last");
+      slot.classList.add("sm-lw--empty");
+      slot.setAttribute("aria-label", "Start your first move");
+      img.removeAttribute("src"); img.style.display = "none";
+      ey.textContent = "";
+      name.textContent = "Start your first move";
     }
   }
 
-  // capture every move open (fires from both card opens and plan opens)
-  window.addEventListener("sm:move_opened", function(e){
-    var d = e.detail || {};
-    if (!d.item_id) return;
-    if (String(d.item_type || "move") !== "move") return;
-    setLast({ id: String(d.item_id), title: d.title || "Move" });
+  function record(type, d){
+    if (!d || !d.item_id || !TYPES[type]) return;
+    setLast({
+      type: type,
+      id: String(d.item_id),
+      title: d.title || "",
+      cover: d.cover || "",
+      meta: d.meta || "",
+      ts: Date.now()
+    });
     renderSlot();
-  });
+  }
 
-  // initial paint (in case a move was watched in a previous session)
+  // Only real content opens reach these events (locked previews are intercepted
+  // earlier and never emit), so Last watched never records a locked preview.
+  window.addEventListener("sm:move_opened", function(e){ record("move", e.detail || {}); });
+  window.addEventListener("sm:plan_opened", function(e){ record("plan", e.detail || {}); });
+  window.addEventListener("sm:pack_opened", function(e){ record("pack", e.detail || {}); });
+
+  // Always render (empty state included) so the slot replaces the marketing quote.
   renderSlot();
   setTimeout(renderSlot, 400);
 })();

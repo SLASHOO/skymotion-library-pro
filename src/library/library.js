@@ -3674,7 +3674,9 @@
     emit("sm:move_opened", {
       item_id: getVideoId(video),
       item_type: "move",
-      title: video?.title || ""
+      title: video?.title || "",
+      cover: pickThumb(video?.thumb),
+      meta: [video?.duration || formatSeconds(video?.duration_s), getMoveDifficulty(video)].filter(Boolean).join(" · ")
     });
 
     buildVideoPlayer(video);
@@ -3759,7 +3761,9 @@
     emit("sm:move_opened", {
       item_id: getVideoId(move),
       item_type: "move",
-      title: move?.title || "Move video"
+      title: move?.title || "Move video",
+      cover: pickThumb(move?.thumb),
+      meta: [move?.duration || formatSeconds(move?.duration_s), getMoveDifficulty(move)].filter(Boolean).join(" · ")
     });
 
     buildVideoPlayer({
@@ -3934,6 +3938,18 @@
       e.preventDefault();
       e.stopPropagation();
       activeProPackId = packCard.dataset.proPack || "car_event_air4future";
+
+      // Real pack-detail open (free users are intercepted earlier into a preview modal,
+      // so this only fires when the actual pack content opens).
+      const _pack = getProPackItems().find((p) => String(p.id) === String(activeProPackId));
+      emit("sm:pack_opened", {
+        item_id: activeProPackId,
+        item_type: "pack",
+        title: _pack?.title || packCard.querySelector("h3")?.textContent?.trim() || "Pack",
+        cover: _pack?.thumb || packCard.querySelector(".sm-pro-pack-img")?.getAttribute("src") || "",
+        meta: _pack?.meta || ""
+      });
+
       activeProTab = "packs";
       proSearchOpen = false;
       proSearchQuery = "";
@@ -3967,10 +3983,13 @@
     }
 
     if (isPlan(item)) {
+      const planShots = Number(item?.meta?.shots_count) || Number(item?.shots_count) || (Array.isArray(item?.steps) ? item.steps.length : 0);
       emit("sm:plan_opened", {
         item_id: item?.id || "",
         item_type: "plan",
-        title: item?.title || ""
+        title: item?.title || "",
+        cover: getPlanCover(item),
+        meta: [planShots ? `${planShots} shots` : "", "Plan"].filter(Boolean).join(" · ")
       });
 
       window.dispatchEvent(new CustomEvent("sm:open-plan", {
