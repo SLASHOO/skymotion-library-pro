@@ -170,18 +170,60 @@
     var CHECKOUT_URL = 'https://skymotion.cloud/pro-library';   // member-buy destination (swap if you add a dedicated checkout)
     function open(){
       // must register before buying — guests go to sign-up, members to checkout
+      // ('loading' resolves to the guest path until Memberstack confirms a member)
       var auth = nav ? nav.getAttribute('data-auth') : 'guest';
+      var loggedIn = (auth === 'member' || auth === 'pro');
       if(buy){
-        if(auth === 'guest'){ buy.textContent = 'Sign up to get Pro'; buy.href = SIGNUP_URL; }
+        if(!loggedIn){ buy.textContent = 'Sign up to get Pro'; buy.href = SIGNUP_URL; }
         else { buy.textContent = 'Get Pro'; buy.href = CHECKOUT_URL; }
       }
-      if(note) note.style.display = (auth === 'guest') ? '' : 'none';
+      if(note) note.style.display = loggedIn ? 'none' : '';
       modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
     }
     function close(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
     document.querySelectorAll('[data-open-pro]').forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); open(); }); });
     modal.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', close); });
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
+  })();
+
+  // AUTH STATE — drive the header from real Memberstack state (guest | member | pro).
+  // Reuses the exact Pro-detection logic from the Pro Library (PRO_PLAN_ID +
+  // planConnections check); no custom/fake auth. Memberstack is loaded site-wide,
+  // so we poll until its DOM SDK is ready, same as the Library does.
+  (function(){
+    var PRO_PLAN_ID = 'pln_skymotion-pro-beta-r8ai0gbb';
+    function setState(s){ if (typeof window.setAuth === 'function') window.setAuth(s); }
+    function isPro(member){
+      var conns = member && member.planConnections;
+      return Array.isArray(conns) && conns.some(function(pc){
+        if (!pc) return false;
+        var id = pc.planId || (pc.plan && pc.plan.id);
+        if (id !== PRO_PLAN_ID) return false;
+        if (pc.active === false) return false;
+        if (pc.status && /cancel|expired|inactive|past_due/i.test(String(pc.status))) return false;
+        return true;
+      });
+    }
+    function apply(res){
+      var d = res && res.data;
+      var m = (d && d.member) || d || (res && res.member) || null;
+      // A real logged-in member has an id; logged-out Memberstack resolves data:null.
+      if (!m || !m.id) { setState('guest'); return; }
+      setState(isPro(m) ? 'pro' : 'member');
+    }
+    function check(){
+      var ms = window.$memberstackDom || window.$memberstack;
+      if (ms && ms.getCurrentMember){
+        ms.getCurrentMember().then(apply).catch(function(){ setState('guest'); });
+        return true;
+      }
+      return false;
+    }
+    (function resolve(tries){
+      if (check()) return;
+      if (tries > 0){ setTimeout(function(){ resolve(tries - 1); }, 250); }
+      else { setState('guest'); }   // no Memberstack on the page → treat as guest
+    })(40);
   })();
 
   // CONTACT POPUP — Web3Forms (recipient email never appears in the page)

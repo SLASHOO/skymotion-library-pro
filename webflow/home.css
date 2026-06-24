@@ -65,7 +65,25 @@ html.sm-home-page body.sm-home-page{
   .brand__logo{ height:26px; }
   .nav__r{ gap:6px; }
   .nav__link{ padding:7px 9px; font-size:13.5px; }
-  .nav__btn--ghost{ display:none !important; }
+  /* Guest mobile: declutter — hide the secondary ghost "Open library" (Get Pro stays as the CTA). */
+  .nav[data-auth="guest"] .nav__btn--ghost{ display:none !important; }
+  /* Logged-in Free mobile: keep "Open library", drop "Get Pro" (upgrade lives inside the Library). */
+  .nav[data-auth="member"] .nav__btn.show-free[data-open-pro]{ display:none !important; }
+  /* Logged-in mobile: compact the bar (member + pro only) so logo + "Log out" + the full
+     "Open library" button fit at 320–390px with no clipping and no horizontal scroll.
+     Guest header is untouched. */
+  .nav[data-auth="member"] .nav__in,
+  .nav[data-auth="pro"] .nav__in{ padding-left:12px; padding-right:12px; }
+  .nav[data-auth="member"] .nav__r,
+  .nav[data-auth="pro"] .nav__r{ gap:5px; }
+  .nav[data-auth="member"] .brand,
+  .nav[data-auth="pro"] .brand{ flex-shrink:0; }
+  .nav[data-auth="member"] .brand__logo,
+  .nav[data-auth="pro"] .brand__logo{ height:22px; }
+  .nav[data-auth="member"] .nav__link.show-auth,
+  .nav[data-auth="pro"] .nav__link.show-auth{ padding:6px 8px; font-size:13px; white-space:nowrap; flex-shrink:0; }
+  .nav[data-auth="member"] .nav__btn,
+  .nav[data-auth="pro"] .nav__btn{ padding:8px 14px; font-size:13px; white-space:nowrap; flex-shrink:0; }
 }
 /* very small phones: keep only Sign up + Get Pro for guests so the bar never overflows */
 @media (max-width:380px){
