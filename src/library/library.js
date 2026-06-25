@@ -3194,6 +3194,15 @@
   }
 
 
+  // Home preview: a few free moves + a couple locked previews. Order stays free-first
+  // (no reorder); the free region mirrors the gating free-set (first 7 moves).
+  const HOME_FREE_MOVES = 7;
+  function homeMovePreview(moves, freeN, lockedN) {
+    const free = moves.slice(0, HOME_FREE_MOVES).slice(0, freeN);
+    const locked = moves.slice(HOME_FREE_MOVES, HOME_FREE_MOVES + lockedN);
+    return free.concat(locked);
+  }
+
   function renderProMobileHome() {
     grid.innerHTML = "";
 
@@ -3216,8 +3225,8 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-mobile-home";
 
-    const popularMoves = moves.slice(0, 14);
-    const cinematicPlans = plans.slice(0, 10);
+    const popularMoves = homeMovePreview(moves, 3, 1);   // mobile: 3 free + 1 locked
+    const cinematicPlans = plans.slice(0, 3);            // 2 free + 1 locked
 
     wrap.innerHTML = `
       <section class="sm-pro-section sm-pro-section--pack">
@@ -3278,7 +3287,7 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = plans.slice(0, 10).map((item) => {
+    const planCards = plans.slice(0, 3).map((item) => {   // 2 free + 1 locked
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
@@ -3306,7 +3315,7 @@
     `;
 
     const moveStack = wrap.querySelector('[data-pro-desktop-section="moves"]');
-    moves.slice(0, 14).forEach((item) => {
+    homeMovePreview(moves, 5, 2).forEach((item) => {   // desktop: 5 free + 2 locked
       const idx = getItemFilteredIndex(item);
       moveStack.appendChild(renderMoveCard(item, idx));
     });
