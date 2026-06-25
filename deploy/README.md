@@ -82,14 +82,31 @@ Optional:
 If `.env.local` is missing or any required field is blank, the script creates
 all files but performs **no upload**, and prints exactly which fields to fill.
 
+## Home (same pattern, separate files)
+
+Home has its own identical system, fully independent of the Library one:
+- boot loader: `boot/home.js`  → Bunny `/boot/home.js`
+- manifest:    `boot/home-release.json` → Bunny `/boot/home-release.json`
+- release:     `node deploy/release-home.mjs <full-commit-hash>`
+- loader path validated: `/webflow/home-loader.js`; mount: `#sm-home`
+
+Final Webflow Home snippet (set once, then never touched again):
+
+```html
+<div id="sm-home"></div>
+<script src="https://skymotion-cdn.b-cdn.net/boot/home.js"></script>
+```
+
 ## Local verification (before Webflow Publish)
 
 Serve the repo root over HTTP, then open:
-- `boot/boot-smoke-test.html` — full chain through the boot loader (happy path).
-- `boot/boot-smoke-test-broken.html` — neutral error state on a bad manifest.
+- Library: `boot/boot-smoke-test.html` / `boot/boot-smoke-test-broken.html`
+- Home:    `boot/home-boot-smoke-test.html` / `boot/home-boot-smoke-test-broken.html`
 
 ```bash
 python -m http.server 8777
 # http://localhost:8777/boot/boot-smoke-test.html
 # http://localhost:8777/boot/boot-smoke-test-broken.html
+# http://localhost:8777/boot/home-boot-smoke-test.html
+# http://localhost:8777/boot/home-boot-smoke-test-broken.html
 ```

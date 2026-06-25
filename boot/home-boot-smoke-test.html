@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Home — Boot Loader Smoke Test (normal path)</title>
+
+  <!-- LOCAL TEST ONLY.
+       Reproduces the exact production chain through the STABLE Home boot loader:
+         boot/home.js -> reads manifest -> injects pinned jsDelivr home-loader
+                      -> home-loader.js mounts the landing from that commit.
+       Serve the repo root over HTTP and open /boot/home-boot-smoke-test.html
+       (file:// will fail fetch). The only local override is the manifest URL,
+       pointed at a local fixture (mirrors window.SM_ASSET_BASE in home-loader). -->
+  <script>
+    // Point the boot loader at a LOCAL manifest fixture instead of Bunny.
+    window.SM_HOME_BOOT_MANIFEST_URL = "./fixtures/home-release-good.json";
+
+    window.__SMOKE_ERRORS__ = [];
+    window.addEventListener("error", function (e) {
+      window.__SMOKE_ERRORS__.push(String(e.message || e.error || e));
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+      window.__SMOKE_ERRORS__.push("promise: " + String(e.reason));
+    });
+  </script>
+
+  <style>
+    #smoke-panel{
+      position:fixed; z-index:2147483647; top:10px; right:10px; width:380px; max-height:92vh;
+      overflow:auto; font:12px/1.4 ui-monospace,Menlo,Consolas,monospace; color:#eaeaea;
+      background:rgba(12,12,12,.92); border:1px solid #333; border-radius:10px; padding:12px;
+    }
+    #smoke-panel h2{ margin:0 0 8px; font-size:13px; }
+    #smoke-panel .info{ margin:0 0 8px; padding-bottom:8px; border-bottom:1px solid #333; word-break:break-all; }
+    #smoke-panel .info b{ color:#9aa; }
+    #smoke-panel .row{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid #222; }
+    #smoke-panel .row b{ width:34px; }
+    .pass{ color:#56d364; } .fail{ color:#f85149; } .wait{ color:#d29922; }
+  </style>
+</head>
+<body>
+  <!-- Production mount: identical to Webflow Home. -->
+  <div id="sm-home"></div>
+
+  <div id="smoke-panel">
+    <h2>Home boot loader — normal path</h2>
+    <div class="info" id="smoke-info">reading manifest…</div>
+    <div id="smoke-rows">running…</div>
+  </div>
+
+  <!-- The STABLE Home boot loader (local copy). In production this is the ONLY Home script. -->
+  <script src="./home.js"></script>
+
+  <script>
+  (function(){
+    var EXPECTED_COMMIT = "08457aea1448bdac1ca950a38b66ba4a33e264bc";
+
+    function injectedLoaderEl(){
+      return document.querySelector(
+        'script[src^="https://cdn.jsdelivr.net/gh/SLASHOO/skymotion-library-pro@"]');
+    }
+    function injectedHash(src){
+      var m = src && src.match(/@([0-9a-f]{40})\//);
+      return m ? m[1] : null;
+    }
+
+    var checks = [
+      { label:"Boot single-init guard set",
+        test:function(){ return window.__SM_HOME_BOOT__ === true; } },
+      { label:"Pinned jsDelivr home-loader injected at exact commit",
+        test:function(){ var el=injectedLoaderEl();
+          return !!el && injectedHash(el.src) === EXPECTED_COMMIT
+              && /\/webflow\/home-loader\.js$/.test(el.src); } },
+      { label:"No boot error state on mount",
+        test:function(){ var m=document.getElementById("sm-home");
+          return m && m.getAttribute("data-sm-boot-error") !== "1"; } },
+      { label:"home-loader.js ran (its guard set)",
+        test:function(){ return window.__SM_HOME_LOADER__ === true; } },
+      { label:"Template mounted (#sm-home has content)",
+        test:function(){ var m=document.getElementById("sm-home");
+          return m && m.children.length > 0; } },
+      { label:"Home sections present (#top, #how, #library, #pro)",
+        test:function(){ return ["top","how","library","pro"].every(function(id){
+          return !!document.getElementById(id); }); } },
+      { label:"home.js ran (year stamped in #yr)",
+        test:function(){ var y=document.getElementById("yr");
+          return y && /^\d{4}$/.test((y.textContent||"").trim()); } },
+      { label:"No console / window errors",
+        test:function(){ return (window.__SMOKE_ERRORS__||[]).length===0; } }
+    ];
+
+    var info = document.getElementById("smoke-info");
+    function renderInfo(){
+      var el = injectedLoaderEl();
+      var src = el ? el.src : null;
+      var hash = injectedHash(src);
+      info.innerHTML =
+        '<div><b>manifest release:</b> ' + (hash || "—") + '</div>' +
+        '<div><b>injected loader:</b> ' + (src || "—") + '</div>';
+    }
+
+    var rows=document.getElementById("smoke-rows");
+    var attempts=0, MAX=120; // jsDelivr fetch can take a moment
+    function render(done){
+      var html="", passed=0;
+      checks.forEach(function(c){
+        var ok=false; try{ ok=!!c.test(); }catch(_){ ok=false; }
+        if(ok) passed++;
+        var cls=ok?"pass":(done?"fail":"wait");
+        var mark=ok?"PASS":(done?"FAIL":"...");
+        html+='<div class="row"><b class="'+cls+'">'+mark+'</b><span>'+c.label+'</span></div>';
+      });
+      html+='<div class="row"><b></b><span>'+passed+'/'+checks.length+' passed'+(done?'':' (settling…)')+'</span></div>';
+      if(done && (window.__SMOKE_ERRORS__||[]).length){
+        html+='<div class="row fail"><b>!</b><span>'+window.__SMOKE_ERRORS__.join("<br>")+'</span></div>';
+      }
+      rows.innerHTML=html;
+      window.__SMOKE_RESULT__={ passed:passed, total:checks.length, done:done };
+    }
+    var t=setInterval(function(){
+      attempts++;
+      renderInfo();
+      var allOk=checks.every(function(c){ try{return !!c.test();}catch(_){return false;} });
+      render(false);
+      if(allOk||attempts>=MAX){ clearInterval(t); renderInfo(); render(true);
+        console.log("[home-boot-smoke] result", window.__SMOKE_RESULT__); }
+    },100);
+  })();
+  </script>
+</body>
+</html>
