@@ -1,3 +1,9 @@
+# Secrets — never commit Bunny (or any) credentials.
+.env
+.env.*
+# …but DO track the secret-free example.
+!.env.local.example
+
 .venv/
 .idea/workspace.xml
 .idea/shelf/

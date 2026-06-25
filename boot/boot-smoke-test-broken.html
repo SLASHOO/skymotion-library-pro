@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Library — Boot Loader Smoke Test (error state)</title>
+
+  <!-- LOCAL TEST ONLY. Points the boot loader at a manifest whose loader URL is
+       for the WRONG repo owner (evil-fork/…). The strict validator must reject
+       it, no loader script must be injected, and the mount must show the neutral
+       failure state instead of a white screen. -->
+  <script>
+    window.SM_BOOT_MANIFEST_URL = "./fixtures/release-broken.json";
+    window.__SMOKE_ERRORS__ = [];
+    window.addEventListener("error", function (e) {
+      window.__SMOKE_ERRORS__.push(String(e.message || e.error || e));
+    });
+  </script>
+
+  <style>
+    #smoke-panel{
+      position:fixed; z-index:2147483647; top:10px; right:10px; width:360px; max-height:92vh;
+      overflow:auto; font:12px/1.4 ui-monospace,Menlo,Consolas,monospace; color:#eaeaea;
+      background:rgba(12,12,12,.92); border:1px solid #333; border-radius:10px; padding:12px;
+    }
+    #smoke-panel h2{ margin:0 0 8px; font-size:13px; }
+    #smoke-panel .row{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid #222; }
+    #smoke-panel .row b{ width:34px; }
+    .pass{ color:#56d364; } .fail{ color:#f85149; } .wait{ color:#d29922; }
+  </style>
+</head>
+<body>
+  <div id="sm-library-pro"></div>
+
+  <div id="smoke-panel"><h2>Boot loader — error state</h2><div id="smoke-rows">running…</div></div>
+
+  <script src="./library.js"></script>
+
+  <script>
+  (function(){
+    var checks = [
+      { label:"Neutral failure text shown in mount",
+        test:function(){ var m=document.getElementById("sm-library-pro");
+          return m && m.textContent.trim() === "Library couldn't load. Please refresh."; } },
+      { label:"Mount flagged data-sm-boot-error",
+        test:function(){ var m=document.getElementById("sm-library-pro");
+          return m && m.getAttribute("data-sm-boot-error") === "1"; } },
+      { label:"No jsDelivr loader injected (rejected before inject)",
+        test:function(){ return !document.querySelector(
+          'script[src*="cdn.jsdelivr.net/gh/"][src*="library-loader.js"]'); } },
+      { label:"library-loader.js never ran",
+        test:function(){ return window.__SM_LIBRARY_LOADER__ !== true; } }
+    ];
+
+    var rows=document.getElementById("smoke-rows");
+    var attempts=0, MAX=60;
+    function render(done){
+      var html="", passed=0;
+      checks.forEach(function(c){
+        var ok=false; try{ ok=!!c.test(); }catch(_){ ok=false; }
+        if(ok) passed++;
+        var cls=ok?"pass":(done?"fail":"wait");
+        var mark=ok?"PASS":(done?"FAIL":"...");
+        html+='<div class="row"><b class="'+cls+'">'+mark+'</b><span>'+c.label+'</span></div>';
+      });
+      html+='<div class="row"><b></b><span>'+passed+'/'+checks.length+' passed'+(done?'':' (settling…)')+'</span></div>';
+      rows.innerHTML=html;
+      window.__SMOKE_RESULT__={ passed:passed, total:checks.length, done:done };
+    }
+    var t=setInterval(function(){
+      attempts++;
+      var allOk=checks.every(function(c){ try{return !!c.test();}catch(_){return false;} });
+      render(false);
+      if(allOk||attempts>=MAX){ clearInterval(t); render(true); console.log("[boot-smoke-broken] result", window.__SMOKE_RESULT__); }
+    },100);
+  })();
+  </script>
+</body>
+</html>
