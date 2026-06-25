@@ -1677,3 +1677,9 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   background:rgba(0,0,0,.42) !important;
   box-shadow:none !important;
 }
+
+/* Members-only gate: while auth is still resolving (scope is .sm-anon) keep the
+   library hidden so anonymous visitors never see content before the redirect to
+   the login page kicks in (see gateAnon() in enhancements.js). Logged-in members
+   get .sm-authed (drops .sm-anon) and the library is shown normally. */
+#sm-library-scope.sm-anon{ visibility:hidden; }

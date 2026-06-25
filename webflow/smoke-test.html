@@ -18,6 +18,15 @@
     window.SM_PRO_SIGNUP_URL = "https://skymotion.cloud/sign-up";
     window.SM_PRO_PRICE_ID = "";
 
+    // The library is now members-only: an anonymous visitor would be redirected
+    // to the login page. Mock a LOGGED-IN, non-Pro member so this test exercises
+    // the full Free-tier library (logged-in Free === the old anonymous Free UI).
+    window.$memberstackDom = {
+      getCurrentMember: function(){
+        return Promise.resolve({ data: { id: "mem_smoketest", planConnections: [] } });
+      }
+    };
+
     // Capture console errors for the harness.
     window.__SMOKE_ERRORS__ = [];
     window.addEventListener("error", function (e) {
@@ -75,7 +84,7 @@
       { id:"enhance",  label:"Enhancements ran (gating tier classes applied)",
         test:function(){ var s=document.getElementById("sm-library-scope");
           return s && (s.classList.contains("sm-free") || s.classList.contains("sm-pro")); } },
-      { id:"free",     label:"Free gating: anonymous = Free (Basic badge / sm-free)",
+      { id:"free",     label:"Free gating: logged-in non-Pro = Free (Basic badge / sm-free)",
         test:function(){ var s=document.getElementById("sm-library-scope");
           return s && s.classList.contains("sm-free") && !s.classList.contains("sm-pro"); } },
       { id:"cards",    label:"Cards rendered (#resultsGrid has items)",

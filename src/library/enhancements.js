@@ -513,6 +513,18 @@
   // NOTE: real Pro checkout (Memberstack price id / Stripe) is intentionally deferred.
   // Until billing is configured, "Get Pro" is a placeholder (see the click handler below).
 
+  // The library is members-only: anonymous visitors are redirected to the login
+  // page (configurable via window.SM_LOGIN_URL). location.replace() so the back
+  // button doesn't bounce them straight back into the gated library.
+  var LOGIN_URL = window.SM_LOGIN_URL || "https://skymotion.cloud/log-in";
+  var _redirectingToLogin = false;
+  function gateAnon(){
+    if (_redirectingToLogin) return;   // redirect once only
+    _redirectingToLogin = true;
+    try { window.location.replace(LOGIN_URL); }
+    catch (e){ window.location.href = LOGIN_URL; }
+  }
+
   function updateProBadge(){
     var want = IS_PRO ? "PRO" : "Basic";
     scopeEl.querySelectorAll(".sm-pro-badge, .sm-pro-tool-badge").forEach(function(badge){
@@ -687,7 +699,10 @@
   // resolve Memberstack member → authed? + Pro? (re-runnable so we can update live)
   function applyMember(res){
     var m = (res && res.data && res.data.member) || (res && res.data) || (res && res.member) || res || null;
-    IS_AUTHED = !!m;
+    // A real Memberstack member always has an id; a logged-out response ({data:null})
+    // does not. Gate on the id so anonymous users are reliably detected.
+    IS_AUTHED = !!(m && m.id);
+    if (!IS_AUTHED){ gateAnon(); return; }   // members-only: not logged in → go to login
     var conns = m && m.planConnections;
     IS_PRO = Array.isArray(conns) && conns.some(function(pc){
       if (!pc) return false;
@@ -703,7 +718,7 @@
     var ms = window.$memberstackDom || window.$memberstack;
     if (ms && ms.getCurrentMember){
       ms.getCurrentMember().then(applyMember).catch(function(){
-        IS_AUTHED = false; setTierClass(); processAll(); syncSavedMsg();
+        IS_AUTHED = false; gateAnon();   // member lookup failed → treat as anonymous
       });
       return true;
     }
@@ -712,7 +727,7 @@
   (function resolve(tries){
     if (checkMember()) return;
     if (tries > 0){ setTimeout(function(){ resolve(tries - 1); }, 250); }
-    else { IS_AUTHED = false; setTierClass(); processAll(); syncSavedMsg(); }   // no Memberstack → anonymous
+    else { IS_AUTHED = false; gateAnon(); }   // no Memberstack at all → anonymous → login
   })(40);
 
   // "Get Pro" — placeholder until Memberstack billing is configured.

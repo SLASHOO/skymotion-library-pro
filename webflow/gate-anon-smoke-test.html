@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SkyMotion Library — Members-only gate (ANONYMOUS) smoke test</title>
+
+  <!-- LOCAL TEST ONLY. Proves the members-only gate: an ANONYMOUS visitor must be
+       redirected to the login page and must NOT see library content. Serve the
+       repo root over HTTP and open /webflow/gate-anon-smoke-test.html. -->
+  <script>
+    window.SM_ASSET_BASE = "../";
+    window.SM_LIBRARY_DATA_URL = "../library-data-pro.json";
+    window.SM_API_BASE = "https://skymotion.onrender.com";
+    // Redirect target pointed at a LOCAL sentinel so we never hit skymotion.cloud.
+    window.SM_LOGIN_URL = "./gate-login-landing.html";
+
+    // Mock Memberstack returning a LOGGED-OUT response ({ data: null }).
+    window.$memberstackDom = {
+      getCurrentMember: function(){ return Promise.resolve({ data: null }); }
+    };
+  </script>
+</head>
+<body>
+  <div id="sm-library-pro"></div>
+  <script src="./library-loader.js"></script>
+</body>
+</html>
