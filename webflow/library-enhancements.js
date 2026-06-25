@@ -823,20 +823,9 @@
     return found;
   }
 
-  // Empty-state action (desktop only — the slot never shows on mobile): focus the
-  // Assistant panel. Never opens fake content.
-  function openAssistant(){
-    var panel = scopeEl.querySelector(".assistant");
-    if (panel){
-      if (!panel.hasAttribute("tabindex")) panel.setAttribute("tabindex","-1");
-      try { panel.focus(); } catch(_){}
-      try { panel.scrollIntoView({ block:"nearest" }); } catch(_){}
-    }
-  }
-
   function reopenLast(){
     var last = getLast();
-    if (!last){ openAssistant(); return; }   // empty state → Assistant
+    if (!last) return;   // no history → nothing to reopen (slot hidden, quote shows)
     var card = findCard(last.type, last.id);
     if (card){ card.click(); return; }
     // not on screen → switch to its tab, then open once rendered
@@ -883,20 +872,18 @@
     var name = slot.querySelector(".sm-lw__name");
 
     if (last){
-      slot.classList.remove("sm-lw--empty");
-      slot.setAttribute("aria-label", "Reopen last opened " + (last.type || "item"));
+      slot.setAttribute("aria-label", "Reopen last watched " + (last.type || "item"));
       var cover = last.cover || "";
       if (cover){ img.src = cover; img.style.display = ""; }
       else { img.removeAttribute("src"); img.style.display = "none"; }
       img.onerror = function(){ img.style.display = "none"; };   // graceful: bad cover → hide img
-      ey.textContent = TYPES[last.type] || "";
+      ey.textContent = "Last watched";
       name.textContent = last.title || "";
     } else {
-      slot.classList.add("sm-lw--empty");
-      slot.setAttribute("aria-label", "Start your first move");
+      // No history → slot stays hidden (CSS); the marketing quote shows instead.
       img.removeAttribute("src"); img.style.display = "none";
       ey.textContent = "";
-      name.textContent = "Start your first move";
+      name.textContent = "";
     }
   }
 
@@ -919,7 +906,7 @@
   window.addEventListener("sm:plan_opened", function(e){ record("plan", e.detail || {}); });
   window.addEventListener("sm:pack_opened", function(e){ record("pack", e.detail || {}); });
 
-  // Always render (empty state included) so the slot replaces the marketing quote.
+  // Render once history exists; with no history the slot stays hidden and the quote shows.
   renderSlot();
   setTimeout(renderSlot, 400);
 })();

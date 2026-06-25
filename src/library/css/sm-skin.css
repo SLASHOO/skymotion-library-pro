@@ -1638,21 +1638,20 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     content:""; position:absolute; left:0; top:.72em; width:22px; height:1px; background:rgba(201,154,110,.5);
   }
 }
-/* Last watched: real last opened move / plan / pack (or honest empty state).
-   DESKTOP ONLY. On mobile the slot stays hidden and the header keeps its prior
-   behavior (quote toggled by .sm-has-last, exactly as before). */
-#sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-pro-quote{ display:none !important; }  /* unchanged from prior: mobile quote behavior */
+/* Last watched: real last opened move / plan / pack. DESKTOP ONLY, and only when
+   there is history — with no history the slot stays hidden and the marketing quote
+   shows (as before the feature). On mobile the slot is always hidden. */
+#sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-pro-quote{ display:none !important; }  /* quote hidden only when a last item exists */
 
-#sm-library-scope .sm-last-watched{ display:none; }   /* hidden by default → mobile shows nothing */
+#sm-library-scope .sm-last-watched{ display:none; }   /* hidden by default → mobile + no-history */
 @media (min-width:901px){
-  #sm-library-scope .sm-pro-quote{ display:none !important; }   /* desktop: slot replaces the quote (incl. empty state) */
-  #sm-library-scope .sm-last-watched{
+  #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-last-watched{
     display:inline-flex; align-items:center; gap:12px; flex:0 0 auto; text-align:left;
     padding:8px 16px 8px 8px; border-radius:12px;
     background:rgba(255,255,255,.05); border:.5px solid rgba(255,255,255,.1);
     cursor:pointer; transition:transform .15s ease, background .15s ease;
   }
-  #sm-library-scope .sm-last-watched:hover{ transform:translateY(-1px); background:rgba(255,255,255,.08); }
+  #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-last-watched:hover{ transform:translateY(-1px); background:rgba(255,255,255,.08); }
 }
 #sm-library-scope .sm-last-watched .sm-lw__th{
   width:58px; height:38px; border-radius:8px; flex:0 0 auto; position:relative; overflow:hidden;
@@ -1663,18 +1662,14 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 #sm-library-scope .sm-last-watched .sm-lw__ph{ width:18px; height:18px; fill:rgba(255,255,255,.85); filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
 #sm-library-scope .sm-last-watched .sm-lw__t{ line-height:1.3; min-width:0; }
 #sm-library-scope .sm-last-watched .sm-lw__ey{
-  display:block; color:var(--accent); font-size:10px; font-weight:700;
-  letter-spacing:.10em; text-transform:uppercase;
+  display:block; color:rgba(255,255,255,.45); font-size:10px;
+  letter-spacing:.07em; text-transform:uppercase;
 }
 #sm-library-scope .sm-last-watched .sm-lw__ey:empty{ display:none; }
 #sm-library-scope .sm-last-watched .sm-lw__name{
   display:block; color:#fff; font-size:14px; font-weight:500;
   max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-/* honest empty state — no cover, muted */
-#sm-library-scope .sm-last-watched.sm-lw--empty .sm-lw__th{ background:rgba(255,255,255,.06); }
-#sm-library-scope .sm-last-watched.sm-lw--empty .sm-lw__ph{ fill:rgba(255,255,255,.40); }
-#sm-library-scope .sm-last-watched.sm-lw--empty .sm-lw__name{ color:rgba(255,255,255,.62); font-weight:600; }
 /* "Plan" pill → neutral (was solid/outlined purple) */
 #sm-library-scope .cardPlan .pill--plan,
 #sm-library-scope .sm-pro-plans-screen .cardPlan .pill--plan{
