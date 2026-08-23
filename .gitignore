@@ -20,3 +20,9 @@ __pycache__/
 *.pyc
 .DS_Store
 .idea/
+
+# Local dev-server config (per-machine, not product code).
+.claude/launch.json
+
+# Codex CLI tool state (not part of this product).
+.codex/
