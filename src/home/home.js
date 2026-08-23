@@ -110,11 +110,11 @@
     var tipText = tip.querySelector('.tour__text');
     var dots = tip.querySelectorAll('.tour__dots i');
     var steps = [
-      { sel:'.fchips', selM:'.fchips', title:"Conditions", text:"Open Filters, tell SkyMotion where you're flying and the conditions you're working in, then close it." },
-      { sel:'.asst__h span', selM:'.lib__mfilters', title:"Filtered for your location", text:"SkyMotion removes the moves that don't fit and leaves only the ones that make sense here." },
-      { sel:'.mtile:not(.mtile--plan)', selM:'.mtile:not(.mtile--plan)', title:"Moves", text:"Every move includes a video preview, difficulty level, and estimated flight time. Free includes the essential moves used in most shoots." },
-      { sel:'.mtile--plan', selM:'.mtile--plan', title:"Plans", text:"A plan combines multiple moves into a complete shooting sequence, so you can follow the shoot step by step instead of building it yourself." },
-      { sel:'.mgrid', selM:'.mgrid', title:"Moves or Plans?", text:"Use moves when you already know the shot you want. Use plans when you want a complete sequence ready to follow on location." }
+      { sel:'.fchips', selM:'.fchips', title:"Set your conditions", text:"Tell SkyMotion where you're flying, what surrounds you, and how comfortable you feel in the air." },
+      { sel:'.asst__h span', selM:'.lib__mfilters', title:"See what fits", text:"SkyMotion brings forward moves and plans matched to your location and conditions." },
+      { sel:'.mtile:not(.mtile--plan)', selM:'.mtile:not(.mtile--plan)', title:"Preview the move", text:"See the shot, difficulty level, and estimated flight time before you decide to fly it." },
+      { sel:'.mtile--plan', selM:'.mtile--plan', title:"Explore complete plans", text:"Plans combine several moves into a shooting sequence you can follow, adapt, and make your own." },
+      { sel:'.mgrid', selM:'.mgrid', title:"Move or Plan?", text:"Choose a Move when one shot sparks an idea. Choose a Plan when you want a complete sequence." }
     ];
     var isM = function(){ return window.matchMedia('(max-width:760px)').matches; };
     var i = 0, timer = null, running = false;

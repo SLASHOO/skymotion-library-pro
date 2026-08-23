@@ -361,7 +361,6 @@ html.sm-home-page body.sm-home-page{
   background:linear-gradient(180deg,#ffffff,rgba(255,255,255,.58)); -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 2px 18px rgba(0,0,0,.55)); }
 .pro__lead{ position:absolute; left:6%; top:48%; max-width:42%; margin:0; color:rgba(255,255,255,.94); font-size:clamp(15px,1.45vw,20px); line-height:1.5; text-shadow:0 2px 16px rgba(0,0,0,.6); }
-.pro__sub{ position:relative; z-index:2; margin:6px 0 0; color:rgba(255,255,255,.5); font-size:clamp(15px,1.4vw,20px); font-weight:400; letter-spacing:.01em; }
 /* glowing Get Pro button — rotating conic border (loop) */
 .sm-pro-cta-wrap{ position:relative; display:inline-flex; border-radius:999px; }
 .sm-pro-cta-anim{ position:absolute; inset:0; border-radius:999px; overflow:hidden; opacity:0; pointer-events:none; transition:opacity .4s ease; }
