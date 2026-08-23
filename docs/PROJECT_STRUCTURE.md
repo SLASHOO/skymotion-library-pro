@@ -71,7 +71,7 @@ data comes from the BunnyCDN index, not from either file.)
 
 ## Live pins (current)
 - Pro Library loader → `@62213da…`
-- Home loader → `@1339463…`
+- Home loader → `@30db914…` (landing copy refresh)
 
 These are immutable jsDelivr commit pins; repo reorganization never affects live
 until a pin is intentionally bumped.
