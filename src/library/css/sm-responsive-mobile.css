@@ -152,6 +152,14 @@
 }
 
 @media (max-width:640px){
+  #sm-library-scope #modal .player video{
+    object-fit:cover !important;
+  }
+
+  #sm-library-scope #modal .player__ambient{
+    display:none;
+  }
+
   #sm-library-scope .results__grid{
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -441,5 +449,9 @@
     width:100vw !important;
     height:100dvh !important;
     object-fit:cover !important;
+  }
+
+  #sm-library-scope #modal .player__ambient{
+    display:none;
   }
 }

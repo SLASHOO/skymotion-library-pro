@@ -8,7 +8,8 @@
   const REAL_ESTATE_PACK_COVER = window.SM_REAL_ESTATE_PACK_COVER_URL || "https://skymotion-cdn.b-cdn.net/thumb.jpg";
   const CHECKLIST_PAPER_ASSET_URL = window.SM_CHECKLIST_PAPER_ASSET_URL || "https://skymotion-cdn.b-cdn.net/checklist.png";
   const CDN_INDEX_URL = "https://skymotion-cdn.b-cdn.net/videos_index_v16.json";
-  const API_BASE = String(window.SM_API_BASE || "https://skymotion.onrender.com").replace(/\/$/, "");
+  const API_BASE = String(window.SM_API_BASE || "https://skymotion-backend.onrender.com").replace(/\/$/, "");
+  const HLS_JS_URL = String(window.SM_HLS_JS_URL || "https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js");
   const $ = (id) => document.getElementById(id);
 
   const scope = $("sm-library-scope");
@@ -179,6 +180,9 @@
   function hasMatch(itemValue, selectedValue) {
     if (!selectedValue) return true;
     const arr = Array.isArray(itemValue) ? itemValue.map((x) => String(x).toLowerCase()) : [];
+    // Newly migrated Bunny videos may not have filter metadata yet. Treat an
+    // unknown value as neutral so selecting a filter does not hide every video.
+    if (!arr.length) return true;
     return arr.includes(String(selectedValue).toLowerCase());
   }
 
@@ -262,6 +266,8 @@
 
   let _memberCache = null;
   let _memberCacheAt = 0;
+  let _memberTokenCache = "";
+  let _memberTokenCacheAt = 0;
 
   async function getMember(timeout = 12000) {
     const now = Date.now();
@@ -292,6 +298,40 @@
     return null;
   }
 
+  async function getMemberToken(timeout = 12000) {
+    const now = Date.now();
+    if (_memberTokenCache && now - _memberTokenCacheAt < 45000) {
+      return _memberTokenCache;
+    }
+
+    const t0 = Date.now();
+    while (Date.now() - t0 < timeout) {
+      const ms = window.$memberstackDom || window.$memberstack;
+      const fn = ms?.getMemberCookie;
+
+      if (typeof fn === "function") {
+        try {
+          const result = await fn.call(ms);
+          const token = typeof result === "string"
+            ? result
+            : typeof result?.data === "string"
+              ? result.data
+              : result?.data?.token || result?.token || "";
+
+          if (token) {
+            _memberTokenCache = String(token);
+            _memberTokenCacheAt = Date.now();
+            return _memberTokenCache;
+          }
+        } catch (_) {}
+      }
+
+      await sleep(250);
+    }
+
+    return "";
+  }
+
   async function api(path, opts = {}) {
     const member = await getMember(12000);
 
@@ -301,8 +341,15 @@
       throw err;
     }
 
+    const token = await getMemberToken(12000);
+    if (!token) {
+      const err = new Error("LOGIN_REQUIRED");
+      err.status = 401;
+      throw err;
+    }
+
     const headers = new Headers(opts.headers || {});
-    headers.set("x-ms-id", member.id);
+    headers.set("Authorization", `Bearer ${token}`);
 
     if (opts.body && !(opts.body instanceof FormData) && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
@@ -3428,8 +3475,188 @@
     setTimeout(() => renderResults(), 180);
   });
 
+  let hlsJsPromise = null;
+  let playerMountRequest = 0;
+
+  function getBunnyVideoId(video) {
+    const candidates = [
+      video?.bunny_video_id,
+      video?.bunnyVideoId,
+      video?.video_guid,
+      video?.videoGuid,
+      video?.videoId,
+      video?.id
+    ];
+    const guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return candidates.map((value) => String(value || "").trim()).find((value) => guidPattern.test(value)) || "";
+  }
+
+  function hasPlayableVideo(video) {
+    return Boolean(
+      getBunnyVideoId(video)
+      || normalizeUrl(video?.videoUrl || video?.video_url)
+    );
+  }
+
+  async function resolvePlaybackUrl(video) {
+    const bunnyVideoId = getBunnyVideoId(video);
+    if (bunnyVideoId) {
+      const payload = await api(`/v1/videos/${encodeURIComponent(bunnyVideoId)}/playback`, { method: "GET" });
+      const signedUrl = normalizeUrl(payload?.playback_url);
+      if (!signedUrl) throw new Error("EMPTY_PLAYBACK_URL");
+      return signedUrl;
+    }
+
+    const directUrl = normalizeUrl(video?.videoUrl || video?.video_url);
+    if (!directUrl) throw new Error("MISSING_VIDEO_SOURCE");
+    return directUrl;
+  }
+
+  function loadHlsJs() {
+    if (window.Hls) return Promise.resolve(window.Hls);
+    if (hlsJsPromise) return hlsJsPromise;
+
+    hlsJsPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = HLS_JS_URL;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.onload = () => window.Hls ? resolve(window.Hls) : reject(new Error("HLS_JS_MISSING"));
+      script.onerror = () => reject(new Error("HLS_JS_LOAD_FAILED"));
+      document.head.appendChild(script);
+    }).catch((error) => {
+      hlsJsPromise = null;
+      throw error;
+    });
+
+    return hlsJsPromise;
+  }
+
+  async function attachPlaybackSource(player, video) {
+    const url = await resolvePlaybackUrl(video);
+    const isHls = /\.m3u8(?:$|[?#])/i.test(url);
+
+    if (!isHls) {
+      player.src = url;
+      player.load();
+      return () => {
+        player.removeAttribute("src");
+        player.load();
+      };
+    }
+
+    if (player.canPlayType("application/vnd.apple.mpegurl")) {
+      player.src = url;
+      player.load();
+      return () => {
+        player.removeAttribute("src");
+        player.load();
+      };
+    }
+
+    const Hls = await loadHlsJs();
+    if (!Hls?.isSupported?.()) throw new Error("HLS_NOT_SUPPORTED");
+
+    const hls = new Hls({
+      enableWorker: true,
+      lowLatencyMode: false,
+      backBufferLength: 30
+    });
+
+    await new Promise((resolve, reject) => {
+      let settled = false;
+      const finish = (callback, value) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        callback(value);
+      };
+      const timeout = setTimeout(
+        () => finish(reject, new Error("HLS_MANIFEST_TIMEOUT")),
+        15000
+      );
+
+      hls.once(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+      hls.once(Hls.Events.MANIFEST_PARSED, () => finish(resolve));
+      hls.on(Hls.Events.ERROR, (_event, data) => {
+        if (data?.fatal) {
+          finish(reject, new Error(`HLS_${data?.details || "FATAL"}`));
+        }
+      });
+      hls.attachMedia(player);
+    }).catch((error) => {
+      hls.destroy();
+      throw error;
+    });
+
+    return () => hls.destroy();
+  }
+
+  function bindAmbientCanvas(player, canvas) {
+    if (!player || !canvas) return () => {};
+
+    const context = canvas.getContext("2d", { alpha: false });
+    if (!context) return () => {};
+
+    canvas.width = 160;
+    canvas.height = 90;
+    let timer = null;
+
+    const draw = () => {
+      if (!player.videoWidth || !player.videoHeight) return;
+      const sourceRatio = player.videoWidth / player.videoHeight;
+      const targetRatio = canvas.width / canvas.height;
+      let sx = 0;
+      let sy = 0;
+      let sw = player.videoWidth;
+      let sh = player.videoHeight;
+
+      if (sourceRatio > targetRatio) {
+        sw = player.videoHeight * targetRatio;
+        sx = (player.videoWidth - sw) / 2;
+      } else {
+        sh = player.videoWidth / targetRatio;
+        sy = (player.videoHeight - sh) / 2;
+      }
+
+      try {
+        context.drawImage(player, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+      } catch (_) {}
+    };
+
+    const start = () => {
+      draw();
+      if (!timer) timer = setInterval(draw, 450);
+    };
+    const stop = () => {
+      if (timer) clearInterval(timer);
+      timer = null;
+    };
+
+    player.addEventListener("loadeddata", draw);
+    player.addEventListener("play", start);
+    player.addEventListener("pause", stop);
+    player.addEventListener("ended", stop);
+
+    return () => {
+      stop();
+      player.removeEventListener("loadeddata", draw);
+      player.removeEventListener("play", start);
+      player.removeEventListener("pause", stop);
+      player.removeEventListener("ended", stop);
+    };
+  }
+
+  function setPlayerStatus(message = "", isError = false) {
+    const status = $("playerStatus");
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle("is-error", !!isError);
+    status.setAttribute("aria-hidden", message ? "false" : "true");
+  }
+
   function buildVideoPlayer(video) {
-    const src = normalizeUrl(video?.videoUrl || video?.video_url);
+    const poster = pickThumb(video?.thumb);
 
     modalContent.innerHTML = `
       <div class="player">
@@ -3439,9 +3666,10 @@
         </div>
 
         <div class="player__videoWrap">
-          <video id="playerVideo" playsinline preload="metadata">
-            <source src="${escapeHtml(src)}" type="video/mp4">
-          </video>
+          <canvas class="player__ambient" id="playerAmbient" aria-hidden="true"></canvas>
+          <video id="playerVideo" playsinline preload="metadata" crossorigin="anonymous" poster="${escapeHtml(poster)}"></video>
+
+          <div class="player__status" id="playerStatus" aria-live="polite">Loading video…</div>
 
           <div class="player__rotateHint" id="rotateHint" aria-hidden="true">
             Rotate phone for better view
@@ -3483,6 +3711,7 @@
     nextBtn,
     fsBtn,
     videoWrap,
+    ambientCanvas,
     controls,
     onPrev,
     onNext,
@@ -3493,6 +3722,7 @@
     let startedTracked = false;
     let watched50Tracked = false;
     let isSeeking = false;
+    const removeAmbientBindings = bindAmbientCanvas(player, ambientCanvas);
 
     function updateTimeUi() {
       if (!player || !playerTime || !playerSeek) return;
@@ -3658,36 +3888,19 @@
 
       if (removeFsBindings) removeFsBindings();
       if (removeRotateHintBindings) removeRotateHintBindings();
+      if (removeAmbientBindings) removeAmbientBindings();
 
       setFsUiHidden(false);
     };
   }
 
-  async function openPlayer(index, options = {}) {
-    if (!filtered.length) return;
-
-    const preservePlanReturn = options.preservePlanReturn === true;
-    returnToPlanAfterClose = preservePlanReturn ? true : false;
-
-    const item = filtered[index];
-    if (!item || isPlan(item)) return;
+  async function mountVideoPlayer(video, options = {}) {
+    if (!hasPlayableVideo(video)) return;
 
     try { modal._cleanup && modal._cleanup(); } catch (_) {}
     modal._cleanup = null;
 
-    currentIndex = index;
-    const video = filtered[currentIndex];
-    const src = normalizeUrl(video?.videoUrl || video?.video_url);
-    if (!src) return;
-
-    emit("sm:move_opened", {
-      item_id: getVideoId(video),
-      item_type: "move",
-      title: video?.title || "",
-      cover: pickThumb(video?.thumb),
-      meta: [video?.duration || formatSeconds(video?.duration_s), getMoveDifficulty(video)].filter(Boolean).join(" · ")
-    });
-
+    const requestId = ++playerMountRequest;
     buildVideoPlayer(video);
 
     window.scrollTo(0, 0);
@@ -3702,8 +3915,94 @@
     const playPauseBtn = $("playPauseBtn");
     const playerSeek = $("playerSeek");
     const playerTime = $("playerTime");
+    const ambientCanvas = $("playerAmbient");
     const videoWrap = player?.closest(".player__videoWrap");
     const controls = $("playerControls");
+
+    if (options.showNavigation === false) {
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
+    }
+
+    let alive = true;
+    let sourceCleanup = () => {};
+    let playerCleanup = () => {};
+    const onClose = () => closeModal();
+    const onBackdrop = () => closeModal();
+
+    closeBtn?.addEventListener("click", onClose);
+    modalBackdrop.addEventListener("click", onBackdrop);
+
+    modal._cleanup = () => {
+      alive = false;
+      if (playerMountRequest === requestId) playerMountRequest += 1;
+      closeBtn?.removeEventListener("click", onClose);
+      modalBackdrop.removeEventListener("click", onBackdrop);
+      try { playerCleanup(); } catch (_) {}
+      try { sourceCleanup(); } catch (_) {}
+    };
+
+    try {
+      sourceCleanup = await attachPlaybackSource(player, video);
+      if (!alive || playerMountRequest !== requestId) {
+        sourceCleanup();
+        return;
+      }
+
+      setPlayerStatus("");
+      player.addEventListener("error", () => {
+        setPlayerStatus("Video playback failed. Please try again.", true);
+      }, { once: true });
+
+      playerCleanup = bindPlayerUi({
+        player,
+        playPauseBtn,
+        playerSeek,
+        playerTime,
+        closeBtn: null,
+        prevBtn,
+        nextBtn,
+        fsBtn,
+        videoWrap,
+        ambientCanvas,
+        controls,
+        onPrev: options.onPrev || null,
+        onNext: options.onNext || null,
+        onClose: null,
+        analyticsId: getVideoId(video),
+        analyticsTitle: video?.title || "Move video"
+      });
+    } catch (error) {
+      if (!alive || playerMountRequest !== requestId) return;
+      console.error("[SM] secure playback failed", error);
+      setPlayerStatus(
+        error?.status === 401 || error?.status === 403
+          ? "Your session has expired. Sign in again."
+          : "Video is temporarily unavailable. Please try again.",
+        true
+      );
+    }
+  }
+
+  async function openPlayer(index, options = {}) {
+    if (!filtered.length) return;
+
+    const preservePlanReturn = options.preservePlanReturn === true;
+    returnToPlanAfterClose = preservePlanReturn ? true : false;
+
+    const item = filtered[index];
+    if (!item || isPlan(item) || !hasPlayableVideo(item)) return;
+
+    currentIndex = index;
+    const video = filtered[currentIndex];
+
+    emit("sm:move_opened", {
+      item_id: getVideoId(video),
+      item_type: "move",
+      title: video?.title || "",
+      cover: pickThumb(video?.thumb),
+      meta: [video?.duration || formatSeconds(video?.duration_s), getMoveDifficulty(video)].filter(Boolean).join(" · ")
+    });
 
     const goPrev = () => {
       for (let i = currentIndex - 1; i >= 0; i--) {
@@ -3721,41 +4020,14 @@
       }
     };
 
-    const onBackdrop = () => closeModal();
-    modalBackdrop.addEventListener("click", onBackdrop);
-
-    const playerCleanup = bindPlayerUi({
-      player,
-      playPauseBtn,
-      playerSeek,
-      playerTime,
-      closeBtn,
-      prevBtn,
-      nextBtn,
-      fsBtn,
-      videoWrap,
-      controls,
-      onPrev: goPrev,
-      onNext: goNext,
-      onClose: closeModal,
-      analyticsId: getVideoId(video),
-      analyticsTitle: video?.title || ""
-    });
-
-    modal._cleanup = () => {
-      modalBackdrop.removeEventListener("click", onBackdrop);
-      playerCleanup();
-    };
+    await mountVideoPlayer(video, { onPrev: goPrev, onNext: goNext });
   }
 
   window.addEventListener("sm:open-move-player", (e) => {
     returnToPlanAfterClose = true;
 
     const move = e.detail?.move;
-    if (!move) return;
-
-    const directUrl = normalizeUrl(move?.videoUrl || move?.video_url || "");
-    if (!directUrl) return;
+    if (!move || !hasPlayableVideo(move)) return;
 
     const idx = filtered.findIndex((x) => !isPlan(x) && String(getVideoId(x)) === String(getVideoId(move)));
 
@@ -3763,9 +4035,6 @@
       openPlayer(idx, { preservePlanReturn: true });
       return;
     }
-
-    try { modal._cleanup && modal._cleanup(); } catch (_) {}
-    modal._cleanup = null;
 
     emit("sm:move_opened", {
       item_id: getVideoId(move),
@@ -3775,58 +4044,7 @@
       meta: [move?.duration || formatSeconds(move?.duration_s), getMoveDifficulty(move)].filter(Boolean).join(" · ")
     });
 
-    buildVideoPlayer({
-      id: move?.id || directUrl,
-      title: move?.title || "Move video",
-      videoUrl: directUrl,
-      video_url: directUrl,
-      thumb: move?.thumb || FALLBACK_THUMB,
-      duration: move?.duration || ""
-    });
-
-    window.scrollTo(0, 0);
-    setPlayerViewportHeight();
-    setModal(true);
-
-    const player = $("playerVideo");
-    const closeBtn = $("playerClose");
-    const prevBtn = $("prevVideoBtn");
-    const nextBtn = $("nextVideoBtn");
-    const fsBtn = $("fsBtn");
-    const playPauseBtn = $("playPauseBtn");
-    const playerSeek = $("playerSeek");
-    const playerTime = $("playerTime");
-    const videoWrap = player?.closest(".player__videoWrap");
-    const controls = $("playerControls");
-
-    if (prevBtn) prevBtn.style.display = "none";
-    if (nextBtn) nextBtn.style.display = "none";
-
-    const onBackdrop = () => closeModal();
-    modalBackdrop.addEventListener("click", onBackdrop);
-
-    const playerCleanup = bindPlayerUi({
-      player,
-      playPauseBtn,
-      playerSeek,
-      playerTime,
-      closeBtn,
-      prevBtn,
-      nextBtn,
-      fsBtn,
-      videoWrap,
-      controls,
-      onPrev: null,
-      onNext: null,
-      onClose: closeModal,
-      analyticsId: getVideoId(move),
-      analyticsTitle: move?.title || "Move video"
-    });
-
-    modal._cleanup = () => {
-      modalBackdrop.removeEventListener("click", onBackdrop);
-      playerCleanup();
-    };
+    mountVideoPlayer(move, { showNavigation: false });
   });
 
   function findMoveForSave(saveId, sourceCard = null) {
@@ -4109,9 +4327,47 @@
 
       const res = await fetch(window.SM_LIBRARY_DATA_URL || CDN_INDEX_URL, { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
-
       const json = await res.json();
-      const items = Array.isArray(json) ? json : [];
+      const legacyItems = Array.isArray(json) ? json : [];
+
+      let items = legacyItems;
+      if (window.SM_SECURE_CATALOG_ENABLED === true) {
+        const payload = await api(`/v1/videos?page=1&items_per_page=100`, { method: "GET" });
+        const secureVideos = Array.isArray(payload?.items) ? payload.items : [];
+        const titleKey = (value) => String(value || "")
+          .replace(/\.[a-z0-9]{2,5}$/i, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, " ")
+          .trim();
+        const legacyMoves = legacyItems.filter((item) => !isPlan(item));
+        const metadataByTitle = new Map(
+          legacyMoves.map((item) => [titleKey(item?.title), item])
+        );
+
+        const mergedSecureVideos = secureVideos.map((video) => {
+          const metadata = metadataByTitle.get(titleKey(video?.title)) || {};
+          const merged = {
+            ...metadata,
+            ...video,
+            env: video?.env?.length ? video.env : metadata?.env || [],
+            risk: video?.risk?.length ? video.risk : metadata?.risk || [],
+            subject: video?.subject?.length ? video.subject : metadata?.subject || [],
+            pilot: video?.pilot?.length ? video.pilot : metadata?.pilot || [],
+            mood: video?.mood?.length ? video.mood : metadata?.mood || []
+          };
+
+          // Never carry a legacy public MP4 into a secure Bunny catalog item.
+          delete merged.videoUrl;
+          delete merged.video_url;
+          delete merged.result_video;
+          return merged;
+        });
+
+        items = [
+          ...legacyItems.filter(isPlan),
+          ...mergedSecureVideos
+        ];
+      }
 
       const plans = items.filter(isPlan);
       const moves = items.filter((x) => !isPlan(x));

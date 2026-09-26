@@ -1,7 +1,11 @@
-    window.SM_API_BASE = "https://skymotion.onrender.com";
+    window.SM_API_BASE = "https://skymotion-backend.onrender.com";
     // LOCAL TEST DATA (33 moves + 10 plans). For production set this to the CDN
     // index URL, or remove this line to fall back to videos_index_v16.json.
     window.SM_LIBRARY_DATA_URL = "./library-data-pro.json";
+    // Keep false until the Render backend has Memberstack + Bunny secrets.
+    // When true, the library reads the authenticated Bunny Stream catalog.
+    window.SM_SECURE_CATALOG_ENABLED = false;
+    window.SM_HLS_JS_URL = "https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js";
     window.SM_CHECKLIST_PAPER_ASSET_URL = "https://skymotion-cdn.b-cdn.net/checklist.png";
 
     // Pro upgrade. Logged-in Free users buy Pro via Memberstack in-app checkout.
