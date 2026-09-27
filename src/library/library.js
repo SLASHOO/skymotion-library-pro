@@ -10,6 +10,13 @@
   const CDN_INDEX_URL = "https://skymotion-cdn.b-cdn.net/videos_index_v16.json";
   const API_BASE = String(window.SM_API_BASE || "https://skymotion-backend.onrender.com").replace(/\/$/, "");
   const HLS_JS_URL = String(window.SM_HLS_JS_URL || "https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js");
+  // Default ON. The live Webflow page has no config <script> block at all
+  // under the stable boot-loader setup (boot/library.js only injects the
+  // pinned loader) — so window.SM_SECURE_CATALOG_ENABLED is never actually
+  // set there, and this default is what production really runs. Kept as an
+  // explicit opt-OUT (window.SM_SECURE_CATALOG_ENABLED = false) for local/
+  // dev pages that still set it, e.g. src/library/config.js.
+  const SECURE_CATALOG_ENABLED = window.SM_SECURE_CATALOG_ENABLED !== false;
   const $ = (id) => document.getElementById(id);
 
   const scope = $("sm-library-scope");
@@ -3592,6 +3599,16 @@
     return () => hls.destroy();
   }
 
+  // Public bridge so plan-viewer.js (a separate script/closure) can reuse
+  // this file's attachPlaybackSource() for the plan intro video, instead of
+  // duplicating auth/HLS logic. Wraps the raw GUID in the minimal shape
+  // getBunnyVideoId()/resolvePlaybackUrl() already expect.
+  window.SMLibraryPlayback = {
+    attachSource(videoEl, guid) {
+      return attachPlaybackSource(videoEl, { bunny_video_id: guid });
+    }
+  };
+
   function bindAmbientCanvas(player, canvas) {
     if (!player || !canvas) return () => {};
 
@@ -4331,42 +4348,53 @@
       const legacyItems = Array.isArray(json) ? json : [];
 
       let items = legacyItems;
-      if (window.SM_SECURE_CATALOG_ENABLED === true) {
-        const payload = await api(`/v1/videos?page=1&items_per_page=100`, { method: "GET" });
-        const secureVideos = Array.isArray(payload?.items) ? payload.items : [];
-        const titleKey = (value) => String(value || "")
-          .replace(/\.[a-z0-9]{2,5}$/i, "")
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, " ")
-          .trim();
-        const legacyMoves = legacyItems.filter((item) => !isPlan(item));
-        const metadataByTitle = new Map(
-          legacyMoves.map((item) => [titleKey(item?.title), item])
-        );
+      if (SECURE_CATALOG_ENABLED) {
+        try {
+          const payload = await api(`/v1/videos?page=1&items_per_page=100`, { method: "GET" });
+          // plan-intro-* are the 8 plans' own intro videos, resolved separately
+          // by Plan Viewer via intro_video — they are not moves and must not
+          // show up in the Moves tab.
+          const secureVideos = (Array.isArray(payload?.items) ? payload.items : [])
+            .filter((v) => !String(v?.title || "").toLowerCase().startsWith("plan-intro-"));
+          const titleKey = (value) => String(value || "")
+            .replace(/\.[a-z0-9]{2,5}$/i, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, " ")
+            .trim();
+          const legacyMoves = legacyItems.filter((item) => !isPlan(item));
+          const metadataByTitle = new Map(
+            legacyMoves.map((item) => [titleKey(item?.title), item])
+          );
 
-        const mergedSecureVideos = secureVideos.map((video) => {
-          const metadata = metadataByTitle.get(titleKey(video?.title)) || {};
-          const merged = {
-            ...metadata,
-            ...video,
-            env: video?.env?.length ? video.env : metadata?.env || [],
-            risk: video?.risk?.length ? video.risk : metadata?.risk || [],
-            subject: video?.subject?.length ? video.subject : metadata?.subject || [],
-            pilot: video?.pilot?.length ? video.pilot : metadata?.pilot || [],
-            mood: video?.mood?.length ? video.mood : metadata?.mood || []
-          };
+          const mergedSecureVideos = secureVideos.map((video) => {
+            const metadata = metadataByTitle.get(titleKey(video?.title)) || {};
+            const merged = {
+              ...metadata,
+              ...video,
+              env: video?.env?.length ? video.env : metadata?.env || [],
+              risk: video?.risk?.length ? video.risk : metadata?.risk || [],
+              subject: video?.subject?.length ? video.subject : metadata?.subject || [],
+              pilot: video?.pilot?.length ? video.pilot : metadata?.pilot || [],
+              mood: video?.mood?.length ? video.mood : metadata?.mood || []
+            };
 
-          // Never carry a legacy public MP4 into a secure Bunny catalog item.
-          delete merged.videoUrl;
-          delete merged.video_url;
-          delete merged.result_video;
-          return merged;
-        });
+            // Never carry a legacy public MP4 into a secure Bunny catalog item.
+            delete merged.videoUrl;
+            delete merged.video_url;
+            delete merged.result_video;
+            return merged;
+          });
 
-        items = [
-          ...legacyItems.filter(isPlan),
-          ...mergedSecureVideos
-        ];
+          items = [
+            ...legacyItems.filter(isPlan),
+            ...mergedSecureVideos
+          ];
+        } catch (e) {
+          // No session, CORS-blocked local dev, transient backend error, etc.
+          // Fall back to the static-JSON placeholder moves instead of failing
+          // the whole Library load.
+          console.warn("[SM] secure catalog unavailable, using placeholder moves:", e);
+        }
       }
 
       const plans = items.filter(isPlan);

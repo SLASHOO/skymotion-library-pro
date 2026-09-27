@@ -236,9 +236,8 @@
   min-width:100%;
   min-height:100%;
   display:block;
-  object-fit:cover !important;
-  object-position:50% 58%;
-  transform:translate(-50%, -50%) scale(1.13);
+  object-fit:contain !important;
+  transform:translate(-50%, -50%);
   filter:saturate(1.03) contrast(1.03) brightness(.93);
   background:#000;
 }
@@ -925,6 +924,13 @@
   min-width:100% !important;
   min-height:100% !important;
   max-width:none !important;
-  object-fit:cover !important;
   background:#000 !important;
+}
+
+#sm-plan-v3-root .spv3Step__poster{
+  object-fit:cover !important;
+}
+
+#sm-plan-v3-root .spv3Result__video{
+  object-fit:contain !important;
 }

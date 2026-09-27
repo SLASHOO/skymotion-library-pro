@@ -15,6 +15,10 @@
     // Use the local test data (33 moves + 10 plans) so gating/cards work offline.
     window.SM_LIBRARY_DATA_URL = "../library-data-pro.json";
     window.SM_API_BASE = "https://skymotion.onrender.com";
+    // No real Memberstack session exists in this local test page — the secure
+    // catalog fetch would otherwise stall for ~12s waiting on getMemberToken()
+    // before falling back. Opt out locally, same as src/library/config.js.
+    window.SM_SECURE_CATALOG_ENABLED = false;
     window.SM_PRO_SIGNUP_URL = "https://skymotion.cloud/sign-up";
     window.SM_PRO_PRICE_ID = "";
 

@@ -101,6 +101,8 @@ const root = document.getElementById("sm-plan-v3-root");
   function getMoveId(item) {
     return (
       item?.id ||
+      item?.guid ||
+      item?.bunny_video_id ||
       item?.slug ||
       item?.videoUrl ||
       item?.video_url ||
@@ -108,9 +110,23 @@ const root = document.getElementById("sm-plan-v3-root");
     );
   }
 
+  function normalizeMoveKey(s) {
+    return String(s || "").trim().toLowerCase();
+  }
+
+  // move_ref today is a plain move NAME (real move GUIDs aren't wired into
+  // the plan data yet). Matches by id/GUID first — so this keeps working
+  // once real refs switch to GUIDs — then falls back to a normalized title
+  // match for the current name-based refs.
   function getMoveByRef(allItems, moveRef) {
     if (!Array.isArray(allItems) || !moveRef) return null;
-    return allItems.find((item) => String(getMoveId(item)) === String(moveRef)) || null;
+    const ref = String(moveRef);
+    const refKey = normalizeMoveKey(moveRef);
+    return (
+      allItems.find((item) => String(getMoveId(item)) === ref) ||
+      allItems.find((item) => normalizeMoveKey(item?.title) === refKey) ||
+      null
+    );
   }
 
   function getStepMoveRef(step = {}) {
@@ -131,6 +147,33 @@ const root = document.getElementById("sm-plan-v3-root");
       plan?.thumb,
       FALLBACK_THUMB
     );
+  }
+
+  function getPlanIntroVideoGuid(plan) {
+    const iv = plan?.intro_video;
+    if (!iv) return null;
+    const isPhone = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
+    return (isPhone ? iv.mobile_id : iv.desktop_id) || iv.desktop_id || iv.mobile_id || null;
+  }
+
+  // Resolves the signed Bunny Stream URL for a plan's intro_video (desktop or
+  // mobile GUID, picked by viewport) and injects it into the already-rendered
+  // #spv3ResultVideo element. Lazy: only called for the plan slide actually
+  // being shown, never eagerly for the whole catalog. Falls back to whatever
+  // poster is already showing if the signed URL can't be resolved (no
+  // Memberstack session locally, network error, etc.) rather than breaking
+  // the slide.
+  async function resolveResultVideo() {
+    const video = document.getElementById("spv3ResultVideo");
+    const guid = video?.getAttribute("data-intro-guid");
+    if (!video || !guid) return;
+
+    try {
+      const cleanup = await window.SMLibraryPlayback?.attachSource(video, guid);
+      if (typeof cleanup === "function") cleanupFns.push(cleanup);
+    } catch (e) {
+      console.warn("[plan-viewer] could not attach intro_video playback for", guid, e);
+    }
   }
 
   function getPlanFinalVideo(plan) {
@@ -628,7 +671,8 @@ const root = document.getElementById("sm-plan-v3-root");
       getPlanCover(plan)
     );
 
-    const videoUrl = getPlanFinalVideo(plan);
+    const introGuid = getPlanIntroVideoGuid(plan);
+    const videoUrl = introGuid ? "" : getPlanFinalVideo(plan);
 
     return `
       <section class="spv3__slide">
@@ -641,8 +685,9 @@ const root = document.getElementById("sm-plan-v3-root");
             webkit-playsinline
             preload="metadata"
             poster="${escapeHtml(poster)}"
+            ${introGuid ? `data-intro-guid="${escapeHtml(introGuid)}"` : ""}
           >
-            <source src="${escapeHtml(videoUrl)}" type="video/mp4">
+            ${videoUrl ? `<source src="${escapeHtml(videoUrl)}" type="video/mp4">` : ""}
           </video>
 
           <div class="spv3Result__overlay">
@@ -718,6 +763,7 @@ const root = document.getElementById("sm-plan-v3-root");
 
     track.innerHTML = html;
     attachImgFallback(track);
+    resolveResultVideo();
   }
 
   function openMoveFromButton(btn) {

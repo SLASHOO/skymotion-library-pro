@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0.0",
+  "status": "editorial_v1_applied",
+  "approved_at": "2026-09-27",
+  "data_policy": {
+    "unknown_value": null,
+    "uncertainty_rule": "A null value means the source materials do not establish it. It must not be inferred."
+  },
+  "notes": [
+    "Shot composition (movement_ref per shot) was authored by the assistant, per explicit product-owner instruction, using ONLY the confirmed 28-move canonical catalog — no invented move names. No move repeats within a single plan.",
+    "title/description/difficulty/shoot_time_min/filters/tip/transition are editorial copy, authored by the assistant — explicitly allowed to be imperfect for this first working version.",
+    "intro_video desktop_id/mobile_id and final_clip_duration_s are unchanged from the confirmed Bunny Stream data (not re-derived).",
+    "movement_ref is a move NAME (not yet a GUID) — the 28 real moves' Bunny Stream GUIDs are still pending. getMoveByRef() resolves by normalized title in the meantime.",
+    "shot-level duration_s is left null (not established, not invented) — only tip/transition were authored.",
+    "plan-intro-* Stream assets are excluded from the Moves tab by loadRealMoves() in library.js — unaffected by this file."
+  ],
+  "plans": [
+    {
+      "id": "plan-01-beach",
+      "title": "Beach",
+      "description": "5 shots. A relaxed beach sequence — an orbit on the sand, a rising reveal, and a glide along the shoreline.",
+      "difficulty": "Intermediate",
+      "shoot_time_min": 16,
+      "filters": { "env": ["open", "near_objects"], "subject": ["landscape", "person", "atmosphere"], "risk": ["calm", "some_risks"], "pilot": ["normal"], "mood": ["smooth", "epic", "wow"] },
+      "intro_video": { "desktop_id": "6333c9ab-b7cf-4a3d-b209-2040b2186792", "mobile_id": "3ed4761e-df3a-426c-b33b-80f973616426" },
+      "shots": [
+        { "order": 1, "movement_ref": "Scene Reveal", "duration_s": null, "tip": "Rise slowly as you pull back to reveal the shoreline.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Basic Orbit", "duration_s": null, "tip": "Keep a steady radius circling the subject.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Orbit Reveal", "duration_s": null, "tip": "Climb gently while circling to open up the view.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Sideways Parallax", "duration_s": null, "tip": "Glide sideways at a constant speed along the shoreline.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Rise Reveal", "duration_s": null, "tip": "Finish high to reveal the full beach and coastline.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-02-buildings",
+      "title": "City Buildings",
+      "description": "6 shots. A dynamic urban sequence — descending orbits, a dramatic pull, and a rise to the skyline.",
+      "difficulty": "Advanced",
+      "shoot_time_min": 20,
+      "filters": { "env": ["urban", "near_objects"], "subject": ["building", "car_bike"], "risk": ["some_risks"], "pilot": ["normal", "experiment"], "mood": ["dynamic", "tense", "wow"] },
+      "intro_video": { "desktop_id": "920186ff-1fa9-43a7-8478-39ff234aaae4", "mobile_id": "6043a2b5-d172-405b-bbd6-be470021df8f" },
+      "shots": [
+        { "order": 1, "movement_ref": "Descending Orbit", "duration_s": null, "tip": "Orbit while gradually losing altitude past the facade.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Dolly Zoom", "duration_s": null, "tip": "Fly backward while slowly zooming in for a dramatic pull.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "C-17 Arc Flyby", "duration_s": null, "tip": "Sweep a wide arc past the skyline at a steady bank.", "transition": "Hard cut" },
+        { "order": 4, "movement_ref": "Orbit Interception", "duration_s": null, "tip": "Circle in and intercept the tower's silhouette.", "transition": "Cross dissolve" },
+        { "order": 5, "movement_ref": "Rise Reveal", "duration_s": null, "tip": "Climb straight up to reveal the full skyline.", "transition": "Hard cut" },
+        { "order": 6, "movement_ref": "Top-Down Spin", "duration_s": null, "tip": "Spin slowly overhead to show the street grid below.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-03-coastline",
+      "title": "Coastline",
+      "description": "5 shots. A coastal sequence combining a diving reveal, an orbiting climb, and a wide finishing pull-back.",
+      "difficulty": "Intermediate",
+      "shoot_time_min": 15,
+      "filters": { "env": ["open"], "subject": ["landscape", "atmosphere", "building"], "risk": ["some_risks"], "pilot": ["normal", "experiment"], "mood": ["epic", "dynamic", "wow"] },
+      "intro_video": { "desktop_id": "28faf2a5-ec10-4676-a717-0957b3a985a5", "mobile_id": "cda09096-76e8-4517-a906-22fc03d5e6d8" },
+      "shots": [
+        { "order": 1, "movement_ref": "Dive Reveal", "duration_s": null, "tip": "Approach low and fast, then tilt down into the dive.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Orbit Reveal", "duration_s": null, "tip": "Circle while climbing to open up the cove.", "transition": "Cross dissolve" },
+        { "order": 3, "movement_ref": "Side Pan", "duration_s": null, "tip": "Pan smoothly while sliding along the coastline.", "transition": "Hard cut" },
+        { "order": 4, "movement_ref": "Pull Away Reveal", "duration_s": null, "tip": "Retreat steadily to show the coast at scale.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Grand Reveal", "duration_s": null, "tip": "Combine a pull-back and rise for the biggest reveal last.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-04-ocean-island",
+      "title": "Ocean Island",
+      "description": "5 shots. A wide arc, a tight orbit, and a classic pull-back reveal an island surrounded by open water.",
+      "difficulty": "Intermediate",
+      "shoot_time_min": 14,
+      "filters": { "env": ["open"], "subject": ["landscape", "atmosphere"], "risk": ["calm", "some_risks"], "pilot": ["normal", "experiment"], "mood": ["smooth", "epic", "wow"] },
+      "intro_video": { "desktop_id": "c5093607-2994-49ea-8174-57cf3492716c", "mobile_id": "3ada5502-367f-46a2-8d7e-58d4a8608746" },
+      "shots": [
+        { "order": 1, "movement_ref": "C-17 Arc Flyby", "duration_s": null, "tip": "Bank into a wide arc circling the island.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Basic Orbit", "duration_s": null, "tip": "Hold a tight, steady orbit around the island's peak.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Diagonal Forward", "duration_s": null, "tip": "Cross the frame on a clean 45° approach.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Dronie", "duration_s": null, "tip": "Retreat and climb together for the classic dronie pull.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Expanding Reveal", "duration_s": null, "tip": "Widen out gradually to show the open water around the island.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-05-landscape",
+      "title": "Landscape",
+      "description": "6 shots. A layered landscape sequence — a tilt, a push in, a diagonal cross, and a grand finishing reveal.",
+      "difficulty": "Advanced",
+      "shoot_time_min": 19,
+      "filters": { "env": ["open", "forest"], "subject": ["landscape", "atmosphere"], "risk": ["calm", "some_risks"], "pilot": ["normal", "experiment"], "mood": ["smooth", "epic", "wow"] },
+      "intro_video": { "desktop_id": "7f349ec3-fc1e-4f87-9905-ebd18e4e2470", "mobile_id": "70e5c3aa-eeff-4e11-98a0-bbe3872149a2" },
+      "shots": [
+        { "order": 1, "movement_ref": "Tilt Reveal", "duration_s": null, "tip": "Hold low, then tilt up to reveal the vista.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Push In", "duration_s": null, "tip": "Push steadily toward the focal point in the distance.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Diagonal Forward", "duration_s": null, "tip": "Cut across the landscape on a clean diagonal.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Descending Reveal", "duration_s": null, "tip": "Descend smoothly to bring the foreground into frame.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Orbit Reveal", "duration_s": null, "tip": "Circle while climbing for a wide, open feel.", "transition": "Hard cut" },
+        { "order": 6, "movement_ref": "Grand Reveal", "duration_s": null, "tip": "Finish with a big pull-back and rise for scale.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-06-mountains",
+      "title": "Mountains",
+      "description": "5 shots. A mountain sequence built around a tilt reveal, a fly-over, and a wide orbit around the peak.",
+      "difficulty": "Intermediate",
+      "shoot_time_min": 13,
+      "filters": { "env": ["open", "forest"], "subject": ["landscape", "atmosphere"], "risk": ["calm", "some_risks"], "pilot": ["safe", "normal"], "mood": ["smooth", "epic"] },
+      "intro_video": { "desktop_id": "e7547973-25fb-41e3-9ad6-3eb3a67968f3", "mobile_id": "f6b13869-5640-4415-8c21-ad6e2f7d5791" },
+      "shots": [
+        { "order": 1, "movement_ref": "Tilt Reveal", "duration_s": null, "tip": "Start low on the trail, then tilt up to the peak.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Fly Over", "duration_s": null, "tip": "Hold a steady altitude flying straight over the ridge.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Orbit Reveal", "duration_s": null, "tip": "Circle the peak while gently climbing.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Diagonal Forward", "duration_s": null, "tip": "Cross the ridge line on a clean diagonal.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Sideways Parallax", "duration_s": null, "tip": "Glide sideways to build depth between ridgelines.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-07-water",
+      "title": "Water & Waves",
+      "description": "5 shots. A fast, dynamic water sequence with a low pass, an intercepting orbit, and a tracked retreat.",
+      "difficulty": "Intermediate",
+      "shoot_time_min": 12,
+      "filters": { "env": ["open"], "subject": ["landscape", "atmosphere"], "risk": ["some_risks"], "pilot": ["normal", "experiment"], "mood": ["dynamic", "epic", "wow"] },
+      "intro_video": { "desktop_id": "ac1b1da9-91f7-41f2-aee7-a8519870bfc1", "mobile_id": "180fef25-5f2b-48de-a67e-bf189f6ccb35" },
+      "shots": [
+        { "order": 1, "movement_ref": "High-Speed Low Pass", "duration_s": null, "tip": "Stay low and level for a fast pass over the water.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Orbit Interception", "duration_s": null, "tip": "Circle in fast toward the subject on the water.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Scene Reveal", "duration_s": null, "tip": "Pull back and rise to reveal the wider scene.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Pull Away Reveal", "duration_s": null, "tip": "Retreat smoothly to show the water at scale.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Backward Interception", "duration_s": null, "tip": "Retreat while panning to keep the action framed.", "transition": "Fade out" }
+      ]
+    },
+    {
+      "id": "plan-08-waterfront-city",
+      "title": "Waterfront City",
+      "description": "6 shots. A city-meets-water sequence — a descending orbit, a harbor reveal, and a rocket-rise finale.",
+      "difficulty": "Advanced",
+      "shoot_time_min": 17,
+      "filters": { "env": ["urban", "open"], "subject": ["building", "landscape", "car_bike"], "risk": ["some_risks"], "pilot": ["normal", "experiment"], "mood": ["dynamic", "epic", "wow"] },
+      "intro_video": { "desktop_id": "8f5844ce-6bb6-4ddb-882e-941fa2239e4d", "mobile_id": "75b86580-4109-4f8b-84a2-ab78d29bb2d3" },
+      "shots": [
+        { "order": 1, "movement_ref": "Tilt Reveal", "duration_s": null, "tip": "Start at the waterline, then tilt up to the skyline.", "transition": "Hard cut" },
+        { "order": 2, "movement_ref": "Descending Orbit", "duration_s": null, "tip": "Orbit down toward the waterfront buildings.", "transition": "Hard cut" },
+        { "order": 3, "movement_ref": "Descending Reveal", "duration_s": null, "tip": "Descend to bring the docks and marina into frame.", "transition": "Cross dissolve" },
+        { "order": 4, "movement_ref": "Scene Reveal", "duration_s": null, "tip": "Pull back and rise to reveal the harbor.", "transition": "Hard cut" },
+        { "order": 5, "movement_ref": "Side Pan", "duration_s": null, "tip": "Pan along the waterfront at a steady pace.", "transition": "Hard cut" },
+        { "order": 6, "movement_ref": "Rocket Rise", "duration_s": null, "tip": "Finish with a fast vertical climb over the water and skyline.", "transition": "Fade out" }
+      ]
+    }
+  ]
+}

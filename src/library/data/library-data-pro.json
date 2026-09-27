@@ -1,47 +1,1892 @@
 [
-  { "kind": "move", "id": "m001", "title": "Orbit", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4", "env": ["open","near_objects"], "subject": ["person","building","car_bike"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m002", "title": "Raise Up", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m003", "title": "Move + Gimbal Up", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4", "env": ["open","forest","near_objects"], "subject": ["person","landscape","atmosphere","building"], "risk": ["calm","some_risks"], "pilot": ["normal","experiment"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m004", "title": "Take Off", "duration_s": 11, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"] },
-  { "kind": "move", "id": "m005", "title": "Top Down", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4", "env": ["open","urban"], "subject": ["person","car_bike","building","landscape"], "risk": ["calm","some_risks"], "pilot": ["normal"], "mood": ["smooth","epic","tense","wow"] },
-  { "kind": "move", "id": "m006", "title": "Push Out", "duration_s": 10, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m007", "title": "3 Directions Move", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["experiment"], "mood": ["epic","dynamic","wow"] },
-
-  { "kind": "move", "id": "m008", "title": "Reveal", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4", "env": ["open","near_objects"], "subject": ["person","building","car_bike"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m009", "title": "Fly Through", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m010", "title": "Side Track", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4", "env": ["open","forest","near_objects"], "subject": ["person","landscape","atmosphere","building"], "risk": ["calm","some_risks"], "pilot": ["normal","experiment"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m011", "title": "Pull Back", "duration_s": 11, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"] },
-  { "kind": "move", "id": "m012", "title": "Crane Up", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4", "env": ["open","urban"], "subject": ["person","car_bike","building","landscape"], "risk": ["calm","some_risks"], "pilot": ["normal"], "mood": ["smooth","epic","tense","wow"] },
-  { "kind": "move", "id": "m013", "title": "Dronie", "duration_s": 10, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m014", "title": "Boomerang", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m015", "title": "Rocket", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4", "env": ["open","near_objects"], "subject": ["person","building","car_bike"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m016", "title": "Cable Cam", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m017", "title": "Tracking Shot", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4", "env": ["open","forest","near_objects"], "subject": ["person","landscape","atmosphere","building"], "risk": ["calm","some_risks"], "pilot": ["normal","experiment"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m018", "title": "Fly Over", "duration_s": 11, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"] },
-  { "kind": "move", "id": "m019", "title": "Spiral", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4", "env": ["open","urban"], "subject": ["person","car_bike","building","landscape"], "risk": ["calm","some_risks"], "pilot": ["normal"], "mood": ["smooth","epic","tense","wow"] },
-  { "kind": "move", "id": "m020", "title": "Tilt Reveal", "duration_s": 10, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m021", "title": "Low Pass", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m022", "title": "High Orbit", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4", "env": ["open","near_objects"], "subject": ["person","building","car_bike"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m023", "title": "Chase", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m024", "title": "Parallax", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4", "env": ["open","forest","near_objects"], "subject": ["person","landscape","atmosphere","building"], "risk": ["calm","some_risks"], "pilot": ["normal","experiment"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m025", "title": "Vertical Reveal", "duration_s": 11, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"] },
-  { "kind": "move", "id": "m026", "title": "Pan Reveal", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4", "env": ["open","urban"], "subject": ["person","car_bike","building","landscape"], "risk": ["calm","some_risks"], "pilot": ["normal"], "mood": ["smooth","epic","tense","wow"] },
-  { "kind": "move", "id": "m027", "title": "Fly Under", "duration_s": 10, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m028", "title": "Pedestal", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4", "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["experiment"], "mood": ["epic","dynamic","wow"] },
-  { "kind": "move", "id": "m029", "title": "Whip Pan", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4", "env": ["open","near_objects"], "subject": ["person","building","car_bike"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m030", "title": "Slow Push", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m031", "title": "Fast Orbit", "duration_s": 15, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4", "env": ["open","forest","near_objects"], "subject": ["person","landscape","atmosphere","building"], "risk": ["calm","some_risks"], "pilot": ["normal","experiment"], "mood": ["smooth","epic","wow"] },
-  { "kind": "move", "id": "m032", "title": "Reverse Reveal", "duration_s": 11, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4", "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"] },
-  { "kind": "move", "id": "m033", "title": "Establishing", "duration_s": 21, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4", "env": ["open","urban"], "subject": ["person","car_bike","building","landscape"], "risk": ["calm","some_risks"], "pilot": ["normal"], "mood": ["smooth","epic","tense","wow"] },
-
-  { "kind": "plan", "id": "p001", "title": "Hike With Friends", "description": "4 shots. Cinematic hiking sequence with a person and epic mountain reveal.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4", "final_clip_duration_s": 23, "meta": { "shoot_time_min": 17, "difficulty": "Beginner", "shots_count": 4 }, "env": ["open","forest"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" }, "edit": { "bpm": [95,120], "shots": [ { "n": 1, "type": "orbit", "dur_s": 5, "tip": "Orbit around subject", "transition": "Hard cut" }, { "n": 2, "type": "raise up", "dur_s": 5, "tip": "Rise above ridge", "transition": "Cross dissolve" }, { "n": 3, "type": "gimbal reveal", "dur_s": 8, "tip": "Move + gimbal tilt", "transition": "Hard cut" }, { "n": 4, "type": "take off", "dur_s": 5, "tip": "Drone lifts and reveals scene", "transition": "Fade out" } ] }, "steps": [ { "id": "p001_s1", "title": "Orbit Around Subject", "shot_ref": 1, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "move_ref": "m001" }, { "id": "p001_s2", "title": "Raise Above Ridge", "shot_ref": 2, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "move_ref": "m002" }, { "id": "p001_s3", "title": "Move + Gimbal Reveal", "shot_ref": 3, "duration_s": 8, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "move_ref": "m003" }, { "id": "p001_s4", "title": "Take Off Reveal", "shot_ref": 4, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "move_ref": "m004" } ] },
-  { "kind": "plan", "id": "p002", "title": "Coastline Plan", "description": "3 shots. Cinematic coastline drone sequence.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov", "final_clip_duration_s": 17, "meta": { "shoot_time_min": 15, "difficulty": "Intermediate", "shots_count": 3 }, "env": ["open"], "subject": ["landscape","atmosphere","building"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }, "edit": { "bpm": [110,140], "shots": [ { "n": 1, "type": "top down", "dur_s": 8, "tip": "Follow subject from above", "transition": "Hard cut" }, { "n": 2, "type": "push out", "dur_s": 4, "tip": "Fly backward revealing coast", "transition": "Hard cut" }, { "n": 3, "type": "3 directions", "dur_s": 5, "tip": "Complex multi-direction move", "transition": "Fade out" } ] }, "steps": [ { "id": "p002_s1", "title": "Top Down Follow", "shot_ref": 1, "duration_s": 8, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p002_s2", "title": "Push Out Over Coast", "shot_ref": 2, "duration_s": 4, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" }, { "id": "p002_s3", "title": "3 Directions Finale", "shot_ref": 3, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "move_ref": "m007" } ] },
-  { "kind": "plan", "id": "p003", "title": "Sunset Ridge", "description": "3 shots. Warm sunset reveal over a ridge.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4", "final_clip_duration_s": 18, "meta": { "shoot_time_min": 14, "difficulty": "Beginner", "shots_count": 3 }, "env": ["open","forest"], "subject": ["landscape","atmosphere"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" }, "edit": { "bpm": [90,115], "shots": [ { "n": 1, "type": "orbit", "dur_s": 6, "tip": "Orbit the ridge", "transition": "Hard cut" }, { "n": 2, "type": "raise up", "dur_s": 6, "tip": "Rise into the sun", "transition": "Cross dissolve" }, { "n": 3, "type": "push out", "dur_s": 6, "tip": "Pull back to reveal", "transition": "Fade out" } ] }, "steps": [ { "id": "p003_s1", "title": "Orbit the Ridge", "shot_ref": 1, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "move_ref": "m001" }, { "id": "p003_s2", "title": "Rise Into the Sun", "shot_ref": 2, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "move_ref": "m002" }, { "id": "p003_s3", "title": "Pull Back Reveal", "shot_ref": 3, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" } ] },
-  { "kind": "plan", "id": "p004", "title": "Urban Flow", "description": "3 shots. Dynamic city sequence.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov", "final_clip_duration_s": 19, "meta": { "shoot_time_min": 18, "difficulty": "Intermediate", "shots_count": 3 }, "env": ["urban","near_objects"], "subject": ["building","car_bike","person"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["dynamic","tense","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }, "edit": { "bpm": [120,140], "shots": [ { "n": 1, "type": "top down", "dur_s": 6, "tip": "Top down over street", "transition": "Hard cut" }, { "n": 2, "type": "move gimbal up", "dur_s": 7, "tip": "Reveal skyline", "transition": "Hard cut" }, { "n": 3, "type": "3 directions", "dur_s": 6, "tip": "Multi-direction finish", "transition": "Fade out" } ] }, "steps": [ { "id": "p004_s1", "title": "Top Down Street", "shot_ref": 1, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p004_s2", "title": "Reveal Skyline", "shot_ref": 2, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "move_ref": "m003" }, { "id": "p004_s3", "title": "Multi-Direction Finish", "shot_ref": 3, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "move_ref": "m007" } ] },
-  { "kind": "plan", "id": "p005", "title": "Forest Trail", "description": "3 shots. Calm forest follow.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4", "final_clip_duration_s": 16, "meta": { "shoot_time_min": 12, "difficulty": "Beginner", "shots_count": 3 }, "env": ["forest","open"], "subject": ["person","landscape","atmosphere"], "risk": ["calm","no_aggressive_moves"], "pilot": ["safe","normal"], "mood": ["smooth","epic"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" }, "edit": { "bpm": [85,110], "shots": [ { "n": 1, "type": "raise up", "dur_s": 5, "tip": "Rise through trees", "transition": "Cross dissolve" }, { "n": 2, "type": "move gimbal up", "dur_s": 6, "tip": "Tilt to canopy", "transition": "Hard cut" }, { "n": 3, "type": "take off", "dur_s": 5, "tip": "Lift above forest", "transition": "Fade out" } ] }, "steps": [ { "id": "p005_s1", "title": "Rise Through Trees", "shot_ref": 1, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "move_ref": "m002" }, { "id": "p005_s2", "title": "Tilt to Canopy", "shot_ref": 2, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "move_ref": "m003" }, { "id": "p005_s3", "title": "Lift Above Forest", "shot_ref": 3, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png", "move_ref": "m004" } ] },
-  { "kind": "plan", "id": "p006", "title": "Beach Day", "description": "3 shots. Coastal golden-hour reel.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov", "final_clip_duration_s": 20, "meta": { "shoot_time_min": 16, "difficulty": "Beginner", "shots_count": 3 }, "env": ["open"], "subject": ["landscape","atmosphere","person"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }, "edit": { "bpm": [95,120], "shots": [ { "n": 1, "type": "orbit", "dur_s": 7, "tip": "Orbit on the sand", "transition": "Hard cut" }, { "n": 2, "type": "top down", "dur_s": 6, "tip": "Top down on waves", "transition": "Cross dissolve" }, { "n": 3, "type": "push out", "dur_s": 7, "tip": "Reveal the coastline", "transition": "Fade out" } ] }, "steps": [ { "id": "p006_s1", "title": "Orbit on the Sand", "shot_ref": 1, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "move_ref": "m001" }, { "id": "p006_s2", "title": "Top Down on Waves", "shot_ref": 2, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p006_s3", "title": "Reveal the Coastline", "shot_ref": 3, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" } ] },
-  { "kind": "plan", "id": "p007", "title": "Mountain Epic", "description": "4 shots. Big mountain establishing reel.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4", "final_clip_duration_s": 26, "meta": { "shoot_time_min": 20, "difficulty": "Advanced", "shots_count": 4 }, "env": ["open","forest"], "subject": ["landscape","atmosphere"], "risk": ["some_risks"], "pilot": ["experiment"], "mood": ["epic","dynamic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" }, "edit": { "bpm": [100,130], "shots": [ { "n": 1, "type": "raise up", "dur_s": 6, "tip": "Climb the slope", "transition": "Cross dissolve" }, { "n": 2, "type": "orbit", "dur_s": 7, "tip": "Orbit the peak", "transition": "Hard cut" }, { "n": 3, "type": "3 directions", "dur_s": 7, "tip": "Sweep the range", "transition": "Hard cut" }, { "n": 4, "type": "push out", "dur_s": 6, "tip": "Pull back to scale", "transition": "Fade out" } ] }, "steps": [ { "id": "p007_s1", "title": "Climb the Slope", "shot_ref": 1, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "move_ref": "m002" }, { "id": "p007_s2", "title": "Orbit the Peak", "shot_ref": 2, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "move_ref": "m001" }, { "id": "p007_s3", "title": "Sweep the Range", "shot_ref": 3, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "move_ref": "m007" }, { "id": "p007_s4", "title": "Pull Back to Scale", "shot_ref": 4, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" } ] },
-  { "kind": "plan", "id": "p008", "title": "City Lights", "description": "3 shots. Night city energy.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov", "final_clip_duration_s": 18, "meta": { "shoot_time_min": 17, "difficulty": "Intermediate", "shots_count": 3 }, "env": ["urban","near_objects"], "subject": ["building","car_bike"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["dynamic","tense","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }, "edit": { "bpm": [125,145], "shots": [ { "n": 1, "type": "top down", "dur_s": 6, "tip": "Top down on traffic", "transition": "Hard cut" }, { "n": 2, "type": "orbit", "dur_s": 6, "tip": "Orbit a tower", "transition": "Hard cut" }, { "n": 3, "type": "move gimbal up", "dur_s": 6, "tip": "Reveal the skyline", "transition": "Fade out" } ] }, "steps": [ { "id": "p008_s1", "title": "Top Down on Traffic", "shot_ref": 1, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p008_s2", "title": "Orbit a Tower", "shot_ref": 2, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png", "move_ref": "m001" }, { "id": "p008_s3", "title": "Reveal the Skyline", "shot_ref": 3, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png", "move_ref": "m003" } ] },
-  { "kind": "plan", "id": "p009", "title": "River Run", "description": "3 shots. Follow a river through a valley.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/hike_with_friends_plan.mp4", "final_clip_duration_s": 17, "meta": { "shoot_time_min": 13, "difficulty": "Beginner", "shots_count": 3 }, "env": ["open","forest"], "subject": ["landscape","atmosphere"], "risk": ["calm","some_risks"], "pilot": ["safe","normal"], "mood": ["smooth","epic"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/hike_plan_test.jpg" }, "edit": { "bpm": [90,115], "shots": [ { "n": 1, "type": "top down", "dur_s": 6, "tip": "Follow the water", "transition": "Cross dissolve" }, { "n": 2, "type": "raise up", "dur_s": 5, "tip": "Rise over the bend", "transition": "Hard cut" }, { "n": 3, "type": "push out", "dur_s": 6, "tip": "Reveal the valley", "transition": "Fade out" } ] }, "steps": [ { "id": "p009_s1", "title": "Follow the Water", "shot_ref": 1, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p009_s2", "title": "Rise Over the Bend", "shot_ref": 2, "duration_s": 5, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png", "move_ref": "m002" }, { "id": "p009_s3", "title": "Reveal the Valley", "shot_ref": 3, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" } ] },
-  { "kind": "plan", "id": "p010", "title": "Desert Lines", "description": "3 shots. Graphic desert patterns.", "result_video": "https://skymotion-cdn.b-cdn.net/plans/coastline_plan_test.mov", "final_clip_duration_s": 19, "meta": { "shoot_time_min": 15, "difficulty": "Intermediate", "shots_count": 3 }, "env": ["open"], "subject": ["landscape","atmosphere"], "risk": ["some_risks"], "pilot": ["normal","experiment"], "mood": ["epic","dynamic","wow"], "thumb": { "a": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg", "b": "https://skymotion-cdn.b-cdn.net/thumbs/Coastline.jpg" }, "edit": { "bpm": [100,125], "shots": [ { "n": 1, "type": "top down", "dur_s": 7, "tip": "Top down on dunes", "transition": "Hard cut" }, { "n": 2, "type": "3 directions", "dur_s": 6, "tip": "Trace the lines", "transition": "Hard cut" }, { "n": 3, "type": "push out", "dur_s": 6, "tip": "Pull back wide", "transition": "Fade out" } ] }, "steps": [ { "id": "p010_s1", "title": "Top Down on Dunes", "shot_ref": 1, "duration_s": 7, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png", "move_ref": "m005" }, { "id": "p010_s2", "title": "Trace the Lines", "shot_ref": 2, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png", "move_ref": "m007" }, { "id": "p010_s3", "title": "Pull Back Wide", "shot_ref": 3, "duration_s": 6, "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png", "move_ref": "m006" } ] }
+  {
+    "kind": "move",
+    "id": "m001",
+    "title": "Orbit",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m002",
+    "title": "Raise Up",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m003",
+    "title": "Move + Gimbal Up",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4",
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m004",
+    "title": "Take Off",
+    "duration_s": 11,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m005",
+    "title": "Top Down",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "person",
+      "car_bike",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "tense",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m006",
+    "title": "Push Out",
+    "duration_s": 10,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m007",
+    "title": "3 Directions Move",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m008",
+    "title": "Reveal",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m009",
+    "title": "Fly Through",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m010",
+    "title": "Side Track",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4",
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m011",
+    "title": "Pull Back",
+    "duration_s": 11,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m012",
+    "title": "Crane Up",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "person",
+      "car_bike",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "tense",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m013",
+    "title": "Dronie",
+    "duration_s": 10,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m014",
+    "title": "Boomerang",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m015",
+    "title": "Rocket",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m016",
+    "title": "Cable Cam",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m017",
+    "title": "Tracking Shot",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4",
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m018",
+    "title": "Fly Over",
+    "duration_s": 11,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m019",
+    "title": "Spiral",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "person",
+      "car_bike",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "tense",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m020",
+    "title": "Tilt Reveal",
+    "duration_s": 10,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m021",
+    "title": "Low Pass",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m022",
+    "title": "High Orbit",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m023",
+    "title": "Chase",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m024",
+    "title": "Parallax",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4",
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m025",
+    "title": "Vertical Reveal",
+    "duration_s": 11,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m026",
+    "title": "Pan Reveal",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "person",
+      "car_bike",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "tense",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m027",
+    "title": "Fly Under",
+    "duration_s": 10,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/push_out.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/push_out.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m028",
+    "title": "Pedestal",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/three_direction_move.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/3directions_move_gimbal.mp4",
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m029",
+    "title": "Whip Pan",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/orbit.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/orbit_01.mp4",
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m030",
+    "title": "Slow Push",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/raise_up.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/raise_up_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m031",
+    "title": "Fast Orbit",
+    "duration_s": 15,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/gimbal_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/move_gimbal_01.mp4",
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m032",
+    "title": "Reverse Reveal",
+    "duration_s": 11,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/take_off.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/take_off_01.mp4",
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "no_aggressive_moves"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
+  },
+  {
+    "kind": "move",
+    "id": "m033",
+    "title": "Establishing",
+    "duration_s": 21,
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/top_down.png",
+    "videoUrl": "https://skymotion-cdn.b-cdn.net/moves/top_down.mp4",
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "person",
+      "car_bike",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "tense",
+      "wow"
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-01-beach",
+    "title": "Beach",
+    "description": "5 shots. A relaxed beach sequence — an orbit on the sand, a rising reveal, and a glide along the shoreline.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "6333c9ab-b7cf-4a3d-b209-2040b2186792",
+      "mobile_id": "3ed4761e-df3a-426c-b33b-80f973616426"
+    },
+    "final_clip_duration_s": 11,
+    "meta": {
+      "shoot_time_min": 16,
+      "difficulty": "Intermediate",
+      "shots_count": 5
+    },
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "person",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Scene Reveal",
+          "tip": "Rise slowly as you pull back to reveal the shoreline.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Basic Orbit",
+          "tip": "Keep a steady radius circling the subject.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Orbit Reveal",
+          "tip": "Climb gently while circling to open up the view.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Sideways Parallax",
+          "tip": "Glide sideways at a constant speed along the shoreline.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Rise Reveal",
+          "tip": "Finish high to reveal the full beach and coastline.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-01-beach_s1",
+        "title": "Scene Reveal",
+        "shot_ref": 1,
+        "move_ref": "Scene Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-01-beach_s2",
+        "title": "Basic Orbit",
+        "shot_ref": 2,
+        "move_ref": "Basic Orbit",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-01-beach_s3",
+        "title": "Orbit Reveal",
+        "shot_ref": 3,
+        "move_ref": "Orbit Reveal",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-01-beach_s4",
+        "title": "Sideways Parallax",
+        "shot_ref": 4,
+        "move_ref": "Sideways Parallax",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-01-beach_s5",
+        "title": "Rise Reveal",
+        "shot_ref": 5,
+        "move_ref": "Rise Reveal",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-02-buildings",
+    "title": "City Buildings",
+    "description": "6 shots. A dynamic urban sequence — descending orbits, a dramatic pull, and a rise to the skyline.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "920186ff-1fa9-43a7-8478-39ff234aaae4",
+      "mobile_id": "6043a2b5-d172-405b-bbd6-be470021df8f"
+    },
+    "final_clip_duration_s": 16,
+    "meta": {
+      "shoot_time_min": 20,
+      "difficulty": "Advanced",
+      "shots_count": 6
+    },
+    "env": [
+      "urban",
+      "near_objects"
+    ],
+    "subject": [
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "tense",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Descending Orbit",
+          "tip": "Orbit while gradually losing altitude past the facade.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Dolly Zoom",
+          "tip": "Fly backward while slowly zooming in for a dramatic pull.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "C-17 Arc Flyby",
+          "tip": "Sweep a wide arc past the skyline at a steady bank.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 4,
+          "type": "Orbit Interception",
+          "tip": "Circle in and intercept the tower's silhouette.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 5,
+          "type": "Rise Reveal",
+          "tip": "Climb straight up to reveal the full skyline.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 6,
+          "type": "Top-Down Spin",
+          "tip": "Spin slowly overhead to show the street grid below.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-02-buildings_s1",
+        "title": "Descending Orbit",
+        "shot_ref": 1,
+        "move_ref": "Descending Orbit",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-02-buildings_s2",
+        "title": "Dolly Zoom",
+        "shot_ref": 2,
+        "move_ref": "Dolly Zoom",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-02-buildings_s3",
+        "title": "C-17 Arc Flyby",
+        "shot_ref": 3,
+        "move_ref": "C-17 Arc Flyby",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-02-buildings_s4",
+        "title": "Orbit Interception",
+        "shot_ref": 4,
+        "move_ref": "Orbit Interception",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-02-buildings_s5",
+        "title": "Rise Reveal",
+        "shot_ref": 5,
+        "move_ref": "Rise Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-02-buildings_s6",
+        "title": "Top-Down Spin",
+        "shot_ref": 6,
+        "move_ref": "Top-Down Spin",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-03-coastline",
+    "title": "Coastline",
+    "description": "5 shots. A coastal sequence combining a diving reveal, an orbiting climb, and a wide finishing pull-back.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "28faf2a5-ec10-4676-a717-0957b3a985a5",
+      "mobile_id": "cda09096-76e8-4517-a906-22fc03d5e6d8"
+    },
+    "final_clip_duration_s": 12,
+    "meta": {
+      "shoot_time_min": 15,
+      "difficulty": "Intermediate",
+      "shots_count": 5
+    },
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Dive Reveal",
+          "tip": "Approach low and fast, then tilt down into the dive.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Orbit Reveal",
+          "tip": "Circle while climbing to open up the cove.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 3,
+          "type": "Side Pan",
+          "tip": "Pan smoothly while sliding along the coastline.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 4,
+          "type": "Pull Away Reveal",
+          "tip": "Retreat steadily to show the coast at scale.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Grand Reveal",
+          "tip": "Combine a pull-back and rise for the biggest reveal last.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-03-coastline_s1",
+        "title": "Dive Reveal",
+        "shot_ref": 1,
+        "move_ref": "Dive Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-03-coastline_s2",
+        "title": "Orbit Reveal",
+        "shot_ref": 2,
+        "move_ref": "Orbit Reveal",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-03-coastline_s3",
+        "title": "Side Pan",
+        "shot_ref": 3,
+        "move_ref": "Side Pan",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-03-coastline_s4",
+        "title": "Pull Away Reveal",
+        "shot_ref": 4,
+        "move_ref": "Pull Away Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-03-coastline_s5",
+        "title": "Grand Reveal",
+        "shot_ref": 5,
+        "move_ref": "Grand Reveal",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-04-ocean-island",
+    "title": "Ocean Island",
+    "description": "5 shots. A wide arc, a tight orbit, and a classic pull-back reveal an island surrounded by open water.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "c5093607-2994-49ea-8174-57cf3492716c",
+      "mobile_id": "3ada5502-367f-46a2-8d7e-58d4a8608746"
+    },
+    "final_clip_duration_s": 11,
+    "meta": {
+      "shoot_time_min": 14,
+      "difficulty": "Intermediate",
+      "shots_count": 5
+    },
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "C-17 Arc Flyby",
+          "tip": "Bank into a wide arc circling the island.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Basic Orbit",
+          "tip": "Hold a tight, steady orbit around the island's peak.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Diagonal Forward",
+          "tip": "Cross the frame on a clean 45° approach.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Dronie",
+          "tip": "Retreat and climb together for the classic dronie pull.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Expanding Reveal",
+          "tip": "Widen out gradually to show the open water around the island.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-04-ocean-island_s1",
+        "title": "C-17 Arc Flyby",
+        "shot_ref": 1,
+        "move_ref": "C-17 Arc Flyby",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-04-ocean-island_s2",
+        "title": "Basic Orbit",
+        "shot_ref": 2,
+        "move_ref": "Basic Orbit",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-04-ocean-island_s3",
+        "title": "Diagonal Forward",
+        "shot_ref": 3,
+        "move_ref": "Diagonal Forward",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-04-ocean-island_s4",
+        "title": "Dronie",
+        "shot_ref": 4,
+        "move_ref": "Dronie",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-04-ocean-island_s5",
+        "title": "Expanding Reveal",
+        "shot_ref": 5,
+        "move_ref": "Expanding Reveal",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-05-landscape",
+    "title": "Landscape",
+    "description": "6 shots. A layered landscape sequence — a tilt, a push in, a diagonal cross, and a grand finishing reveal.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "7f349ec3-fc1e-4f87-9905-ebd18e4e2470",
+      "mobile_id": "70e5c3aa-eeff-4e11-98a0-bbe3872149a2"
+    },
+    "final_clip_duration_s": 16,
+    "meta": {
+      "shoot_time_min": 19,
+      "difficulty": "Advanced",
+      "shots_count": 6
+    },
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Tilt Reveal",
+          "tip": "Hold low, then tilt up to reveal the vista.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Push In",
+          "tip": "Push steadily toward the focal point in the distance.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Diagonal Forward",
+          "tip": "Cut across the landscape on a clean diagonal.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Descending Reveal",
+          "tip": "Descend smoothly to bring the foreground into frame.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Orbit Reveal",
+          "tip": "Circle while climbing for a wide, open feel.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 6,
+          "type": "Grand Reveal",
+          "tip": "Finish with a big pull-back and rise for scale.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-05-landscape_s1",
+        "title": "Tilt Reveal",
+        "shot_ref": 1,
+        "move_ref": "Tilt Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-05-landscape_s2",
+        "title": "Push In",
+        "shot_ref": 2,
+        "move_ref": "Push In",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-05-landscape_s3",
+        "title": "Diagonal Forward",
+        "shot_ref": 3,
+        "move_ref": "Diagonal Forward",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-05-landscape_s4",
+        "title": "Descending Reveal",
+        "shot_ref": 4,
+        "move_ref": "Descending Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-05-landscape_s5",
+        "title": "Orbit Reveal",
+        "shot_ref": 5,
+        "move_ref": "Orbit Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-05-landscape_s6",
+        "title": "Grand Reveal",
+        "shot_ref": 6,
+        "move_ref": "Grand Reveal",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-06-mountains",
+    "title": "Mountains",
+    "description": "5 shots. A mountain sequence built around a tilt reveal, a fly-over, and a wide orbit around the peak.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "e7547973-25fb-41e3-9ad6-3eb3a67968f3",
+      "mobile_id": "f6b13869-5640-4415-8c21-ad6e2f7d5791"
+    },
+    "final_clip_duration_s": 9,
+    "meta": {
+      "shoot_time_min": 13,
+      "difficulty": "Intermediate",
+      "shots_count": 5
+    },
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Tilt Reveal",
+          "tip": "Start low on the trail, then tilt up to the peak.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Fly Over",
+          "tip": "Hold a steady altitude flying straight over the ridge.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Orbit Reveal",
+          "tip": "Circle the peak while gently climbing.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Diagonal Forward",
+          "tip": "Cross the ridge line on a clean diagonal.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Sideways Parallax",
+          "tip": "Glide sideways to build depth between ridgelines.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-06-mountains_s1",
+        "title": "Tilt Reveal",
+        "shot_ref": 1,
+        "move_ref": "Tilt Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-06-mountains_s2",
+        "title": "Fly Over",
+        "shot_ref": 2,
+        "move_ref": "Fly Over",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-06-mountains_s3",
+        "title": "Orbit Reveal",
+        "shot_ref": 3,
+        "move_ref": "Orbit Reveal",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-06-mountains_s4",
+        "title": "Diagonal Forward",
+        "shot_ref": 4,
+        "move_ref": "Diagonal Forward",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-06-mountains_s5",
+        "title": "Sideways Parallax",
+        "shot_ref": 5,
+        "move_ref": "Sideways Parallax",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-07-water",
+    "title": "Water & Waves",
+    "description": "5 shots. A fast, dynamic water sequence with a low pass, an intercepting orbit, and a tracked retreat.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "ac1b1da9-91f7-41f2-aee7-a8519870bfc1",
+      "mobile_id": "180fef25-5f2b-48de-a67e-bf189f6ccb35"
+    },
+    "final_clip_duration_s": 8,
+    "meta": {
+      "shoot_time_min": 12,
+      "difficulty": "Intermediate",
+      "shots_count": 5
+    },
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "epic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "High-Speed Low Pass",
+          "tip": "Stay low and level for a fast pass over the water.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Orbit Interception",
+          "tip": "Circle in fast toward the subject on the water.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Scene Reveal",
+          "tip": "Pull back and rise to reveal the wider scene.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Pull Away Reveal",
+          "tip": "Retreat smoothly to show the water at scale.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Backward Interception",
+          "tip": "Retreat while panning to keep the action framed.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-07-water_s1",
+        "title": "High-Speed Low Pass",
+        "shot_ref": 1,
+        "move_ref": "High-Speed Low Pass",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-07-water_s2",
+        "title": "Orbit Interception",
+        "shot_ref": 2,
+        "move_ref": "Orbit Interception",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-07-water_s3",
+        "title": "Scene Reveal",
+        "shot_ref": 3,
+        "move_ref": "Scene Reveal",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-07-water_s4",
+        "title": "Pull Away Reveal",
+        "shot_ref": 4,
+        "move_ref": "Pull Away Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-07-water_s5",
+        "title": "Backward Interception",
+        "shot_ref": 5,
+        "move_ref": "Backward Interception",
+        "transition": "Fade out"
+      }
+    ]
+  },
+  {
+    "kind": "plan",
+    "id": "plan-08-waterfront-city",
+    "title": "Waterfront City",
+    "description": "6 shots. A city-meets-water sequence — a descending orbit, a harbor reveal, and a rocket-rise finale.",
+    "result_video": null,
+    "intro_video": {
+      "desktop_id": "8f5844ce-6bb6-4ddb-882e-941fa2239e4d",
+      "mobile_id": "75b86580-4109-4f8b-84a2-ab78d29bb2d3"
+    },
+    "final_clip_duration_s": 10,
+    "meta": {
+      "shoot_time_min": 17,
+      "difficulty": "Advanced",
+      "shots_count": 6
+    },
+    "env": [
+      "urban",
+      "open"
+    ],
+    "subject": [
+      "building",
+      "landscape",
+      "car_bike"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "epic",
+      "wow"
+    ],
+    "edit": {
+      "shots": [
+        {
+          "n": 1,
+          "type": "Tilt Reveal",
+          "tip": "Start at the waterline, then tilt up to the skyline.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 2,
+          "type": "Descending Orbit",
+          "tip": "Orbit down toward the waterfront buildings.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 3,
+          "type": "Descending Reveal",
+          "tip": "Descend to bring the docks and marina into frame.",
+          "transition": "Cross dissolve"
+        },
+        {
+          "n": 4,
+          "type": "Scene Reveal",
+          "tip": "Pull back and rise to reveal the harbor.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 5,
+          "type": "Side Pan",
+          "tip": "Pan along the waterfront at a steady pace.",
+          "transition": "Hard cut"
+        },
+        {
+          "n": 6,
+          "type": "Rocket Rise",
+          "tip": "Finish with a fast vertical climb over the water and skyline.",
+          "transition": "Fade out"
+        }
+      ]
+    },
+    "steps": [
+      {
+        "id": "plan-08-waterfront-city_s1",
+        "title": "Tilt Reveal",
+        "shot_ref": 1,
+        "move_ref": "Tilt Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-08-waterfront-city_s2",
+        "title": "Descending Orbit",
+        "shot_ref": 2,
+        "move_ref": "Descending Orbit",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-08-waterfront-city_s3",
+        "title": "Descending Reveal",
+        "shot_ref": 3,
+        "move_ref": "Descending Reveal",
+        "transition": "Cross dissolve"
+      },
+      {
+        "id": "plan-08-waterfront-city_s4",
+        "title": "Scene Reveal",
+        "shot_ref": 4,
+        "move_ref": "Scene Reveal",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-08-waterfront-city_s5",
+        "title": "Side Pan",
+        "shot_ref": 5,
+        "move_ref": "Side Pan",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-08-waterfront-city_s6",
+        "title": "Rocket Rise",
+        "shot_ref": 6,
+        "move_ref": "Rocket Rise",
+        "transition": "Fade out"
+      }
+    ]
+  }
 ]
