@@ -2394,14 +2394,12 @@
     safeText(matchCount, String(plans.length));
   }
 
-  // Temporary: the only pack right now is by air4future, and it needs to be
-  // pulled from the product for the moment. Flip back to false to restore it
-  // everywhere (Featured pack on Home, Packs tab, save/open) — no data lost.
-  const PRO_PACK_TEMP_DISABLED = true;
+  // Temporary: the only pack right now (by air4future) isn't ready to open
+  // yet. Keep it visible everywhere with a "Coming soon" state instead of
+  // pulling it — flip back to false once it's ready to open normally.
+  const PRO_PACK_COMING_SOON = true;
 
   function getProPackItems() {
-    if (PRO_PACK_TEMP_DISABLED) return [];
-
     const plans = filtered.filter(isPlan);
     const moves = filtered.filter((item) => !isPlan(item));
 
@@ -2432,6 +2430,7 @@
         id: "real_estate_creator_pack",
         title: window.SM_PRO_PACK_TITLE || "Real Estate Pack",
         creator: window.SM_PRO_PACK_CREATOR || "creator name",
+        comingSoon: PRO_PACK_COMING_SOON,
         label: "PACK",
         thumb: heroCover,
         meta: "13 moves · 5 plans · Checklist",
@@ -2635,12 +2634,13 @@
     const card = document.createElement("article");
     const saved = isGenericSaved("pack", pack?.id);
     const info = getPackCommercialInfo(pack);
-    card.className = "sm-pro-pack-row";
+    card.className = `sm-pro-pack-row ${pack.comingSoon ? "sm-pro-pack-row--coming-soon" : ""}`;
     card.dataset.proPack = pack.id;
     card.innerHTML = `
       <div class="sm-pro-pack-row__media">
         <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <span>${escapeHtml(info.badge)}</span>
+        ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
       </div>
       <div class="sm-pro-pack-row__body">
         <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
@@ -3246,9 +3246,10 @@
       const line = "For paid property shoots · 30–60s property reel · 5 hero shots";
 
       return `
-        <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate" data-pro-pack="${escapeHtml(pack.id)}">
+        <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
           <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
           <div class="sm-pro-pack-shade"></div>
+          ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
 
           <div class="sm-pro-pack-content">
             <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
@@ -3269,9 +3270,10 @@
     }
 
     return `
-      <article class="sm-pro-pack-card" data-pro-pack="${escapeHtml(pack.id)}">
+      <article class="sm-pro-pack-card ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
         <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <div class="sm-pro-pack-shade"></div>
+        ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
 
         <div class="sm-pro-pack-content">
           <span class="sm-pro-pack-badge">POWERED BY ${escapeHtml(pack.creator || "SkyMotion")}</span>
@@ -4245,11 +4247,18 @@
     if (packCard) {
       e.preventDefault();
       e.stopPropagation();
-      activeProPackId = packCard.dataset.proPack || "car_event_air4future";
+      const clickedPackId = packCard.dataset.proPack || "car_event_air4future";
+
+      // Coming-soon packs (see PRO_PACK_COMING_SOON) aren't openable yet —
+      // the card still shows, it just doesn't navigate anywhere.
+      const clickedPack = getProPackItems().find((p) => String(p.id) === String(clickedPackId));
+      if (clickedPack?.comingSoon) return;
+
+      activeProPackId = clickedPackId;
 
       // Real pack-detail open (free users are intercepted earlier into a preview modal,
       // so this only fires when the actual pack content opens).
-      const _pack = getProPackItems().find((p) => String(p.id) === String(activeProPackId));
+      const _pack = clickedPack;
       emit("sm:pack_opened", {
         item_id: activeProPackId,
         item_type: "pack",

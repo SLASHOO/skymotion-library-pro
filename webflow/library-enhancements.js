@@ -777,6 +777,9 @@
     var pack = e.target.closest && e.target.closest(".sm-pack-gated");
     if (pack && scopeEl.contains(pack)){
       e.preventDefault(); e.stopPropagation();
+      // Coming-soon pack (library.js's PRO_PACK_COMING_SOON): not openable at
+      // all yet, not even the Pro value-preview popup — just swallow the click.
+      if (pack.classList.contains("sm-pro-pack-card--coming-soon") || pack.classList.contains("sm-pro-pack-row--coming-soon")) return;
       openPackModal(pack);
       return;
     }
