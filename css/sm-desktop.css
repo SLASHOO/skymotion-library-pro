@@ -2373,16 +2373,7 @@
   }
 }
 
-/* ========================= PRO DESKTOP SCROLL MODEL
-   The outer #sm-library-scope element owns the desktop scroll — not the
-   inner .results column, which is centered with max-width:1440px and so
-   floats short of the real browser edge on wide screens. Scrolling the
-   outer, full-width container instead puts the scrollbar flush against
-   the actual right edge of the browser window. .assistant is sticky
-   within that same scroll so the filter panel never scrolls away.
-   Popular moves / Cinematic plans keep their own capped-height internal
-   scroll (see the row-cap rules further down) independently of this
-   outer scroll. Desktop only. Mobile portrait / phone landscape untouched.
+/* ========================= PRO DESKTOP SCROLL MODEL One unified scroll for the content area. Removes inner scroll from Popular moves and prevents page from dropping below filters. Desktop only. Mobile portrait / phone landscape untouched.
 ========================= */
 @media (min-width: 901px) {
   html:has(#sm-library-scope),
@@ -2394,45 +2385,77 @@
   #sm-library-scope {
     height: 100dvh !important;
     min-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  #sm-library-scope .library {
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    grid-template-rows: auto auto minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    padding-bottom: 24px !important;
+  }
+
+  #sm-library-scope .assistant {
+    position: relative !important;
+    top: auto !important;
+    align-self: stretch !important;
+    height: 100% !important;
+    max-height: calc(100dvh - 48px) !important;
+    min-height: 0 !important;
+  }
+
+  #sm-library-scope .results {
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
+    padding: 0 10px 40px 0 !important;
     overscroll-behavior: contain !important;
     scrollbar-width: thin !important;
     scrollbar-color: rgba(255,255,255,.20) transparent !important;
   }
 
-  #sm-library-scope::-webkit-scrollbar {
+  #sm-library-scope .results::-webkit-scrollbar {
     width: 7px !important;
   }
 
-  #sm-library-scope::-webkit-scrollbar-track {
+  #sm-library-scope .results::-webkit-scrollbar-track {
     background: transparent !important;
   }
 
-  #sm-library-scope::-webkit-scrollbar-thumb {
+  #sm-library-scope .results::-webkit-scrollbar-thumb {
     border-radius: 999px !important;
     background: rgba(255,255,255,.18) !important;
     border: 2px solid transparent !important;
     background-clip: padding-box !important;
   }
 
-  #sm-library-scope::-webkit-scrollbar-thumb:hover {
+  #sm-library-scope .results::-webkit-scrollbar-thumb:hover {
     background: rgba(190,140,255,.34) !important;
     background-clip: padding-box !important;
   }
 
-  #sm-library-scope .library {
-    min-height: 100% !important;
-    align-items: start !important;
-    padding-bottom: 24px !important;
+  /* The right moves rail must not have its own scroll anymore. */
+  #sm-library-scope .sm-pro-desktop-side {
+    position: relative !important;
+    top: auto !important;
+    align-self: start !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
-  #sm-library-scope .assistant {
-    position: sticky !important;
-    top: var(--pad) !important;
-    align-self: start !important;
-    height: calc(100dvh - (var(--pad) * 2)) !important;
-    max-height: calc(100dvh - (var(--pad) * 2)) !important;
+  #sm-library-scope .sm-pro-desktop-move-stack {
+    max-height: none !important;
+    overflow: visible !important;
+    padding-right: 0 !important;
+    scrollbar-width: auto !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar {
+    display: none !important;
   }
 
   /* Keep the Home grid inside the unified scroll area and avoid excess empty depth. */
@@ -2446,6 +2469,7 @@
     padding-bottom: 20px !important;
   }
 
+  /* Tabs stay visible because only .results scrolls. Make spacing tighter. */
   #sm-library-scope .sm-pro-mobile-tabs {
     margin-bottom: 18px !important;
   }
@@ -5507,62 +5531,15 @@
 }
 
 /* =========================================================
-   PRO DESKTOP HOME — CAP "Cinematic plans" / "Popular moves"
-   preview rows so the page stops growing with the catalog size.
-   Plans: 1 row visible (measured card height 300px, 2-col grid).
-   Moves: 3 rows visible (measured card height 178px + 14px gap).
-   Overflow scrolls inside the panel instead of the whole page;
-   scrollbar kept thin/low-contrast so it reads as intentional,
-   not a leftover browser default. This is independent of the outer
-   #sm-library-scope scroll from the "PRO DESKTOP SCROLL MODEL" block
-   above (.assistant stays pinned to that one).
-   ========================================================= */
-@media (min-width:901px){
-  #sm-library-scope .sm-pro-desktop-plan-grid{
-    max-height:300px !important;
-    overflow-x:hidden !important;
-    overflow-y:auto !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-move-stack{
-    max-height:562px !important;
-    overflow-x:hidden !important;
-    overflow-y:auto !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid,
-  #sm-library-scope .sm-pro-desktop-move-stack{
-    scrollbar-width:thin !important;
-    scrollbar-color:rgba(255,255,255,.18) transparent !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar{
-    width:6px !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-track,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-track{
-    background:transparent !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.18) !important;
-    border-radius:999px !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb:hover,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb:hover{
-    background:rgba(255,255,255,.32) !important;
-  }
-}
-
-/* =========================================================
    PRO DESKTOP HOME — polish pass:
    1) A bit more breathing room between/inside cards — they read as
       cramped at the previous gap.
    2) Card titles were too heavy for the card design; lighten them.
+   Note: "Cinematic plans" / "Popular moves" deliberately have NO scroll
+   of their own — the "PRO DESKTOP SCROLL MODEL" block above keeps the
+   single .results pane as the only scroll container, with .assistant
+   pinned beside it. Do not reintroduce max-height/overflow-y:auto on
+   .sm-pro-desktop-plan-grid / .sm-pro-desktop-move-stack here.
    ========================================================= */
 @media (min-width:901px){
   #sm-library-scope .sm-pro-desktop-home-grid{
