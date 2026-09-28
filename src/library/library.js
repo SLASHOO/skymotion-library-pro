@@ -3617,7 +3617,7 @@
 
     canvas.width = 160;
     canvas.height = 90;
-    let timer = null;
+    let rafId = null;
 
     const draw = () => {
       if (!player.videoWidth || !player.videoHeight) return;
@@ -3641,13 +3641,20 @@
       } catch (_) {}
     };
 
-    const start = () => {
+    // requestAnimationFrame instead of a fixed setInterval — redraws every
+    // frame the browser actually renders (~60fps), synced to real playback.
+    // The previous 450ms interval was ~2 draws/sec, which read as a choppy
+    // slideshow instead of a smooth ambient backdrop.
+    const loop = () => {
       draw();
-      if (!timer) timer = setInterval(draw, 450);
+      rafId = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (rafId == null) rafId = requestAnimationFrame(loop);
     };
     const stop = () => {
-      if (timer) clearInterval(timer);
-      timer = null;
+      if (rafId != null) cancelAnimationFrame(rafId);
+      rafId = null;
     };
 
     player.addEventListener("loadeddata", draw);
