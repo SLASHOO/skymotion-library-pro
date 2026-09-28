@@ -2394,7 +2394,14 @@
     safeText(matchCount, String(plans.length));
   }
 
+  // Temporary: the only pack right now is by air4future, and it needs to be
+  // pulled from the product for the moment. Flip back to false to restore it
+  // everywhere (Featured pack on Home, Packs tab, save/open) — no data lost.
+  const PRO_PACK_TEMP_DISABLED = true;
+
   function getProPackItems() {
+    if (PRO_PACK_TEMP_DISABLED) return [];
+
     const plans = filtered.filter(isPlan);
     const moves = filtered.filter((item) => !isPlan(item));
 
@@ -3226,6 +3233,8 @@
 
   function renderFeaturedPackCard(plans = [], moves = []) {
     const pack = getProPackItems()[0];
+    if (!pack) return "";
+
     const movesCount = Number(pack?.movesCount || 10);
     const plansCount = Number(pack?.plansCount || 3);
 
@@ -3316,12 +3325,15 @@
 
     const popularMoves = homeMovePreview(moves, 3, 1);   // mobile: 3 free + 1 locked
     const cinematicPlans = plans.slice(0, 3);            // 2 free + 1 locked
+    const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
+      ${featuredPackCard ? `
       <section class="sm-pro-section sm-pro-section--pack">
         ${renderSectionHeader("Featured pack", "View all", "packs")}
-        ${renderFeaturedPackCard(plans, moves)}
+        ${featuredPackCard}
       </section>
+      ` : ""}
 
       <section class="sm-pro-section sm-pro-section--moves">
         ${renderSectionHeader("Popular moves", "View all", "moves")}
@@ -3381,13 +3393,16 @@
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
     }).join("");
+    const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
       <div class="sm-pro-desktop-primary">
+        ${featuredPackCard ? `
         <section class="sm-pro-section sm-pro-section--pack sm-pro-desktop-panel sm-pro-desktop-panel--pack">
           ${renderSectionHeader("Featured pack", "View all", "packs")}
-          ${renderFeaturedPackCard(plans, moves)}
+          ${featuredPackCard}
         </section>
+        ` : ""}
 
         <section class="sm-pro-section sm-pro-section--plans sm-pro-desktop-panel sm-pro-desktop-panel--plans">
           ${renderSectionHeader("Cinematic plans", "View all", "plans")}
