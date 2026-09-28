@@ -5579,3 +5579,32 @@
     background:rgba(255,255,255,.32) !important;
   }
 }
+
+/* =========================================================
+   PRO DESKTOP HOME — polish pass:
+   1) Separate the "Popular moves" panel's own scrollbar from the
+      page-level <main class="results"> scrollbar right next to it
+      (~20px apart before this — read as a duplicated scrollbar).
+   2) A bit more breathing room between/inside cards — they read as
+      cramped at the previous gap.
+   3) Card titles were too heavy for the card design; lighten them.
+   ========================================================= */
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-desktop-home-grid{
+    padding-right:28px !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid{
+    gap:22px !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-move-stack{
+    gap:18px !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid .cardPlan .planCaption,
+  #sm-library-scope .sm-pro-desktop-move-stack .card .title{
+    font-weight:560 !important;
+    letter-spacing:-.015em !important;
+  }
+}

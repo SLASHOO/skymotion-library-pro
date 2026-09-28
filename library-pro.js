@@ -3341,7 +3341,7 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = plans.slice(0, 3).map((item) => {   // 2 free + 1 locked
+    const planCards = plans.slice(0, 8).map((item) => {   // 2 free + rest locked-but-visible; row-capped + scrollable in CSS
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
