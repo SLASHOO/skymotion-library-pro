@@ -3977,6 +3977,13 @@
       player.addEventListener("error", () => {
         setPlayerStatus("Video playback failed. Please try again.", true);
       }, { once: true });
+      // Until a real frame is decoded, the poster fills the screen
+      // (object-fit:cover, same as the plan cards) instead of showing a
+      // letterboxed/black-barred frame. Switch to contain only once actual
+      // video data is playable, so tutorial text overlays stay uncropped.
+      player.addEventListener("loadeddata", () => {
+        player.classList.add("is-ready");
+      }, { once: true });
 
       playerCleanup = bindPlayerUi({
         player,
