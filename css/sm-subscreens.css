@@ -218,6 +218,16 @@
     line-height:1.08;
     font-weight:650;
     letter-spacing:-.03em;
+    /* Reserve 2 lines' height always (in em, so it holds at every
+       breakpoint's font-size) — otherwise a row with a title that wraps
+       sits taller than its neighbors and the grid (align-items:stretch)
+       stretches every card in that row to match, making row heights
+       jump around while scrolling. */
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    min-height:2.16em;
   }
 
   #sm-library-scope .sm-pro-move-row .sm-save{

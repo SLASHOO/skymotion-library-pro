@@ -2513,6 +2513,16 @@
   #sm-library-scope .sm-pro-move-row__top h3{
     line-height:1.08 !important;
     padding-top:0 !important;
+    /* Reserve 2 lines' height always (em, so it holds at this rule's own
+       font-size) — otherwise a row with a title that wraps sits taller
+       than its neighbors and the grid (align-items:stretch) stretches
+       every card in that row to match, making row heights jump around
+       while scrolling. */
+    display:-webkit-box !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+    min-height:2.16em !important;
   }
 
   /* Plans tab: landscape card, not row-table layout */
@@ -5547,11 +5557,12 @@
   }
 
   #sm-library-scope .sm-pro-desktop-plan-grid{
-    gap:22px !important;
+    row-gap:32px !important;
+    column-gap:22px !important;
   }
 
   #sm-library-scope .sm-pro-desktop-move-stack{
-    gap:18px !important;
+    gap:26px !important;
   }
 
   #sm-library-scope .sm-pro-desktop-plan-grid .cardPlan .planCaption,

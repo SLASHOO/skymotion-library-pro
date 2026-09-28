@@ -1600,6 +1600,18 @@
     return raw.charAt(0).toUpperCase() + raw.slice(1);
   }
 
+  // Real catalog moves carry a "pilot" tag ("safe" / "normal" / "experiment")
+  // instead of an explicit difficulty. "safe" moves are the easiest, moves
+  // that call for "experiment" piloting only (no "normal"/"safe" fallback)
+  // are the hardest, everything else lands in the middle.
+  function getMoveDifficultyFromPilot(pilotTags) {
+    if (!Array.isArray(pilotTags) || !pilotTags.length) return "";
+    const tags = pilotTags.map((t) => String(t || "").toLowerCase());
+    if (tags.includes("safe")) return "Basic";
+    if (tags.includes("experiment") && !tags.includes("normal")) return "Advanced";
+    return "Intermediate";
+  }
+
   function getMoveDifficulty(v) {
     const explicit = normalizeDifficulty(
       v?.difficulty ||
@@ -1611,6 +1623,9 @@
     );
 
     if (explicit) return explicit;
+
+    const fromPilot = getMoveDifficultyFromPilot(v?.pilot);
+    if (fromPilot) return fromPilot;
 
     const title = String(v?.title || "").toLowerCase();
 
