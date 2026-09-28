@@ -143,6 +143,11 @@
   z-index:1;
   object-fit:contain !important;
   background:transparent;
+  /* Fade the sharp video into the blurred .player__ambient layer behind it
+     instead of a hard edge — the video's own corners dissolve into the
+     ambient glow rather than cutting off abruptly. */
+  -webkit-mask-image:radial-gradient(ellipse 62% 62% at center, #000 55%, transparent 100%);
+  mask-image:radial-gradient(ellipse 62% 62% at center, #000 55%, transparent 100%);
 }
 
 #sm-library-scope #modal .player__status{
