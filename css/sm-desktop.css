@@ -5531,63 +5531,15 @@
 }
 
 /* =========================================================
-   PRO DESKTOP HOME — CAP "Cinematic plans" / "Popular moves"
-   preview rows so the page stops growing with the catalog size.
-   Plans: 1 row visible (measured card height 300px, 2-col grid).
-   Moves: 3 rows visible (measured card height 178px + 14px gap).
-   Overflow scrolls inside the panel instead of the whole page;
-   scrollbar kept thin/low-contrast so it reads as intentional,
-   not a leftover browser default.
-   ========================================================= */
-@media (min-width:901px){
-  #sm-library-scope .sm-pro-desktop-plan-grid{
-    max-height:300px !important;
-    overflow-x:hidden !important;
-    overflow-y:auto !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-move-stack{
-    max-height:562px !important;
-    overflow-x:hidden !important;
-    overflow-y:auto !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid,
-  #sm-library-scope .sm-pro-desktop-move-stack{
-    scrollbar-width:thin !important;
-    scrollbar-color:rgba(255,255,255,.18) transparent !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar{
-    width:6px !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-track,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-track{
-    background:transparent !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.18) !important;
-    border-radius:999px !important;
-  }
-
-  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb:hover,
-  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb:hover{
-    background:rgba(255,255,255,.32) !important;
-  }
-}
-
-/* =========================================================
    PRO DESKTOP HOME — polish pass:
-   1) Separate the "Popular moves" panel's own scrollbar from the
-      page-level <main class="results"> scrollbar right next to it
-      (~20px apart before this — read as a duplicated scrollbar).
-   2) A bit more breathing room between/inside cards — they read as
+   1) A bit more breathing room between/inside cards — they read as
       cramped at the previous gap.
-   3) Card titles were too heavy for the card design; lighten them.
+   2) Card titles were too heavy for the card design; lighten them.
+   Note: "Cinematic plans" / "Popular moves" deliberately have NO scroll
+   of their own — the "PRO DESKTOP SCROLL MODEL" block above keeps the
+   single .results pane as the only scroll container, with .assistant
+   pinned beside it. Do not reintroduce max-height/overflow-y:auto on
+   .sm-pro-desktop-plan-grid / .sm-pro-desktop-move-stack here.
    ========================================================= */
 @media (min-width:901px){
   #sm-library-scope .sm-pro-desktop-home-grid{
