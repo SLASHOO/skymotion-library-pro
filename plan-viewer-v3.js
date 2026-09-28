@@ -176,6 +176,69 @@ const root = document.getElementById("sm-plan-v3-root");
     }
   }
 
+  // Same ambient-glow backdrop as the move player (library.js's
+  // bindAmbientCanvas) — duplicated here rather than shared across files,
+  // since plan-viewer.js is a separate script/closure. Samples the current
+  // video frame onto a small canvas every animation frame while playing, so
+  // the blurred backdrop behind the contained video tracks real motion
+  // instead of staying a static image or plain black bars.
+  function bindResultAmbientCanvas() {
+    const video = document.getElementById("spv3ResultVideo");
+    const canvas = document.getElementById("spv3ResultAmbient");
+    if (!video || !canvas) return;
+
+    const context = canvas.getContext("2d", { alpha: false });
+    if (!context) return;
+
+    canvas.width = 160;
+    canvas.height = 90;
+    let rafId = null;
+
+    const draw = () => {
+      if (!video.videoWidth || !video.videoHeight) return;
+      const sourceRatio = video.videoWidth / video.videoHeight;
+      const targetRatio = canvas.width / canvas.height;
+      let sx = 0, sy = 0, sw = video.videoWidth, sh = video.videoHeight;
+
+      if (sourceRatio > targetRatio) {
+        sw = video.videoHeight * targetRatio;
+        sx = (video.videoWidth - sw) / 2;
+      } else {
+        sh = video.videoWidth / targetRatio;
+        sy = (video.videoHeight - sh) / 2;
+      }
+
+      try {
+        context.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+      } catch (_) {}
+    };
+
+    const loop = () => {
+      draw();
+      rafId = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (rafId == null) rafId = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      if (rafId != null) cancelAnimationFrame(rafId);
+      rafId = null;
+    };
+
+    video.addEventListener("loadeddata", draw);
+    video.addEventListener("play", start);
+    video.addEventListener("pause", stop);
+    video.addEventListener("ended", stop);
+
+    cleanupFns.push(() => {
+      stop();
+      video.removeEventListener("loadeddata", draw);
+      video.removeEventListener("play", start);
+      video.removeEventListener("pause", stop);
+      video.removeEventListener("ended", stop);
+    });
+  }
+
   function getPlanFinalVideo(plan) {
     return (
       normalizeUrl(
@@ -677,6 +740,7 @@ const root = document.getElementById("sm-plan-v3-root");
     return `
       <section class="spv3__slide">
         <div class="spv3Result">
+          <canvas class="spv3Result__ambient" id="spv3ResultAmbient" aria-hidden="true"></canvas>
           <video
             class="spv3Result__video"
             id="spv3ResultVideo"
@@ -764,6 +828,7 @@ const root = document.getElementById("sm-plan-v3-root");
     track.innerHTML = html;
     attachImgFallback(track);
     resolveResultVideo();
+    bindResultAmbientCanvas();
   }
 
   function openMoveFromButton(btn) {
