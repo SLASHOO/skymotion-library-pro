@@ -1138,10 +1138,10 @@
 
     if (showResultsBtn) {
       if (disabled) {
-        showResultsBtn.innerHTML = "No moves found";
+        showResultsBtn.innerHTML = "No results found";
         showResultsBtn.disabled = true;
       } else {
-        showResultsBtn.innerHTML = `Show <span id="matchCount">${count}</span> ${count === 1 ? "move" : "moves"}`;
+        showResultsBtn.innerHTML = `Show <span id="matchCount">${count}</span> ${count === 1 ? "result" : "results"}`;
         showResultsBtn.disabled = false;
       }
     }
