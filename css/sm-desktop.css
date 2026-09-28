@@ -1831,6 +1831,33 @@
     font-weight:620 !important;
   }
 
+  /* Difficulty pill lives on the thumbnail next to the time badge now
+     (same cluster-of-badges treatment as the Home screen cards) instead
+     of sitting in the text body next to the title — that copy is hidden
+     here (there's enough width on desktop thumbnails for both badges;
+     see sm-subscreens.css for the mobile-portrait swap the other way). */
+  #sm-library-scope .sm-pro-move-row__media .sm-pro-move-row__difficulty{
+    position:absolute !important;
+    z-index:2 !important;
+    top:9px !important;
+    right:9px !important;
+    left:auto !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    min-height:24px !important;
+    padding:0 8px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.13) !important;
+    background:rgba(0,0,0,.48) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    box-shadow:none !important;
+    font-size:11px !important;
+    font-weight:650 !important;
+  }
+
+
   #sm-library-scope .sm-pro-move-row__play{
     position:absolute !important;
     z-index:2 !important;
@@ -5569,5 +5596,19 @@
   #sm-library-scope .sm-pro-desktop-move-stack .card .title{
     font-weight:560 !important;
     letter-spacing:-.015em !important;
+  }
+}
+
+/* =========================================================
+   PRO DESKTOP MOVES — difficulty pill lives on the thumbnail now
+   (see the .sm-pro-move-row__difficulty rule earlier in this file),
+   so hide the original copy next to the title. Matches the specificity
+   of "PRO DESKTOP PLANS POLISH"'s
+   .sm-pro-move-row:not(.sm-pro-plan-row) .sm-pro-move-row__meta rule
+   (which also sets display:flex !important) so this actually wins.
+   ========================================================= */
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-move-row:not(.sm-pro-plan-row) .sm-pro-move-row__headline .sm-pro-move-row__meta{
+    display:none !important;
   }
 }

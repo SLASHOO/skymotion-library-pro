@@ -1967,6 +1967,7 @@
       <div class="sm-pro-move-row__media">
         <img src="${escapeHtml(thumb)}" alt="${title}" loading="lazy">
         ${duration ? `<span class="sm-pro-move-row__time">${duration}</span>` : ""}
+        <span class="sm-pro-difficulty-pill sm-pro-difficulty-pill--${tone} sm-pro-move-row__difficulty">${escapeHtml(difficulty)}</span>
         <span class="sm-pro-move-row__play" aria-hidden="true"></span>
       </div>
 

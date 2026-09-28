@@ -173,6 +173,16 @@
     line-height:1;
   }
 
+  /* This thumbnail is too narrow (~112px) to fit the time badge and a
+     text difficulty pill ("Intermediate"/"Advanced") side by side without
+     overlap — keep the difficulty pill in the text body next to the
+     title here instead (its default position; see sm-desktop.css for the
+     wider desktop thumbnail, which hides that copy and shows this one
+     as a photo overlay instead). */
+  #sm-library-scope .sm-pro-move-row__media .sm-pro-move-row__difficulty{
+    display:none;
+  }
+
   #sm-library-scope .sm-pro-move-row__play{
     position:absolute;
     z-index:2;
