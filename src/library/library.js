@@ -22,6 +22,25 @@
   const scope = $("sm-library-scope");
   if (!scope) return;
 
+  // Cards use a :hover lift (transform:translateY). :hover re-evaluates
+  // continuously while the page scrolls, so any card passing under a
+  // stationary mouse cursor flickers/shifts as it scrolls past. Disable
+  // pointer-events on cards while actively scrolling (see sm-skin.css)
+  // so :hover can't trigger mid-scroll, and re-enable shortly after
+  // scrolling stops.
+  (() => {
+    const resultsEl = scope.querySelector(".results");
+    if (!resultsEl) return;
+    let scrollEndTimer = null;
+    resultsEl.addEventListener("scroll", () => {
+      scope.classList.add("sm-is-scrolling");
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => {
+        scope.classList.remove("sm-is-scrolling");
+      }, 150);
+    }, { passive: true });
+  })();
+
   function setPackDetailPageMode(enabled) {
     const on = !!enabled;
     document.documentElement.classList.toggle("sm-pack-detail-open", on);
