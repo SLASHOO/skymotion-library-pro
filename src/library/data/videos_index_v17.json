@@ -5,11 +5,25 @@
     "guid": "b0ecde71-ee9e-4d42-8da1-1f4f99185800",
     "title": "Backward Interception",
     "duration_s": 29,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -17,11 +31,26 @@
     "guid": "3ef4c328-4d86-4c46-90df-761287edd7cc",
     "title": "Basic Orbit",
     "duration_s": 29,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -29,11 +58,25 @@
     "guid": "42965478-7572-4e4b-a804-47abbe3ec2ac",
     "title": "C-17 Arc Flyby",
     "duration_s": 27,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -41,11 +84,23 @@
     "guid": "6f0cedce-158b-444b-b770-6380e4a0ef11",
     "title": "C-17 Descending Arc",
     "duration_s": 25,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic"
+    ]
   },
   {
     "kind": "move",
@@ -53,11 +108,26 @@
     "guid": "c04a5925-cc6f-4a79-94c3-73608f8866c5",
     "title": "Descending Orbit",
     "duration_s": 25,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "urban",
+      "near_objects",
+      "open"
+    ],
+    "subject": [
+      "building",
+      "landscape"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -65,11 +135,25 @@
     "guid": "dd397232-53ef-4b00-ad5a-effc5573579d",
     "title": "Descending Reveal",
     "duration_s": 29,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -77,11 +161,24 @@
     "guid": "641f3c71-dab5-4add-b46c-e43791d436b7",
     "title": "Diagonal Forward",
     "duration_s": 24,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "dynamic"
+    ]
   },
   {
     "kind": "move",
@@ -89,11 +186,23 @@
     "guid": "8bd52bd9-258a-46e7-8815-6635b0d4524d",
     "title": "Diagonal Rise",
     "duration_s": 24,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -101,11 +210,26 @@
     "guid": "455b3e34-50d2-456f-b003-9f5261070fe6",
     "title": "Dive Reveal",
     "duration_s": 32,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -113,11 +237,25 @@
     "guid": "27f5a261-fe33-4139-8ff0-471eab196f5a",
     "title": "Dolly Zoom",
     "duration_s": 23,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "urban",
+      "near_objects"
+    ],
+    "subject": [
+      "building",
+      "person"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "tense",
+      "dynamic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -125,11 +263,27 @@
     "guid": "b0a8a766-4b67-46c5-b1ce-3ec7d61ed651",
     "title": "Dronie",
     "duration_s": 26,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -137,11 +291,25 @@
     "guid": "029b83aa-66de-4599-8b9c-15ffe4ca2c9b",
     "title": "Dynamic Pullback Reveal",
     "duration_s": 28,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "dynamic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -149,11 +317,24 @@
     "guid": "3717c15d-1a24-4682-b07f-c48df9b60c8c",
     "title": "Expanding Reveal",
     "duration_s": 23,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -161,11 +342,24 @@
     "guid": "a79fa1e8-da2a-4ca3-b7f2-5d6f83aa6443",
     "title": "Fly Over",
     "duration_s": 22,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -173,11 +367,24 @@
     "guid": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
     "title": "Grand Reveal",
     "duration_s": 28,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "epic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -185,11 +392,25 @@
     "guid": "19b42f22-d578-4eb8-a78f-d20925f05c8d",
     "title": "High-Speed Low Pass",
     "duration_s": 16,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "car_bike"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "tense",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -197,11 +418,23 @@
     "guid": "046fc67a-b9bd-485e-b8b9-ad83dbf715cc",
     "title": "Low Pass",
     "duration_s": 29,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "dynamic",
+      "smooth"
+    ]
   },
   {
     "kind": "move",
@@ -209,11 +442,28 @@
     "guid": "89b83b8b-1b68-4ace-8783-01d0075e53a1",
     "title": "Orbit Interception",
     "duration_s": 26,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "urban",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "building",
+      "car_bike"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "epic",
+      "tense"
+    ]
   },
   {
     "kind": "move",
@@ -221,11 +471,27 @@
     "guid": "1a70b0ed-562b-411d-95de-a1bc6f931124",
     "title": "Orbit Reveal",
     "duration_s": 31,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "person",
+      "landscape",
+      "building"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -233,11 +499,25 @@
     "guid": "e8beb703-e662-4f93-a30e-dd6c88f92d8e",
     "title": "Pull Away Reveal",
     "duration_s": 14,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere",
+      "person"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -245,11 +525,26 @@
     "guid": "81e56201-0a5b-496d-ba6f-fb0ee80c12ba",
     "title": "Push In",
     "duration_s": 19,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "building",
+      "person"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "dynamic"
+    ]
   },
   {
     "kind": "move",
@@ -257,11 +552,25 @@
     "guid": "6b296468-bb03-4b4c-99d5-ca3c62bde2e6",
     "title": "Rise Reveal",
     "duration_s": 31,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -269,11 +578,25 @@
     "guid": "a3c2c7dc-943f-467a-a161-7312e8cda3e6",
     "title": "Rocket Rise",
     "duration_s": 19,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "urban"
+    ],
+    "subject": [
+      "landscape",
+      "building"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "epic",
+      "wow"
+    ]
   },
   {
     "kind": "move",
@@ -281,11 +604,26 @@
     "guid": "af55dc68-fa4c-435e-a720-15264468dccf",
     "title": "Scene Reveal",
     "duration_s": 29,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "person",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm",
+      "some_risks"
+    ],
+    "pilot": [
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -293,11 +631,25 @@
     "guid": "8373f196-c133-4fe1-bf06-f6623c85d89a",
     "title": "Side Pan",
     "duration_s": 24,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "forest",
+      "near_objects"
+    ],
+    "subject": [
+      "landscape",
+      "person"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth"
+    ]
   },
   {
     "kind": "move",
@@ -305,11 +657,24 @@
     "guid": "aa2dd048-de17-430d-ad5e-81924f3d723e",
     "title": "Sideways Parallax",
     "duration_s": 17,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth"
+    ]
   },
   {
     "kind": "move",
@@ -317,11 +682,25 @@
     "guid": "9422f296-8423-4174-91da-7517264c0bf9",
     "title": "Tilt Reveal",
     "duration_s": 25,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "open",
+      "forest"
+    ],
+    "subject": [
+      "landscape",
+      "atmosphere"
+    ],
+    "risk": [
+      "calm"
+    ],
+    "pilot": [
+      "safe",
+      "normal"
+    ],
+    "mood": [
+      "smooth",
+      "epic"
+    ]
   },
   {
     "kind": "move",
@@ -329,11 +708,27 @@
     "guid": "96a82e40-34f2-4969-a9fa-082a9ee6ecb0",
     "title": "Top-Down spin",
     "duration_s": 25,
-    "env": [],
-    "subject": [],
-    "risk": [],
-    "pilot": [],
-    "mood": []
+    "env": [
+      "urban",
+      "open",
+      "near_objects"
+    ],
+    "subject": [
+      "building",
+      "car_bike",
+      "landscape"
+    ],
+    "risk": [
+      "some_risks"
+    ],
+    "pilot": [
+      "normal",
+      "experiment"
+    ],
+    "mood": [
+      "dynamic",
+      "wow"
+    ]
   },
   {
     "kind": "plan",
