@@ -5529,3 +5529,53 @@
     box-shadow:0 14px 30px rgba(255,165,20,.18) !important;
   }
 }
+
+/* =========================================================
+   PRO DESKTOP HOME — CAP "Cinematic plans" / "Popular moves"
+   preview rows so the page stops growing with the catalog size.
+   Plans: 1 row visible (measured card height 300px, 2-col grid).
+   Moves: 3 rows visible (measured card height 178px + 14px gap).
+   Overflow scrolls inside the panel instead of the whole page;
+   scrollbar kept thin/low-contrast so it reads as intentional,
+   not a leftover browser default.
+   ========================================================= */
+@media (min-width:901px){
+  #sm-library-scope .sm-pro-desktop-plan-grid{
+    max-height:300px !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-move-stack{
+    max-height:562px !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid,
+  #sm-library-scope .sm-pro-desktop-move-stack{
+    scrollbar-width:thin !important;
+    scrollbar-color:rgba(255,255,255,.18) transparent !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar,
+  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar{
+    width:6px !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-track,
+  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-track{
+    background:transparent !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb,
+  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.18) !important;
+    border-radius:999px !important;
+  }
+
+  #sm-library-scope .sm-pro-desktop-plan-grid::-webkit-scrollbar-thumb:hover,
+  #sm-library-scope .sm-pro-desktop-move-stack::-webkit-scrollbar-thumb:hover{
+    background:rgba(255,255,255,.32) !important;
+  }
+}
