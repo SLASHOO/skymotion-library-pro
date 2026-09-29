@@ -165,14 +165,35 @@ const root = document.getElementById("sm-plan-v3-root");
   // the slide.
   async function resolveResultVideo() {
     const video = document.getElementById("spv3ResultVideo");
-    const guid = video?.getAttribute("data-intro-guid");
-    if (!video || !guid) return;
+    if (!video) return;
+
+    // The poster shows immediately; a small spinner over it signals that the
+    // real intro video is still loading (see buildResultSlide's .spv3Result__loader).
+    // Hidden the moment the video can actually play — not on a fixed timer —
+    // so it never waits longer than the real network/auth round trip needs,
+    // and never gets stuck if playback fails (error also clears it).
+    const resultEl = video.closest(".spv3Result");
+    const clearLoading = () => resultEl?.classList.add("is-video-ready");
+    video.addEventListener("canplay", clearLoading, { once: true });
+    video.addEventListener("error", clearLoading, { once: true });
+    // Safety net: never leave the spinner spinning forever if something
+    // wedges (slow network, stalled auth) without an error event.
+    const safetyTimer = setTimeout(clearLoading, 8000);
+    cleanupFns.push(() => {
+      clearTimeout(safetyTimer);
+      video.removeEventListener("canplay", clearLoading);
+      video.removeEventListener("error", clearLoading);
+    });
+
+    const guid = video.getAttribute("data-intro-guid");
+    if (!guid) return;
 
     try {
       const cleanup = await window.SMLibraryPlayback?.attachSource(video, guid);
       if (typeof cleanup === "function") cleanupFns.push(cleanup);
     } catch (e) {
       console.warn("[plan-viewer] could not attach intro_video playback for", guid, e);
+      clearLoading();
     }
   }
 
@@ -689,6 +710,10 @@ const root = document.getElementById("sm-plan-v3-root");
           >
             ${videoUrl ? `<source src="${escapeHtml(videoUrl)}" type="video/mp4">` : ""}
           </video>
+
+          <div class="spv3Result__loader" aria-hidden="true">
+            <span class="spv3Result__spinner"></span>
+          </div>
 
           <div class="spv3Result__overlay">
             <h2 class="spv3Result__title">${escapeHtml(title)}</h2>

@@ -242,6 +242,40 @@
   background:#000;
 }
 
+/* Signals the intro video is still loading over the poster — hidden the
+   moment the video can actually play (see resolveResultVideo in
+   plan-viewer.js), never on a fixed timer, so it's never visible longer
+   than the real network/auth round trip takes. */
+#sm-plan-v3-root .spv3Result__loader{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.22);
+  opacity:1;
+  transition:opacity .28s ease;
+  pointer-events:none;
+}
+
+#sm-plan-v3-root .spv3Result.is-video-ready .spv3Result__loader{
+  opacity:0;
+}
+
+#sm-plan-v3-root .spv3Result__spinner{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:2.5px solid rgba(255,255,255,.28);
+  border-top-color:rgba(255,255,255,.92);
+  animation:spv3ResultSpin .8s linear infinite;
+}
+
+@keyframes spv3ResultSpin{
+  to{ transform:rotate(360deg); }
+}
+
 #sm-plan-v3-root .spv3Result__overlay{
   position:absolute;
   left:28px;
