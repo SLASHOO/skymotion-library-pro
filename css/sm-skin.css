@@ -1717,31 +1717,37 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 
 /* Coming-soon pack: keep it visible (PRO_PACK_COMING_SOON in library.js),
    just dim it and mark it as not openable yet instead of hiding it.
-   Centered on the image, not a corner — every pack-card variant already
-   uses both top corners for its own badge (creator credit / "PRO" tag),
-   and which one sits where differs per variant/breakpoint. */
+   The badge sits inline right next to the title (like Spotify/App Store
+   "Coming soon" / "Pre-order" tags next to a title) instead of floating
+   on the photo — both top corners of the photo are already spoken for
+   by the creator-credit badge and the "PRO"/save button, and an extra
+   line above the title has no headroom on the shorter card variants. */
+#sm-library-scope .sm-pro-pack-titleRow{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:9px !important;
+}
+
+#sm-library-scope .sm-pro-pack-titleRow h3{
+  margin:0 !important;
+}
+
 #sm-library-scope .sm-pro-pack-comingSoon{
-  position:absolute !important;
-  z-index:3 !important;
-  top:40% !important;
-  left:50% !important;
-  right:auto !important;
-  bottom:auto !important;
-  transform:translate(-50%, -50%) !important;
+  position:static !important;
   display:inline-flex !important;
   align-items:center !important;
-  padding:7px 16px !important;
+  flex:0 0 auto !important;
+  padding:4px 11px !important;
   border-radius:999px !important;
-  border:1px solid rgba(255,255,255,.24) !important;
-  background:rgba(0,0,0,.68) !important;
-  backdrop-filter:blur(6px) !important;
-  -webkit-backdrop-filter:blur(6px) !important;
-  color:rgba(255,255,255,.94) !important;
-  font-size:13px !important;
-  font-weight:700 !important;
+  border:1px solid rgba(255,190,98,.45) !important;
+  background:rgba(255,190,98,.14) !important;
+  color:rgba(255,205,140,.98) !important;
+  font-size:11px !important;
+  font-weight:750 !important;
   letter-spacing:.02em !important;
+  text-transform:uppercase !important;
   white-space:nowrap !important;
-  pointer-events:none !important;
 }
 
 #sm-library-scope .sm-pro-pack-card--coming-soon,

@@ -2429,7 +2429,7 @@
       {
         id: "real_estate_creator_pack",
         title: window.SM_PRO_PACK_TITLE || "Real Estate Pack",
-        creator: window.SM_PRO_PACK_CREATOR || "creator name",
+        creator: window.SM_PRO_PACK_CREATOR || "air4future",
         comingSoon: PRO_PACK_COMING_SOON,
         label: "PACK",
         thumb: heroCover,
@@ -2529,7 +2529,7 @@
     const hasChecklist = /checklist/i.test(meta);
     const inside = `${moves} moves · ${plans} plans${hasChecklist ? " · checklist" : ""}`;
     const rawCreator = String(pack?.creator || "").trim();
-    const creatorName = (!rawCreator || rawCreator.toLowerCase() === "creator name") ? "Dominic Hayles" : rawCreator;
+    const creatorName = (!rawCreator || rawCreator.toLowerCase() === "creator name") ? "air4future" : rawCreator;
     const creatorBadge = `BY ${creatorName.toUpperCase()}`;
 
     if (id.includes("real") || title.includes("test")) {
@@ -2640,10 +2640,12 @@
       <div class="sm-pro-pack-row__media">
         <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <span>${escapeHtml(info.badge)}</span>
-        ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
       </div>
       <div class="sm-pro-pack-row__body">
-        <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
+        <div class="sm-pro-pack-titleRow">
+          <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
+          ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
+        </div>
         <div class="sm-pro-pack-row__meta">${escapeHtml(info.inside)}</div>
         <p><strong>${escapeHtml(info.intent || "For paid shoots")}</strong> · ${escapeHtml(info.output || info.bestFor || "Client-ready sequence")}</p>
       </div>
@@ -3242,18 +3244,20 @@
     // Mobile home and the Packs tab keep the existing card behavior.
     if (activeProTab === "all" && isProDesktopLayout()) {
       const title = "Promo Real Estate Pack";
-      const badge = "BY DOMINIC HAYLES";
+      const badge = "BY AIR4FUTURE";
       const line = "For paid property shoots · 30–60s property reel · 5 hero shots";
 
       return `
         <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
           <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
           <div class="sm-pro-pack-shade"></div>
-          ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
 
           <div class="sm-pro-pack-content">
             <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
-            <h3>${escapeHtml(title)}</h3>
+            <div class="sm-pro-pack-titleRow">
+              <h3>${escapeHtml(title)}</h3>
+              ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
+            </div>
             <div class="sm-pro-pack-meta">
               <span>${movesCount} moves</span>
               <span>${plansCount} plans</span>
@@ -3273,11 +3277,13 @@
       <article class="sm-pro-pack-card ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
         <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <div class="sm-pro-pack-shade"></div>
-        ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
 
         <div class="sm-pro-pack-content">
           <span class="sm-pro-pack-badge">POWERED BY ${escapeHtml(pack.creator || "SkyMotion")}</span>
-          <h3>${escapeHtml(pack.title)}</h3>
+          <div class="sm-pro-pack-titleRow">
+            <h3>${escapeHtml(pack.title)}</h3>
+            ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
+          </div>
           <div class="sm-pro-pack-meta">
             <span>${movesCount} moves</span>
             <span>${plansCount} plans</span>
