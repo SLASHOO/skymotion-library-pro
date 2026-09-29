@@ -3656,7 +3656,32 @@
       );
 
       hls.once(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-      hls.once(Hls.Events.MANIFEST_PARSED, () => finish(resolve));
+      hls.once(Hls.Events.MANIFEST_PARSED, (_event, data) => {
+        // startLevel above only decides the FIRST fragment. hls.js's ABR
+        // controller is still free to downgrade every fragment after that
+        // based on measured throughput — and a forced high-bitrate first
+        // fragment taking a while to download over a real (non-CDN-test)
+        // connection can itself convince the bandwidth estimator the link
+        // is slow, dropping quality for most of the clip and only
+        // recovering near the end as the estimate catches up. These clips
+        // are short (10-25s); lock the level for the whole session instead
+        // of leaving ABR free to react mid-clip. Picks by actual bitrate
+        // rather than assuming array order (see 69f7357's fix for why).
+        const levels = data?.levels;
+        if (Array.isArray(levels) && levels.length) {
+          let bestIndex = 0;
+          let bestBitrate = -1;
+          levels.forEach((level, index) => {
+            const bitrate = Number(level?.bitrate) || 0;
+            if (bitrate > bestBitrate) {
+              bestBitrate = bitrate;
+              bestIndex = index;
+            }
+          });
+          hls.currentLevel = bestIndex;
+        }
+        finish(resolve);
+      });
       hls.on(Hls.Events.ERROR, (_event, data) => {
         if (data?.fatal) {
           finish(reject, new Error(`HLS_${data?.details || "FATAL"}`));
