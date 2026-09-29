@@ -1736,10 +1736,25 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   display:none !important;
 }
 
-#sm-library-scope .sm-pro-pack-card--coming-soon .sm-pro-pack-img,
-#sm-library-scope .sm-pro-pack-row--coming-soon img{
-  filter:blur(10px) saturate(1.05) !important;
-  transform:scale(1.06) !important;
+/* Liquid-glass panel: a translucent, blurred sheet sitting ON TOP of the
+   (sharp, untouched) cover photo — backdrop-filter blurs the photo as
+   seen through this glass, instead of blurring the photo pixels
+   themselves (filter:blur). This is what actually reads as "glass"
+   (Apple Control Center / visionOS panels) rather than just "blurry". */
+#sm-library-scope .sm-pro-pack-glass{
+  display:none;
+}
+
+#sm-library-scope .sm-pro-pack-card--coming-soon .sm-pro-pack-glass,
+#sm-library-scope .sm-pro-pack-row--coming-soon .sm-pro-pack-glass{
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  background:rgba(255,255,255,.06) !important;
+  backdrop-filter:blur(22px) saturate(150%) !important;
+  -webkit-backdrop-filter:blur(22px) saturate(150%) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14) !important;
 }
 
 #sm-library-scope .sm-pro-pack-soonFlag{

@@ -2640,6 +2640,7 @@
       <div class="sm-pro-pack-row__media">
         <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <span>${escapeHtml(info.badge)}</span>
+        ${pack.comingSoon ? `<i class="sm-pro-pack-glass"></i>` : ""}
         ${pack.comingSoon ? `<b class="sm-pro-pack-soonFlag">In development</b>` : ""}
       </div>
       <div class="sm-pro-pack-row__body">
@@ -3249,6 +3250,7 @@
         <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
           <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
           <div class="sm-pro-pack-shade"></div>
+          ${pack.comingSoon ? `<div class="sm-pro-pack-glass"></div>` : ""}
           ${pack.comingSoon ? `<span class="sm-pro-pack-soonFlag">In development</span>` : ""}
 
           <div class="sm-pro-pack-content">
@@ -3273,6 +3275,7 @@
       <article class="sm-pro-pack-card ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
         <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <div class="sm-pro-pack-shade"></div>
+        ${pack.comingSoon ? `<div class="sm-pro-pack-glass"></div>` : ""}
         ${pack.comingSoon ? `<span class="sm-pro-pack-soonFlag">In development</span>` : ""}
 
         <div class="sm-pro-pack-content">
