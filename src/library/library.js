@@ -4049,16 +4049,19 @@
       player.addEventListener("error", () => {
         setPlayerStatus("Video playback failed. Please try again.", true);
       }, { once: true });
-      // Until real playback actually starts, the poster fills the screen
-      // (object-fit:cover, same as the plan cards) instead of showing a
-      // letterboxed/black-barred frame. Switching on "loadeddata" (first
-      // decoded frame) instead of "playing" left a ~1s frozen, pillarboxed
-      // first frame visible before motion actually began — loadeddata only
-      // means one frame is ready, not that playback can run smoothly yet.
-      // Waiting for "playing" means the cover->contain switch and the video
-      // actually moving happen at the same moment, so tutorial text
-      // overlays still stay uncropped without that in-between freeze.
-      player.addEventListener("playing", () => {
+      // Until the playhead has actually visibly moved, the poster fills the
+      // screen (object-fit:cover, same as the plan cards) instead of a
+      // letterboxed/black-barred frame. Tried "loadeddata" (fires once one
+      // frame is decoded) and then "playing" (fires once play() succeeds) —
+      // both still left a ~1s frozen, pillarboxed frame: the browser can
+      // report "playing" and then immediately stall/rebuffer for a moment
+      // (more likely now that HLS is forced to the top quality, which needs
+      // more buffered data), so neither event actually guarantees visible
+      // motion yet. "timeupdate" only fires once currentTime has genuinely
+      // advanced, which is the one signal that can't fire without real,
+      // visible playback — that's what the cover->contain switch (and
+      // exposing any tutorial-text overlay) is gated on now.
+      player.addEventListener("timeupdate", () => {
         player.classList.add("is-ready");
       }, { once: true });
 
