@@ -281,21 +281,19 @@
 
 /* Rotating conic-gradient light chasing the pill's border — same technique
    as the "Get Pro" CTA glow (home.css .sm-pro-cta-*), reused here so the
-   loading pill reads as "actively working" without a separate spinner.
-   Blurred (and let bleed past the pill's edge) so it reads as a soft glow
-   travelling around the border rather than a crisp rotating line. */
+   loading pill reads as "actively working" without a separate spinner. */
 #sm-plan-v3-root .spv3Result__loaderText .sm-loadglow{
   position:absolute;
-  inset:-6px;
-  border-radius:18px;
+  inset:0;
+  border-radius:inherit;
+  overflow:hidden;
   pointer-events:none;
-  filter:blur(5px);
 }
 #sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__mask{
   position:absolute;
   inset:0;
   border-radius:inherit;
-  padding:3px;
+  padding:1.5px;
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor;
@@ -308,7 +306,7 @@
   width:220%;
   aspect-ratio:1;
   transform:translate(-50%, -50%);
-  background:conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.95) 0deg, rgba(255,255,255,0) 70deg, rgba(255,255,255,0) 290deg, rgba(255,255,255,.95) 360deg);
+  background:conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.7) 360deg);
   animation:spv3LoadglowTurn 2.5s linear infinite;
 }
 #sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__label{
