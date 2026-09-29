@@ -3628,18 +3628,18 @@
       // no benefit to hls.js's usual "start low, step up" behavior — it
       // would just mean a few seconds of visibly blurry video for no
       // shorter a wait. Force the top rendition from the first fragment.
-      capLevelToPlayerSize: false,
-      // Setting this on MANIFEST_PARSED (via loadLevel/currentLevel) is too
-      // late: hls.js's internal stream controller already kicks off the
-      // first fragment request (at the lowest level) as part of its own
-      // manifest-parsed handling, in the same tick — confirmed by tracing
-      // FRAG_LOADING order against an isolated multi-bitrate test stream,
-      // where it fired for level 0 before our listener ever ran. startLevel
-      // is read at load-source time, before any fragment request goes out,
-      // so it actually wins the race. hls.js clamps an out-of-range value
-      // down to levels.length - 1, so a big number reliably means "start at
-      // the highest rendition" without needing to know the level count.
-      startLevel: 9999
+      capLevelToPlayerSize: false
+      // NOTE: previously also set startLevel:9999 here to win the race
+      // against hls.js's own first-fragment request. Real-site Network
+      // tab traces showed that combined with the hls.currentLevel lock
+      // below, several early segments (video1.ts, video2.ts, ...) were
+      // each being fetched TWICE at two different sizes — startLevel
+      // kicking off one request and the currentLevel assignment on
+      // MANIFEST_PARSED separately flushing/re-requesting another,
+      // wasting bandwidth and likely racing on which one actually renders
+      // first. Removed startLevel and rely solely on the currentLevel
+      // lock (set once, before any fragment has loaded) instead of
+      // stacking two different "pick a level" mechanisms.
     });
 
     await new Promise((resolve, reject) => {
