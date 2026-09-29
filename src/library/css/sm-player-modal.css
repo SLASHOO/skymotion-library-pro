@@ -185,6 +185,47 @@
   display:none;
 }
 
+/* Rotating conic-gradient light chasing the pill's border — same technique
+   as the "Get Pro" CTA glow (home.css .sm-pro-cta-*), reused here so the
+   loading pill reads as "actively working" without a separate spinner. */
+#sm-library-scope #modal .player__status .sm-loadglow{
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  overflow:hidden;
+  pointer-events:none;
+}
+#sm-library-scope #modal .player__status .sm-loadglow__mask{
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1.5px;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+}
+#sm-library-scope #modal .player__status .sm-loadglow__ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:220%;
+  aspect-ratio:1;
+  transform:translate(-50%, -50%);
+  background:conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.7) 360deg);
+  animation:smLoadglowTurn 2.5s linear infinite;
+}
+#sm-library-scope #modal .player__status .sm-loadglow__label{
+  position:relative;
+  z-index:1;
+}
+@keyframes smLoadglowTurn{
+  to{ transform:translate(-50%, -50%) rotate(360deg); }
+}
+@media (prefers-reduced-motion:reduce){
+  #sm-library-scope #modal .player__status .sm-loadglow__ring{ animation:none; }
+}
+
 #sm-library-scope #modal .player__status.is-error{
   border-color:rgba(255,104,83,.55);
   background:rgba(54,12,8,.88);

@@ -265,6 +265,7 @@
 /* Same pill style as the move player's #playerStatus (sm-player-modal.css)
    — kept as its own rule since this markup lives in a different modal root. */
 #sm-plan-v3-root .spv3Result__loaderText{
+  position:relative;
   max-width:min(420px, calc(100vw - 40px));
   padding:11px 15px;
   border:1px solid rgba(255,255,255,.14);
@@ -276,6 +277,47 @@
   text-align:center;
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
+}
+
+/* Rotating conic-gradient light chasing the pill's border — same technique
+   as the "Get Pro" CTA glow (home.css .sm-pro-cta-*), reused here so the
+   loading pill reads as "actively working" without a separate spinner. */
+#sm-plan-v3-root .spv3Result__loaderText .sm-loadglow{
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  overflow:hidden;
+  pointer-events:none;
+}
+#sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__mask{
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1.5px;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+}
+#sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:220%;
+  aspect-ratio:1;
+  transform:translate(-50%, -50%);
+  background:conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.7) 0deg, rgba(255,255,255,0) 60deg, rgba(255,255,255,0) 300deg, rgba(255,255,255,.7) 360deg);
+  animation:spv3LoadglowTurn 2.5s linear infinite;
+}
+#sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__label{
+  position:relative;
+  z-index:1;
+}
+@keyframes spv3LoadglowTurn{
+  to{ transform:translate(-50%, -50%) rotate(360deg); }
+}
+@media (prefers-reduced-motion:reduce){
+  #sm-plan-v3-root .spv3Result__loaderText .sm-loadglow__ring{ animation:none; }
 }
 
 #sm-plan-v3-root .spv3Result__overlay{
