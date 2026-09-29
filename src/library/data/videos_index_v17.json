@@ -837,7 +837,8 @@
         "move_ref": "6b296468-bb03-4b4c-99d5-ca3c62bde2e6",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-01-beach.png"
   },
   {
     "kind": "plan",
@@ -958,7 +959,8 @@
         "move_ref": "96a82e40-34f2-4969-a9fa-082a9ee6ecb0",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-02-buildings.png"
   },
   {
     "kind": "plan",
@@ -1066,7 +1068,8 @@
         "move_ref": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-03-coastline.png"
   },
   {
     "kind": "plan",
@@ -1174,7 +1177,8 @@
         "move_ref": "3717c15d-1a24-4682-b07f-c48df9b60c8c",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-04-ocean-island.png"
   },
   {
     "kind": "plan",
@@ -1296,7 +1300,8 @@
         "move_ref": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.png"
   },
   {
     "kind": "plan",
@@ -1404,7 +1409,8 @@
         "move_ref": "aa2dd048-de17-430d-ad5e-81924f3d723e",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.png"
   },
   {
     "kind": "plan",
@@ -1511,7 +1517,8 @@
         "move_ref": "b0ecde71-ee9e-4d42-8da1-1f4f99185800",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-07-water.png"
   },
   {
     "kind": "plan",
@@ -1633,6 +1640,7 @@
         "move_ref": "a3c2c7dc-943f-467a-a161-7312e8cda3e6",
         "transition": "Fade out"
       }
-    ]
+    ],
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.png"
   }
 ]
