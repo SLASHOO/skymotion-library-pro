@@ -1743,11 +1743,14 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   right:14px !important;
   display:inline-flex !important;
   align-items:center !important;
-  padding:4px 9px !important;
+  padding:5px 10px !important;
   border-radius:100px !important;
-  border:1px solid rgba(255,255,255,.22) !important;
-  background:rgba(0,0,0,.4) !important;
-  color:rgba(255,255,255,.62) !important;
+  border:1px solid rgba(255,255,255,.30) !important;
+  background:rgba(255,255,255,.10) !important;
+  backdrop-filter:blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(180%) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20), 0 4px 14px rgba(0,0,0,.22) !important;
+  color:rgba(255,255,255,.85) !important;
   font-family:ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
   font-size:9px !important;
   font-weight:600 !important;
