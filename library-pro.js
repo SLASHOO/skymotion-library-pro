@@ -3628,7 +3628,18 @@
       // no benefit to hls.js's usual "start low, step up" behavior — it
       // would just mean a few seconds of visibly blurry video for no
       // shorter a wait. Force the top rendition from the first fragment.
-      capLevelToPlayerSize: false
+      capLevelToPlayerSize: false,
+      // Setting this on MANIFEST_PARSED (via loadLevel/currentLevel) is too
+      // late: hls.js's internal stream controller already kicks off the
+      // first fragment request (at the lowest level) as part of its own
+      // manifest-parsed handling, in the same tick — confirmed by tracing
+      // FRAG_LOADING order against an isolated multi-bitrate test stream,
+      // where it fired for level 0 before our listener ever ran. startLevel
+      // is read at load-source time, before any fragment request goes out,
+      // so it actually wins the race. hls.js clamps an out-of-range value
+      // down to levels.length - 1, so a big number reliably means "start at
+      // the highest rendition" without needing to know the level count.
+      startLevel: 9999
     });
 
     await new Promise((resolve, reject) => {
@@ -3645,13 +3656,7 @@
       );
 
       hls.once(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-      hls.once(Hls.Events.MANIFEST_PARSED, (_event, data) => {
-        const levels = data?.levels;
-        if (Array.isArray(levels) && levels.length) {
-          hls.loadLevel = levels.length - 1;
-        }
-        finish(resolve);
-      });
+      hls.once(Hls.Events.MANIFEST_PARSED, () => finish(resolve));
       hls.on(Hls.Events.ERROR, (_event, data) => {
         if (data?.fatal) {
           finish(reject, new Error(`HLS_${data?.details || "FATAL"}`));
