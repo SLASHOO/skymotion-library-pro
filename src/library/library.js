@@ -3607,17 +3607,25 @@
       };
     }
 
-    if (player.canPlayType("application/vnd.apple.mpegurl")) {
-      player.src = url;
-      player.load();
-      return () => {
-        player.removeAttribute("src");
-        player.load();
-      };
-    }
-
+    // Prefer hls.js over native HLS (Safari/iOS) even when the browser can
+    // play it natively: native playback hands quality selection to the OS
+    // media stack's own ABR, which starts at a low rendition and ramps up
+    // over several seconds (and resets every time a looping clip restarts)
+    // — with no JS hook to override it. hls.js is the only path where the
+    // currentLevel lock below actually has any effect. Native src is kept
+    // only as a fallback for browsers where hls.js/MSE isn't supported.
     const Hls = await loadHlsJs();
-    if (!Hls?.isSupported?.()) throw new Error("HLS_NOT_SUPPORTED");
+    if (!Hls?.isSupported?.()) {
+      if (player.canPlayType("application/vnd.apple.mpegurl")) {
+        player.src = url;
+        player.load();
+        return () => {
+          player.removeAttribute("src");
+          player.load();
+        };
+      }
+      throw new Error("HLS_NOT_SUPPORTED");
+    }
 
     const hls = new Hls({
       enableWorker: true,
