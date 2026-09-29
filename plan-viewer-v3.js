@@ -712,7 +712,7 @@ const root = document.getElementById("sm-plan-v3-root");
           </video>
 
           <div class="spv3Result__loader" aria-hidden="true">
-            <span class="spv3Result__spinner"></span>
+            <span class="spv3Result__loaderText">Loading video…</span>
           </div>
 
           <div class="spv3Result__overlay">

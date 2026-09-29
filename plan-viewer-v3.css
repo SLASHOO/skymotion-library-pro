@@ -253,7 +253,6 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.22);
   opacity:1;
   transition:opacity .28s ease;
   pointer-events:none;
@@ -263,17 +262,20 @@
   opacity:0;
 }
 
-#sm-plan-v3-root .spv3Result__spinner{
-  width:34px;
-  height:34px;
-  border-radius:999px;
-  border:2.5px solid rgba(255,255,255,.28);
-  border-top-color:rgba(255,255,255,.92);
-  animation:spv3ResultSpin .8s linear infinite;
-}
-
-@keyframes spv3ResultSpin{
-  to{ transform:rotate(360deg); }
+/* Same pill style as the move player's #playerStatus (sm-player-modal.css)
+   — kept as its own rule since this markup lives in a different modal root. */
+#sm-plan-v3-root .spv3Result__loaderText{
+  max-width:min(420px, calc(100vw - 40px));
+  padding:11px 15px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:12px;
+  background:rgba(8,8,8,.76);
+  color:rgba(255,255,255,.9);
+  font-size:14px;
+  font-weight:750;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
 
 #sm-plan-v3-root .spv3Result__overlay{
