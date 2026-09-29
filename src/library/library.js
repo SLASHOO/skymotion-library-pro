@@ -4049,11 +4049,16 @@
       player.addEventListener("error", () => {
         setPlayerStatus("Video playback failed. Please try again.", true);
       }, { once: true });
-      // Until a real frame is decoded, the poster fills the screen
+      // Until real playback actually starts, the poster fills the screen
       // (object-fit:cover, same as the plan cards) instead of showing a
-      // letterboxed/black-barred frame. Switch to contain only once actual
-      // video data is playable, so tutorial text overlays stay uncropped.
-      player.addEventListener("loadeddata", () => {
+      // letterboxed/black-barred frame. Switching on "loadeddata" (first
+      // decoded frame) instead of "playing" left a ~1s frozen, pillarboxed
+      // first frame visible before motion actually began — loadeddata only
+      // means one frame is ready, not that playback can run smoothly yet.
+      // Waiting for "playing" means the cover->contain switch and the video
+      // actually moving happen at the same moment, so tutorial text
+      // overlays still stay uncropped without that in-between freeze.
+      player.addEventListener("playing", () => {
         player.classList.add("is-ready");
       }, { once: true });
 
