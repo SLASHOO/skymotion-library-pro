@@ -2640,12 +2640,10 @@
       <div class="sm-pro-pack-row__media">
         <img src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <span>${escapeHtml(info.badge)}</span>
+        ${pack.comingSoon ? `<b class="sm-pro-pack-soonFlag">In development</b>` : ""}
       </div>
       <div class="sm-pro-pack-row__body">
-        <div class="sm-pro-pack-titleRow">
-          <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
-          ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
-        </div>
+        <h3>${escapeHtml(info.cardTitle || pack.title)}</h3>
         <div class="sm-pro-pack-row__meta">${escapeHtml(info.inside)}</div>
         <p><strong>${escapeHtml(info.intent || "For paid shoots")}</strong> · ${escapeHtml(info.output || info.bestFor || "Client-ready sequence")}</p>
       </div>
@@ -3251,13 +3249,11 @@
         <article class="sm-pro-pack-card sm-pro-pack-card--home-promo-real-estate ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
           <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(title)}" loading="lazy">
           <div class="sm-pro-pack-shade"></div>
+          ${pack.comingSoon ? `<span class="sm-pro-pack-soonFlag">In development</span>` : ""}
 
           <div class="sm-pro-pack-content">
             <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
-            <div class="sm-pro-pack-titleRow">
-              <h3>${escapeHtml(title)}</h3>
-              ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
-            </div>
+            <h3>${escapeHtml(title)}</h3>
             <div class="sm-pro-pack-meta">
               <span>${movesCount} moves</span>
               <span>${plansCount} plans</span>
@@ -3277,13 +3273,11 @@
       <article class="sm-pro-pack-card ${pack.comingSoon ? "sm-pro-pack-card--coming-soon" : ""}" data-pro-pack="${escapeHtml(pack.id)}">
         <img class="sm-pro-pack-img" src="${escapeHtml(pack.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(pack.title)}" loading="lazy">
         <div class="sm-pro-pack-shade"></div>
+        ${pack.comingSoon ? `<span class="sm-pro-pack-soonFlag">In development</span>` : ""}
 
         <div class="sm-pro-pack-content">
           <span class="sm-pro-pack-badge">POWERED BY ${escapeHtml(pack.creator || "SkyMotion")}</span>
-          <div class="sm-pro-pack-titleRow">
-            <h3>${escapeHtml(pack.title)}</h3>
-            ${pack.comingSoon ? `<span class="sm-pro-pack-comingSoon">Coming soon</span>` : ""}
-          </div>
+          <h3>${escapeHtml(pack.title)}</h3>
           <div class="sm-pro-pack-meta">
             <span>${movesCount} moves</span>
             <span>${plansCount} plans</span>

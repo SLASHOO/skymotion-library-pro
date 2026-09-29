@@ -1716,46 +1716,50 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 }
 
 /* Coming-soon pack: keep it visible (PRO_PACK_COMING_SOON in library.js),
-   just dim it and mark it as not openable yet instead of hiding it.
-   The badge sits inline right next to the title (like Spotify/App Store
-   "Coming soon" / "Pre-order" tags next to a title) instead of floating
-   on the photo — both top corners of the photo are already spoken for
-   by the creator-credit badge and the "PRO"/save button, and an extra
-   line above the title has no headroom on the shorter card variants. */
-#sm-library-scope .sm-pro-pack-titleRow{
-  display:flex !important;
-  align-items:center !important;
-  flex-wrap:wrap !important;
-  gap:9px !important;
-}
-
-#sm-library-scope .sm-pro-pack-titleRow h3{
-  margin:0 !important;
-}
-
-#sm-library-scope .sm-pro-pack-comingSoon{
-  position:static !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  flex:0 0 auto !important;
-  padding:4px 11px !important;
-  border-radius:999px !important;
-  border:1px solid rgba(255,190,98,.45) !important;
-  background:rgba(255,190,98,.14) !important;
-  color:rgba(255,205,140,.98) !important;
-  font-size:11px !important;
-  font-weight:750 !important;
-  letter-spacing:.02em !important;
-  text-transform:uppercase !important;
-  white-space:nowrap !important;
-}
-
+   just mark it not-openable-yet instead of hiding it. Styled after the
+   existing "In development" pricing-plan pattern (#sm-pro-modal .flag /
+   .sm-pplan--soon in library.html) instead of a bright standalone pill:
+   the whole card dims (opacity, not just the photo), and there is ONE
+   quiet, monospace corner tag — so the "PRO" tag / save button are
+   hidden here to free that corner up rather than stacking a second
+   competing badge next to them. */
 #sm-library-scope .sm-pro-pack-card--coming-soon,
 #sm-library-scope .sm-pro-pack-row--coming-soon{
+  opacity:.72 !important;
   cursor:default !important;
 }
 
-#sm-library-scope .sm-pro-pack-card--coming-soon .sm-pro-pack-img,
-#sm-library-scope .sm-pro-pack-row--coming-soon img{
-  filter:grayscale(.55) brightness(.62) !important;
+#sm-library-scope .sm-pro-pack-card--coming-soon .sm-pack-tag,
+#sm-library-scope .sm-pro-pack-row--coming-soon .sm-pack-tag,
+#sm-library-scope .sm-pro-pack-card--coming-soon .sm-pro-pack-save,
+#sm-library-scope .sm-pro-pack-row--coming-soon .sm-pro-pack-save{
+  display:none !important;
+}
+
+#sm-library-scope .sm-pro-pack-soonFlag{
+  position:absolute !important;
+  z-index:3 !important;
+  top:14px !important;
+  right:14px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  padding:4px 9px !important;
+  border-radius:100px !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  background:rgba(0,0,0,.4) !important;
+  color:rgba(255,255,255,.62) !important;
+  font-family:ui-monospace, "SF Mono", Menlo, Consolas, monospace !important;
+  font-size:9px !important;
+  font-weight:600 !important;
+  letter-spacing:.14em !important;
+  text-transform:uppercase !important;
+  white-space:nowrap !important;
+  pointer-events:none !important;
+}
+
+#sm-library-scope .sm-pro-pack-row__media .sm-pro-pack-soonFlag{
+  top:8px !important;
+  right:8px !important;
+  padding:3px 7px !important;
+  font-size:8px !important;
 }
