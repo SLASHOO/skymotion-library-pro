@@ -3622,7 +3622,13 @@
     const hls = new Hls({
       enableWorker: true,
       lowLatencyMode: false,
-      backBufferLength: 30
+      backBufferLength: 30,
+      // Both callers (move player, plan intro) already cover the initial
+      // wait with their own loading UI (poster-fill / spinner), so there's
+      // no benefit to hls.js's usual "start low, step up" behavior — it
+      // would just mean a few seconds of visibly blurry video for no
+      // shorter a wait. Force the top rendition from the first fragment.
+      capLevelToPlayerSize: false
     });
 
     await new Promise((resolve, reject) => {
@@ -3639,7 +3645,13 @@
       );
 
       hls.once(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-      hls.once(Hls.Events.MANIFEST_PARSED, () => finish(resolve));
+      hls.once(Hls.Events.MANIFEST_PARSED, (_event, data) => {
+        const levels = data?.levels;
+        if (Array.isArray(levels) && levels.length) {
+          hls.loadLevel = levels.length - 1;
+        }
+        finish(resolve);
+      });
       hls.on(Hls.Events.ERROR, (_event, data) => {
         if (data?.fatal) {
           finish(reject, new Error(`HLS_${data?.details || "FATAL"}`));
