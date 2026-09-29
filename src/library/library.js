@@ -3798,7 +3798,7 @@
           <canvas class="player__ambient" id="playerAmbient" aria-hidden="true"></canvas>
           <video id="playerVideo" playsinline preload="metadata" crossorigin="anonymous" poster="${escapeHtml(poster)}"></video>
 
-          <div class="player__status" id="playerStatus" aria-live="polite"><span class="sm-loadglow" aria-hidden="true"><span class="sm-loadglow__mask"><span class="sm-loadglow__ring"></span></span></span><span class="sm-loadglow__label">Loading video…</span></div>
+          <div class="player__status" id="playerStatus" aria-live="polite">Loading video…</div>
 
           <div class="player__rotateHint" id="rotateHint" aria-hidden="true">
             Rotate phone for better view
