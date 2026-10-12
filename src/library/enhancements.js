@@ -716,6 +716,7 @@
       return true;
     });
     setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();
+    window.dispatchEvent(new CustomEvent("sm:tier-changed", { detail: { isPro: IS_PRO } }));
   }
   function checkMember(){
     var ms = window.$memberstackDom || window.$memberstack;

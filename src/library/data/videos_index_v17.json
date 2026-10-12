@@ -50,7 +50,8 @@
     "mood": [
       "smooth",
       "epic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -76,7 +77,8 @@
       "epic",
       "dynamic",
       "wow"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -153,7 +155,8 @@
     "mood": [
       "smooth",
       "epic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -178,7 +181,8 @@
     "mood": [
       "smooth",
       "dynamic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -309,7 +313,8 @@
       "epic",
       "dynamic",
       "wow"
-    ]
+    ],
+    "teaser": true
   },
   {
     "kind": "move",
@@ -359,7 +364,8 @@
     "mood": [
       "smooth",
       "epic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -384,7 +390,8 @@
     "mood": [
       "epic",
       "wow"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -491,7 +498,8 @@
       "smooth",
       "epic",
       "wow"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -544,7 +552,8 @@
     "mood": [
       "smooth",
       "dynamic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -674,7 +683,8 @@
     ],
     "mood": [
       "smooth"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -700,7 +710,8 @@
     "mood": [
       "smooth",
       "epic"
-    ]
+    ],
+    "free": true
   },
   {
     "kind": "move",
@@ -1301,7 +1312,8 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.png",
+    "free": true
   },
   {
     "kind": "plan",
@@ -1410,7 +1422,8 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.png",
+    "free": true
   },
   {
     "kind": "plan",
@@ -1641,6 +1654,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.png",
+    "teaser": true
   }
 ]

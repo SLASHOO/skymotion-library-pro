@@ -1090,10 +1090,27 @@
     };
   }
 
+  // Free users see every free item plus a single locked teaser per kind (move/plan),
+  // not the whole locked catalog. Pro users, and catalogs without free flags, see
+  // everything. Set window.SM_FREE_VIEW_MODE = "full" to show all locked cards again.
+  function getViewItems() {
+    if (window.SM_FREE_VIEW_MODE === "full") return allItems;
+    if (scope.classList.contains("sm-pro")) return allItems;
+    if (!allItems.some((item) => item?.free === true)) return allItems;
+
+    const lockedOf = (isPlanKind) => allItems.filter((item) => item?.free !== true && isPlan(item) === isPlanKind);
+    const teaserOf = (isPlanKind) => {
+      const locked = lockedOf(isPlanKind);
+      return locked.find((item) => item?.teaser === true) || locked[0] || null;
+    };
+    const teasers = new Set([teaserOf(true), teaserOf(false)].filter(Boolean));
+    return allItems.filter((item) => item?.free === true || teasers.has(item));
+  }
+
   function getStrictFilteredItems(nextState = state) {
     const selected = getFilterSelected(nextState);
 
-    return allItems.filter((item) => (
+    return getViewItems().filter((item) => (
       hasMatch(item.env, selected.env) &&
       hasMatch(item.risk, selected.risk) &&
       hasMatch(item.subject, selected.subject) &&
@@ -1117,7 +1134,7 @@
     const dropOrder = ["mood", "risk", "subject", "env"];
     for (let drop = 1; drop <= dropOrder.length; drop++) {
       const dropped = dropOrder.slice(0, drop);
-      const relaxed = allItems.filter((item) => dropOrder.every((key) => (
+      const relaxed = getViewItems().filter((item) => dropOrder.every((key) => (
         dropped.includes(key) || hasMatch(item[key], selected[key])
       )));
       if (relaxed.length) {
@@ -1594,6 +1611,11 @@
       });
     }
   }
+
+  // enhancements.js resolves Free/Pro asynchronously; re-run so the visible set matches the tier.
+  window.addEventListener("sm:tier-changed", () => {
+    if (!isInitialLoading && allItems.length) applyFilters();
+  });
 
   function bookmarkSvg() {
     return `
@@ -3292,13 +3314,14 @@
   }
 
 
-  // Home preview: a few free moves + a couple locked previews. Order stays free-first
-  // (no reorder); the free region mirrors the gating free-set (first 7 moves).
+  // Home preview: a few free moves + a couple locked previews. The free region mirrors
+  // the gating free-set: items flagged free in the catalog, else the first 7 moves.
   const HOME_FREE_MOVES = 7;
   function homeMovePreview(moves, freeN, lockedN) {
-    const free = moves.slice(0, HOME_FREE_MOVES).slice(0, freeN);
-    const locked = moves.slice(HOME_FREE_MOVES, HOME_FREE_MOVES + lockedN);
-    return free.concat(locked);
+    const flagged = moves.some((m) => m?.free === true);
+    const freeAll = flagged ? moves.filter((m) => m?.free === true) : moves.slice(0, HOME_FREE_MOVES);
+    const lockedAll = flagged ? moves.filter((m) => m?.free !== true) : moves.slice(HOME_FREE_MOVES);
+    return freeAll.slice(0, freeN).concat(lockedAll.slice(0, lockedN));
   }
 
   function renderProMobileHome() {
@@ -4526,8 +4549,10 @@
         }
       }
 
-      const plans = items.filter(isPlan);
-      const moves = items.filter((x) => !isPlan(x));
+      // Free items first (stable), so Free users see unlocked content before locked teasers.
+      const freeFirst = (list) => list.filter((x) => x?.free === true).concat(list.filter((x) => x?.free !== true));
+      const plans = freeFirst(items.filter(isPlan));
+      const moves = freeFirst(items.filter((x) => !isPlan(x)));
 
       allItems = [...plans, ...moves];
       isInitialLoading = false;
