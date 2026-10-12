@@ -468,7 +468,10 @@
   if (!modal) return;
   function open(){ modal.classList.add("is-open"); modal.setAttribute("aria-hidden","false"); }
   function close(){ modal.classList.remove("is-open"); modal.setAttribute("aria-hidden","true"); }
-  window.smOpenProModal = open;
+  // Upgrade UI is parked for now: every "Get Pro" / "Unlock with Pro" entry point
+  // calls smOpenProModal, so gating it here makes them all inert (no pricing or
+  // plan counts shown to partners yet). Set window.SM_PRO_UPGRADE_UI = true to bring it back.
+  window.smOpenProModal = function(){ if (window.SM_PRO_UPGRADE_UI === true) open(); };
   window.smCloseProModal = close;
   modal.addEventListener("click", function(e){ if (e.target.closest("[data-sm-pclose]")) close(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) close(); });

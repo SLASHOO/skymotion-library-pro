@@ -169,6 +169,9 @@
     var SIGNUP_URL = 'https://skymotion.cloud/sign-up';
     var CHECKOUT_URL = 'https://skymotion.cloud/pro-library';   // member-buy destination (swap if you add a dedicated checkout)
     function open(){
+      // Upgrade UI is parked for now (no pricing/plan counts shown to partners yet).
+      // Set window.SM_PRO_UPGRADE_UI = true to bring the popup back.
+      if (window.SM_PRO_UPGRADE_UI !== true) return;
       // must register before buying — guests go to sign-up, members to checkout
       // ('loading' resolves to the guest path until Memberstack confirms a member)
       var auth = nav ? nav.getAttribute('data-auth') : 'guest';

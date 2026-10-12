@@ -64,10 +64,16 @@
           return y && /^\d{4}$/.test((y.textContent||"").trim()); } },
       { label:"home.js wired setAuth() global",
         test:function(){ return typeof window.setAuth === "function"; } },
-      { label:"Pricing modal opens on [data-open-pro]",
+      { label:"Pricing modal stays closed on [data-open-pro] (upgrade UI parked)",
         test:function(){ var b=document.querySelector("[data-open-pro]");
           var m=document.getElementById("proModal");
           if(!b||!m) return false; b.click();
+          return !m.classList.contains("open"); } },
+      { label:"Pricing modal opens on [data-open-pro] when SM_PRO_UPGRADE_UI=true",
+        test:function(){ var b=document.querySelector("[data-open-pro]");
+          var m=document.getElementById("proModal");
+          if(!b||!m) return false;
+          window.SM_PRO_UPGRADE_UI=true; b.click(); window.SM_PRO_UPGRADE_UI=false;
           var ok=m.classList.contains("open");
           var x=m.querySelector("[data-close]"); if(x) x.click();
           return ok; } },

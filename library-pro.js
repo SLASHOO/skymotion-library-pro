@@ -1067,40 +1067,6 @@
     chat.querySelectorAll(".filterHelp").forEach((el) => el.remove());
   }
 
-  function showNoMatch(btn, label) {
-    removeFilterHelp();
-
-    if (btn) {
-      btn.classList.remove("is-shaking");
-      void btn.offsetWidth;
-      btn.classList.add("is-shaking");
-
-      setTimeout(() => {
-        btn.classList.remove("is-shaking");
-      }, 520);
-    }
-
-    if (isProMobilePortrait()) {
-      assistant.classList.remove("sm-pro-reject");
-      void assistant.offsetWidth;
-      assistant.classList.add("sm-pro-reject");
-      setTimeout(() => assistant.classList.remove("sm-pro-reject"), 560);
-    }
-
-    const help = document.createElement("div");
-    help.className = "filterHelp sm-pro-filter-warning";
-    help.innerHTML = `
-      <strong>No matching results</strong>
-      “${escapeHtml(label)}” would remove all recommendations. Choose another option or reset filters.
-    `;
-
-    const options = chat.querySelector(".options");
-    if (options) options.insertAdjacentElement("afterend", help);
-    else chat.appendChild(help);
-
-    scrollChatBottom();
-  }
-
   let allItems = [];
   let filtered = [];
   let visibleCount = 12;
@@ -1135,11 +1101,45 @@
     ));
   }
 
+  // Any combination of answers is allowed. When nothing matches every tag, drop
+  // the least important tags one at a time (mood, then safety, then subject, then
+  // place) and show the closest matches instead of a dead end.
+  let filterRelaxed = false;
+
   function getFilteredItems(nextState = state) {
-    // Real filtering stays strict for the fields that exist in the Free Library data.
     // space/time/resultType are collected for the future Pro data model, but do not
     // filter yet because the current CDN index does not have reliable tags for them.
-    return getStrictFilteredItems(nextState);
+    const strict = getStrictFilteredItems(nextState);
+    filterRelaxed = false;
+    if (strict.length || !allItems.length) return strict;
+
+    const selected = getFilterSelected(nextState);
+    const dropOrder = ["mood", "risk", "subject", "env"];
+    for (let drop = 1; drop <= dropOrder.length; drop++) {
+      const dropped = dropOrder.slice(0, drop);
+      const relaxed = allItems.filter((item) => dropOrder.every((key) => (
+        dropped.includes(key) || hasMatch(item[key], selected[key])
+      )));
+      if (relaxed.length) {
+        filterRelaxed = true;
+        return relaxed;
+      }
+    }
+    return strict;
+  }
+
+  function syncClosestNote() {
+    let note = scope.querySelector(".sm-closest-note");
+    if (!filterRelaxed) {
+      if (note) note.remove();
+      return;
+    }
+    if (!note) {
+      note = document.createElement("div");
+      note.className = "sm-closest-note";
+      note.textContent = "Closest matches — nothing fits every answer, so these are the nearest options.";
+      grid.parentNode.insertBefore(note, grid);
+    }
   }
 
   function updateFilterUi() {
@@ -1160,7 +1160,9 @@
         showResultsBtn.innerHTML = "No results found";
         showResultsBtn.disabled = true;
       } else {
-        showResultsBtn.innerHTML = `Show <span id="matchCount">${count}</span> ${count === 1 ? "result" : "results"}`;
+        showResultsBtn.innerHTML = filterRelaxed
+          ? `Show <span id="matchCount">${count}</span> closest ${count === 1 ? "match" : "matches"}`
+          : `Show <span id="matchCount">${count}</span> ${count === 1 ? "result" : "results"}`;
         showResultsBtn.disabled = false;
       }
     }
@@ -1323,14 +1325,6 @@
       step_key: s.key,
       tag_name: label
     });
-
-    const candidateState = { ...state, [s.key]: label };
-
-    if (!isInitialLoading && getStrictFilteredItems(candidateState).length === 0) {
-      showNoMatch(btn, label);
-      updateFilterUi();
-      return;
-    }
 
     removeFilterHelp();
 
@@ -1590,6 +1584,7 @@
     visibleCount = 12;
 
     renderResults();
+    syncClosestNote();
     updateFilterUi();
 
     if (!libraryViewedSent && allItems.length) {

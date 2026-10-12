@@ -1787,3 +1787,15 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   padding:3px 7px !important;
   font-size:8px !important;
 }
+
+/* Filter fallback note: shown above results when nothing matched every answer. */
+#sm-library-scope .sm-closest-note{
+  margin:0 0 14px;
+  padding:10px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.72);
+  font-size:13px;
+  line-height:1.4;
+}
