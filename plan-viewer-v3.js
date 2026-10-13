@@ -202,6 +202,7 @@ const root = document.getElementById("sm-plan-v3-root");
       if (typeof cleanup === "function") cleanupFns.push(cleanup);
     } catch (e) {
       console.warn("[plan-viewer] could not attach intro_video playback for", guid, e);
+      emit("sm:playback_error", { status: e?.status || e?.message || "unknown", title: currentPlan?.title || "" });
       clearLoading();
     }
   }

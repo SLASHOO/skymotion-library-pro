@@ -4104,6 +4104,13 @@
       player.addEventListener("timeupdate", () => {
         player.classList.add("is-ready");
       }, { once: true });
+      player.addEventListener("ended", () => {
+        emit("sm:video_completed", {
+          item_id: getVideoId(video),
+          item_type: "move",
+          title: video?.title || "Move video"
+        });
+      }, { once: true });
 
       playerCleanup = bindPlayerUi({
         player,
@@ -4126,6 +4133,7 @@
     } catch (error) {
       if (!alive || playerMountRequest !== requestId) return;
       console.error("[SM] secure playback failed", error);
+      emit("sm:playback_error", { status: error?.status || error?.message || "unknown", title: video?.title || "" });
       setPlayerStatus(
         error?.status === 401
           ? "Your session has expired. Sign in again."

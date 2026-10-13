@@ -171,6 +171,7 @@
     function open(){
       // Upgrade UI is parked for now (no pricing/plan counts shown to partners yet).
       // Set window.SM_PRO_UPGRADE_UI = true to bring the popup back.
+      try { if (typeof window.clarity === 'function') window.clarity('event', 'get_pro_clicked'); } catch(_) {}
       if (window.SM_PRO_UPGRADE_UI !== true) return;
       // must register before buying — guests go to sign-up, members to checkout
       // ('loading' resolves to the guest path until Memberstack confirms a member)
@@ -276,7 +277,7 @@
         fetch('https://api.web3forms.com/submit', { method:'POST', body:new FormData(form) })
           .then(function(r){ return r.json(); })
           .then(function(res){
-            if(res.success){ if(msg){ msg.className='cform__msg ok'; msg.textContent="Thanks — we'll get back to you soon."; } form.reset(); setTimeout(close, 1900); }
+            if(res.success){ try { if (typeof window.clarity === 'function') window.clarity('event', 'contact_submitted'); } catch(_) {} if(msg){ msg.className='cform__msg ok'; msg.textContent="Thanks — we'll get back to you soon."; } form.reset(); setTimeout(close, 1900); }
             else { if(msg){ msg.className='cform__msg err'; msg.textContent = res.message || 'Something went wrong. Please try again.'; } }
           })
           .catch(function(){ if(msg){ msg.className='cform__msg err'; msg.textContent='Network error. Please try again.'; } });

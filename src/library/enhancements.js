@@ -382,6 +382,7 @@
       steps.forEach((item) => item.classList.remove("is-active"));
       const thanks = root.querySelector('[data-step="thanks"]');
       if (thanks) thanks.classList.add("is-active");
+      window.dispatchEvent(new CustomEvent("sm:feedback_submitted"));
       window.setTimeout(() => {
         closeModal();
         resetForm();
@@ -452,7 +453,10 @@
   // Upgrade UI is parked for now: every "Get Pro" / "Unlock with Pro" entry point
   // calls smOpenProModal, so gating it here makes them all inert (no pricing or
   // plan counts shown to partners yet). Set window.SM_PRO_UPGRADE_UI = true to bring it back.
-  window.smOpenProModal = function(){ if (window.SM_PRO_UPGRADE_UI === true) open(); };
+  window.smOpenProModal = function(source){
+    window.dispatchEvent(new CustomEvent("sm:upgrade_clicked", { detail: { source: typeof source === "string" ? source : "button" } }));
+    if (window.SM_PRO_UPGRADE_UI === true) open();
+  };
   window.smCloseProModal = close;
   modal.addEventListener("click", function(e){ if (e.target.closest("[data-sm-pclose]")) close(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) close(); });
@@ -696,7 +700,10 @@
       if (pc.status && /cancel|expired|inactive|past_due/i.test(String(pc.status))) return false;
       return true;
     });
-    setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();  }
+    setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();
+    // Lets Clarity split sessions into Free vs Pro (no personal data involved).
+    try { if (typeof window.clarity === "function") window.clarity("set", "tier", IS_PRO ? "pro" : "free"); } catch(_) {}
+  }
   function checkMember(){
     var ms = window.$memberstackDom || window.$memberstack;
     if (ms && ms.getCurrentMember){
@@ -769,12 +776,23 @@
     var locked = e.target.closest && e.target.closest(".sm-locked");
     if (locked && scopeEl.contains(locked)){
       e.preventDefault(); e.stopPropagation();
-      if (window.smOpenProModal) window.smOpenProModal();
+      var titleEl = locked.querySelector("h3") || locked.querySelector(".planCaption, .title");
+      window.dispatchEvent(new CustomEvent("sm:locked_clicked", { detail: {
+        item_type: locked.getAttribute("data-kind") || "item",
+        title: (titleEl ? titleEl.textContent : locked.textContent || "").replace(/\s+/g, " ").trim().slice(0, 80)
+      } }));
+      if (window.smOpenProModal) window.smOpenProModal("locked_card");
     }
   }, true);
 
   // re-sync the Saved message shortly after any tab switch (backup to the observer)
   scopeEl.addEventListener("click", function(e){
+    var tabBtn = e.target.closest && e.target.closest("[data-pro-tab], [data-pro-go-tab]");
+    if (tabBtn){
+      window.dispatchEvent(new CustomEvent("sm:tab_changed", { detail: {
+        tab: tabBtn.getAttribute("data-pro-tab") || tabBtn.getAttribute("data-pro-go-tab") || ""
+      } }));
+    }
     if (e.target.closest && e.target.closest("[data-pro-tab]")){
       setTimeout(syncSavedMsg, 60);
       setTimeout(syncSavedMsg, 300);
@@ -933,8 +951,9 @@
 (function(){
   var EVENTS = [
     "library_viewed", "tag_clicked", "move_opened", "plan_opened", "pack_opened",
-    "video_started", "plan_viewer_opened", "plan_slide_changed", "plan_closed",
-    "plan_step_video_opened", "plan_result_video_started", "save_clicked"
+    "video_started", "video_completed", "plan_viewer_opened", "plan_slide_changed", "plan_closed",
+    "plan_step_video_opened", "plan_result_video_started", "save_clicked",
+    "locked_clicked", "upgrade_clicked", "tab_changed", "feedback_submitted", "playback_error"
   ];
   function str(v){ return v == null ? "" : String(v).slice(0, 120); }
   function send(name, d){
@@ -945,6 +964,13 @@
         if (d.step_key && d.tag_name) window.clarity("set", "filter_" + str(d.step_key), str(d.tag_name));
       } else if (name === "save_clicked") {
         if (d.title) window.clarity("set", (d.action === "unsave" ? "unsaved_" : "saved_") + str(d.item_type || "item"), str(d.title));
+      } else if (name === "upgrade_clicked") {
+        window.clarity("set", "upgrade_source", str(d.source || "button"));
+      } else if (name === "tab_changed") {
+        if (d.tab) window.clarity("set", "tab", str(d.tab));
+      } else if (name === "playback_error") {
+        window.clarity("set", "playback_error", str(d.status || "unknown"));
+        window.clarity("upgrade", "playback_error");   // keep these sessions for review
       } else if (d.title) {
         window.clarity("set", name, str(d.title));
       }
