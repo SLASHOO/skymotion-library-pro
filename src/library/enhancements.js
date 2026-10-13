@@ -715,9 +715,7 @@
       if (pc.status && /cancel|expired|inactive|past_due/i.test(String(pc.status))) return false;
       return true;
     });
-    setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();
-    window.dispatchEvent(new CustomEvent("sm:tier-changed", { detail: { isPro: IS_PRO } }));
-  }
+    setTierClass(); processAll(); syncSavedMsg(); syncMovesSavedLock();  }
   function checkMember(){
     var ms = window.$memberstackDom || window.$memberstack;
     if (ms && ms.getCurrentMember){

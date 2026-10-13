@@ -1090,27 +1090,10 @@
     };
   }
 
-  // Free users see every free item plus a single locked teaser per kind (move/plan),
-  // not the whole locked catalog. Pro users, and catalogs without free flags, see
-  // everything. Set window.SM_FREE_VIEW_MODE = "full" to show all locked cards again.
-  function getViewItems() {
-    if (window.SM_FREE_VIEW_MODE === "full") return allItems;
-    if (scope.classList.contains("sm-pro")) return allItems;
-    if (!allItems.some((item) => item?.free === true)) return allItems;
-
-    const lockedOf = (isPlanKind) => allItems.filter((item) => item?.free !== true && isPlan(item) === isPlanKind);
-    const teaserOf = (isPlanKind) => {
-      const locked = lockedOf(isPlanKind);
-      return locked.find((item) => item?.teaser === true) || locked[0] || null;
-    };
-    const teasers = new Set([teaserOf(true), teaserOf(false)].filter(Boolean));
-    return allItems.filter((item) => item?.free === true || teasers.has(item));
-  }
-
   function getStrictFilteredItems(nextState = state) {
     const selected = getFilterSelected(nextState);
 
-    return getViewItems().filter((item) => (
+    return allItems.filter((item) => (
       hasMatch(item.env, selected.env) &&
       hasMatch(item.risk, selected.risk) &&
       hasMatch(item.subject, selected.subject) &&
@@ -1134,7 +1117,7 @@
     const dropOrder = ["mood", "risk", "subject", "env"];
     for (let drop = 1; drop <= dropOrder.length; drop++) {
       const dropped = dropOrder.slice(0, drop);
-      const relaxed = getViewItems().filter((item) => dropOrder.every((key) => (
+      const relaxed = allItems.filter((item) => dropOrder.every((key) => (
         dropped.includes(key) || hasMatch(item[key], selected[key])
       )));
       if (relaxed.length) {
@@ -1611,11 +1594,6 @@
       });
     }
   }
-
-  // enhancements.js resolves Free/Pro asynchronously; re-run so the visible set matches the tier.
-  window.addEventListener("sm:tier-changed", () => {
-    if (!isInitialLoading && allItems.length) applyFilters();
-  });
 
   function bookmarkSvg() {
     return `
@@ -3321,7 +3299,18 @@
     const flagged = moves.some((m) => m?.free === true);
     const freeAll = flagged ? moves.filter((m) => m?.free === true) : moves.slice(0, HOME_FREE_MOVES);
     const lockedAll = flagged ? moves.filter((m) => m?.free !== true) : moves.slice(HOME_FREE_MOVES);
-    return freeAll.slice(0, freeN).concat(lockedAll.slice(0, lockedN));
+    return freeAll.slice(0, freeN).concat(pickTeasers(lockedAll, lockedN));
+  }
+
+  // Locked items shown on the home screen: flagged teasers first, then catalog order.
+  function pickTeasers(locked, n) {
+    return locked.filter((x) => x?.teaser === true).concat(locked.filter((x) => x?.teaser !== true)).slice(0, n);
+  }
+
+  // Home plan strip: every free plan plus a locked teaser; the full list lives in the Plans tab.
+  function homePlanPreview(plans, lockedN) {
+    if (!plans.some((p) => p?.free === true)) return plans;
+    return plans.filter((p) => p?.free === true).concat(pickTeasers(plans.filter((p) => p?.free !== true), lockedN));
   }
 
   function renderProMobileHome() {
@@ -3347,7 +3336,7 @@
     wrap.className = "sm-pro-mobile-home";
 
     const popularMoves = homeMovePreview(moves, 3, 1);   // mobile: 3 free + 1 locked
-    const cinematicPlans = plans.slice(0, 3);            // 2 free + 1 locked
+    const cinematicPlans = homePlanPreview(plans, 1);    // free plans + 1 locked teaser
     const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
@@ -3411,7 +3400,7 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = plans.slice(0, 8).map((item) => {   // 2 free + rest locked-but-visible; row-capped + scrollable in CSS
+    const planCards = homePlanPreview(plans, 1).map((item) => {   // free plans + 1 locked teaser
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
@@ -3442,7 +3431,7 @@
     `;
 
     const moveStack = wrap.querySelector('[data-pro-desktop-section="moves"]');
-    homeMovePreview(moves, 5, 2).forEach((item) => {   // desktop: 5 free + 2 locked
+    homeMovePreview(moves, 5, 1).forEach((item) => {   // desktop: 5 free + 1 locked
       const idx = getItemFilteredIndex(item);
       moveStack.appendChild(renderMoveCard(item, idx));
     });
