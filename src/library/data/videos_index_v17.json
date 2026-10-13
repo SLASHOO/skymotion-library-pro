@@ -1195,7 +1195,7 @@
     "kind": "plan",
     "id": "plan-05-landscape",
     "title": "Landscape",
-    "description": "6 shots. A layered landscape sequence — a tilt, a push in, a diagonal cross, and a grand finishing reveal.",
+    "description": "7 shots. A layered landscape sequence — a tilt, a push in, a diagonal cross, and a grand finishing reveal.",
     "result_video": null,
     "intro_video": {
       "desktop_id": "7f349ec3-fc1e-4f87-9905-ebd18e4e2470",
@@ -1205,7 +1205,7 @@
     "meta": {
       "shoot_time_min": 19,
       "difficulty": "Advanced",
-      "shots_count": 6
+      "shots_count": 7
     },
     "env": [
       "open",
@@ -1235,6 +1235,7 @@
           "type": "9422f296-8423-4174-91da-7517264c0bf9",
           "tip": "Hold low, then tilt up to reveal the vista.",
           "transition": "Hard cut",
+          "dur_s": 2.13,
           "fx": [
             "Slow-mo at the start, then normal speed",
             "Speed-matched into shot 2"
@@ -1245,6 +1246,7 @@
           "type": "81e56201-0a5b-496d-ba6f-fb0ee80c12ba",
           "tip": "Push steadily toward the focal point in the distance.",
           "transition": "Hard cut",
+          "dur_s": 2.07,
           "fx": [
             "Slows down at the end"
           ]
@@ -1253,25 +1255,39 @@
           "n": 3,
           "type": "641f3c71-dab5-4add-b46c-e43791d436b7",
           "tip": "Cut across the landscape on a clean diagonal.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "dur_s": 0.67
         },
         {
           "n": 4,
-          "type": "dd397232-53ef-4b00-ad5a-effc5573579d",
-          "tip": "Descend smoothly to bring the foreground into frame.",
-          "transition": "Hard cut"
+          "type": "641f3c71-dab5-4add-b46c-e43791d436b7",
+          "tip": "Cut across the landscape on a clean diagonal.",
+          "transition": "Hard cut",
+          "dur_s": 1.7
         },
         {
           "n": 5,
-          "type": "1a70b0ed-562b-411d-95de-a1bc6f931124",
-          "tip": "Circle while climbing for a wide, open feel.",
-          "transition": "Hard cut"
+          "type": "dd397232-53ef-4b00-ad5a-effc5573579d",
+          "tip": "Descend smoothly to bring the foreground into frame.",
+          "transition": "Hard cut",
+          "dur_s": 1.87
         },
         {
           "n": 6,
+          "type": "1a70b0ed-562b-411d-95de-a1bc6f931124",
+          "tip": "Circle while climbing for a wide, open feel.",
+          "transition": "Hard cut",
+          "dur_s": 3.8,
+          "fx": [
+            "Slow-mo mid-shot on the ocean spray"
+          ]
+        },
+        {
+          "n": 7,
           "type": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
           "tip": "Finish with a big pull-back and rise for scale.",
           "transition": "Hard cut",
+          "dur_s": 3.77,
           "fx": [
             "Fade out with the music"
           ]
@@ -1303,22 +1319,29 @@
       },
       {
         "id": "plan-05-landscape_s4",
-        "title": "Descending Reveal",
+        "title": "Diagonal Forward",
         "shot_ref": 4,
-        "move_ref": "dd397232-53ef-4b00-ad5a-effc5573579d",
+        "move_ref": "641f3c71-dab5-4add-b46c-e43791d436b7",
         "transition": "Hard cut"
       },
       {
         "id": "plan-05-landscape_s5",
-        "title": "Orbit Reveal",
+        "title": "Descending Reveal",
         "shot_ref": 5,
-        "move_ref": "1a70b0ed-562b-411d-95de-a1bc6f931124",
+        "move_ref": "dd397232-53ef-4b00-ad5a-effc5573579d",
         "transition": "Hard cut"
       },
       {
         "id": "plan-05-landscape_s6",
-        "title": "Grand Reveal",
+        "title": "Orbit Reveal",
         "shot_ref": 6,
+        "move_ref": "1a70b0ed-562b-411d-95de-a1bc6f931124",
+        "transition": "Hard cut"
+      },
+      {
+        "id": "plan-05-landscape_s7",
+        "title": "Grand Reveal",
+        "shot_ref": 7,
         "move_ref": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
         "transition": "Hard cut"
       }
