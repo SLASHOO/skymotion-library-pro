@@ -4127,9 +4127,11 @@
       if (!alive || playerMountRequest !== requestId) return;
       console.error("[SM] secure playback failed", error);
       setPlayerStatus(
-        error?.status === 401 || error?.status === 403
+        error?.status === 401
           ? "Your session has expired. Sign in again."
-          : "Video is temporarily unavailable. Please try again.",
+          : error?.status === 403
+            ? "This video is available with Pro."
+            : "Video is temporarily unavailable. Please try again.",
         true
       );
     }
@@ -4377,7 +4379,9 @@
         meta: [planShots ? `${planShots} shots` : "", "Plan"].filter(Boolean).join(" · ")
       });
 
-      window.dispatchEvent(new CustomEvent("sm:open-plan", {
+      // plan-viewer cancels the event once it has opened the plan.
+      const openHandled = !window.dispatchEvent(new CustomEvent("sm:open-plan", {
+        cancelable: true,
         detail: {
           plan: item,
           allItems
@@ -4385,7 +4389,7 @@
       }));
 
       // Direct fallback for local/dev builds where the CustomEvent listener is missed.
-      if (window.SMPlanViewerV3 && typeof window.SMPlanViewerV3.open === "function") {
+      if (!openHandled && window.SMPlanViewerV3 && typeof window.SMPlanViewerV3.open === "function") {
         window.SMPlanViewerV3.open(item, allItems);
       }
 

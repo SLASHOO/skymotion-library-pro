@@ -926,3 +926,31 @@
   window.addEventListener("resize", sync);
   sync();
 })();
+
+/* Analytics bridge: forward the sm:* UI events to Microsoft Clarity as custom events
+   (+ a tag with the item title / filter answer). A no-op until the Clarity script is
+   on the page (Webflow → Project Settings → Custom Code), so it can ship before it. */
+(function(){
+  var EVENTS = [
+    "library_viewed", "tag_clicked", "move_opened", "plan_opened", "pack_opened",
+    "video_started", "plan_viewer_opened", "plan_slide_changed", "plan_closed",
+    "plan_step_video_opened", "plan_result_video_started", "save_clicked"
+  ];
+  function str(v){ return v == null ? "" : String(v).slice(0, 120); }
+  function send(name, d){
+    if (typeof window.clarity !== "function") return;
+    try {
+      window.clarity("event", name);
+      if (name === "tag_clicked") {
+        if (d.step_key && d.tag_name) window.clarity("set", "filter_" + str(d.step_key), str(d.tag_name));
+      } else if (name === "save_clicked") {
+        if (d.title) window.clarity("set", (d.action === "unsave" ? "unsaved_" : "saved_") + str(d.item_type || "item"), str(d.title));
+      } else if (d.title) {
+        window.clarity("set", name, str(d.title));
+      }
+    } catch (_) {}
+  }
+  EVENTS.forEach(function(name){
+    window.addEventListener("sm:" + name, function(e){ send(name, (e && e.detail) || {}); });
+  });
+})();

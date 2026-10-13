@@ -190,6 +190,15 @@ const root = document.getElementById("sm-plan-v3-root");
 
     try {
       const cleanup = await window.SMLibraryPlayback?.attachSource(video, guid);
+      if (!video.isConnected) {
+        // The plan was closed or replaced while the stream was connecting: tear it
+        // down now, otherwise this detached element keeps playing sound.
+        if (typeof cleanup === "function") {
+          try { cleanup(); } catch (_) {}
+        }
+        hardStopVideo(video, { reset: true, mute: true });
+        return;
+      }
       if (typeof cleanup === "function") cleanupFns.push(cleanup);
     } catch (e) {
       console.warn("[plan-viewer] could not attach intro_video playback for", guid, e);
@@ -1084,6 +1093,7 @@ const root = document.getElementById("sm-plan-v3-root");
     const detail = e.detail || {};
     if (!detail.plan) return;
     openPlan(detail.plan, detail.allItems || []);
+    e.preventDefault();   // tells library.js the plan is open, so it skips its direct fallback
   });
 
   window.addEventListener("sm:reopen-plan-after-player", () => {
