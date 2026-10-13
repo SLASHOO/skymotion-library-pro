@@ -587,7 +587,7 @@ const root = document.getElementById("sm-plan-v3-root");
       item_type: "plan",
       title: currentPlan?.title || "Cinematic Plan",
       slide_index: activeSlide,
-      slide_type: activeSlide === 0 ? "result" : (activeSlide === totalSlides - 1 ? "editing" : "step")
+      slide_type: activeSlide === 0 ? "result" : "step"
     });
 
     if (animate) lockNavTemporarily();
@@ -629,6 +629,7 @@ const root = document.getElementById("sm-plan-v3-root");
         transition: getStepTransition(step, edit, move),
         fx: Array.isArray(edit?.fx) ? edit.fx.filter(Boolean) : [],
         hasCutLength: Number.isFinite(Number(edit?.dur_s)) && Number(edit?.dur_s) > 0,
+        repeat: Math.max(1, Math.floor(Number(edit?.repeat) || 1)),
         powered: firstFilled(
           step?.powered,
           step?.powered_by,
@@ -667,7 +668,7 @@ const root = document.getElementById("sm-plan-v3-root");
           style="width:${width}px"
         >
           <span class="spv3TimelineFlow__num">${String(index + 1).padStart(2, "0")}</span>
-          <span class="spv3TimelineFlow__name">${escapeHtml(shot.shortName)}</span>
+          <span class="spv3TimelineFlow__name">${escapeHtml(shot.shortName)}${shot.repeat > 1 ? ` ×${shot.repeat}` : ""}</span>
           <span class="spv3TimelineFlow__dur">${formatSec(shot.dur)}</span>
         </div>
       `;
@@ -830,93 +831,11 @@ const root = document.getElementById("sm-plan-v3-root");
     `;
   }
 
-  // General editing habits for short drone clips (stabilize first, speed ramps,
-  // beat-synced cuts, sound design, grading). Shown on every plan's last slide.
-  const EDIT_TIPS = [
-    { title: "Stabilize first", text: "Stabilize the clip before adding speed changes or effects, so quality stays high." },
-    { title: "Match speeds across a cut", text: "End a shot at the speed the next one starts with. A hard cut then feels like one continuous move." },
-    { title: "Use speed ramps sparingly", text: "One or two per clip, ideally on a reveal. Add motion blur and ease in and out so the change isn't abrupt." },
-    { title: "Cut on the beat", text: "Pick the music first and put cuts on strong beats. Faster tracks call for shorter shots." },
-    { title: "Add a whoosh", text: "Drop a short whoosh on a fast move or speed ramp. Replace the drone's wind and motor noise with music and sound effects." },
-    { title: "Keep shots short", text: "Shots of about 1.5–5 seconds keep a short clip moving. Hold longer only for a big reveal." },
-    { title: "End clean", text: "Fade the picture and the music out together for a smooth ending." },
-    { title: "Grade D-Log last", text: "Shooting D-Log? Apply a conversion LUT first, fix exposure and white balance, then add your look at the end." }
-  ];
-
-  // Last slide: the plan's cut sheet (only when every shot has a real edit length)
-  // plus the general editing tips above.
-  function buildEditSlide(plan, allItems) {
-    const shots = getTimelineShots(plan, allItems);
-    const hasRecipe = shots.length > 0 && shots.every((s) => s.hasCutLength);
-    const endTransition = String(plan?.edit?.end_transition || "").trim();
-
-    let recipeHtml = "";
-    if (hasRecipe) {
-      let cursor = 0;
-      const rows = shots.map((shot, index) => {
-        const start = cursor;
-        cursor += Number(shot.dur || 0);
-        const cut = index > 0 ? getTransitionBadgeLabel(shot.transition) : "";
-        const fx = shot.fx.length ? `<p>${shot.fx.map(escapeHtml).join(" · ")}</p>` : "";
-        return `
-          <li>
-            <span class="spv3Edit__n">${String(index + 1).padStart(2, "0")}</span>
-            <div class="spv3Edit__row">
-              <div class="spv3Edit__rowHead">
-                <b>${escapeHtml(shot.shortName)}</b>
-                <i>${formatTimecode(start)}–${formatTimecode(cursor)}</i>
-                ${cut ? `<span class="spv3Edit__cut">${escapeHtml(cut)}</span>` : ""}
-              </div>
-              ${fx}
-            </div>
-          </li>
-        `;
-      }).join("");
-
-      const ending = endTransition
-        ? `
-          <li class="is-end">
-            <span class="spv3Edit__n">●</span>
-            <div class="spv3Edit__row">
-              <div class="spv3Edit__rowHead">
-                <b>Ending</b>
-                <span class="spv3Edit__cut">${escapeHtml(getTransitionBadgeLabel(endTransition))}</span>
-              </div>
-            </div>
-          </li>
-        `
-        : "";
-
-      recipeHtml = `
-        <h3 class="spv3Edit__h">Cut sheet · ${formatTimecode(cursor)}</h3>
-        <ol class="spv3Edit__recipe">${rows}${ending}</ol>
-      `;
-    }
-
-    const tipsHtml = EDIT_TIPS.map((tip) => `
-      <li><b>${escapeHtml(tip.title)}</b><span>${escapeHtml(tip.text)}</span></li>
-    `).join("");
-
-    return `
-      <section class="spv3__slide">
-        <div class="spv3Edit">
-          <div class="spv3Edit__scroll">
-            <h2 class="spv3Edit__title">${hasRecipe ? "How it's edited" : "Editing tips"}</h2>
-            ${recipeHtml}
-            ${hasRecipe ? `<h3 class="spv3Edit__h">Editing tips</h3>` : ""}
-            <ul class="spv3Edit__tips">${tipsHtml}</ul>
-          </div>
-        </div>
-      </section>
-    `;
-  }
-
   function buildSlides(plan, allItems) {
     const steps = Array.isArray(plan?.steps) ? plan.steps : [];
     const html = [
       buildResultSlide(plan),
-      ...steps.map((_, index) => buildStepSlide(plan, allItems, index)),
-      buildEditSlide(plan, allItems)
+      ...steps.map((_, index) => buildStepSlide(plan, allItems, index))
     ].join("");
 
     track.innerHTML = html;
@@ -1053,7 +972,7 @@ const root = document.getElementById("sm-plan-v3-root");
 
     currentPlan = plan;
     currentAllItems = Array.isArray(allItems) ? allItems : [];
-    totalSlides = 2 + (Array.isArray(plan?.steps) ? plan.steps.length : 0);   // result + steps + edit slide
+    totalSlides = 1 + (Array.isArray(plan?.steps) ? plan.steps.length : 0);
     activeSlide = 0;
     navLocked = false;
 
