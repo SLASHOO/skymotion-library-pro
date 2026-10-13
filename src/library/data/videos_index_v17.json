@@ -1234,19 +1234,26 @@
           "n": 1,
           "type": "9422f296-8423-4174-91da-7517264c0bf9",
           "tip": "Hold low, then tilt up to reveal the vista.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "fx": [
+            "Slow-mo at the start, then normal speed",
+            "Speed-matched into shot 2"
+          ]
         },
         {
           "n": 2,
           "type": "81e56201-0a5b-496d-ba6f-fb0ee80c12ba",
           "tip": "Push steadily toward the focal point in the distance.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "fx": [
+            "Slows down at the end"
+          ]
         },
         {
           "n": 3,
           "type": "641f3c71-dab5-4add-b46c-e43791d436b7",
           "tip": "Cut across the landscape on a clean diagonal.",
-          "transition": "Cross dissolve"
+          "transition": "Hard cut"
         },
         {
           "n": 4,
@@ -1264,9 +1271,13 @@
           "n": 6,
           "type": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
           "tip": "Finish with a big pull-back and rise for scale.",
-          "transition": "Fade out"
+          "transition": "Hard cut",
+          "fx": [
+            "Fade out with the music"
+          ]
         }
-      ]
+      ],
+      "end_transition": "Fade out"
     },
     "steps": [
       {
@@ -1288,7 +1299,7 @@
         "title": "Diagonal Forward",
         "shot_ref": 3,
         "move_ref": "641f3c71-dab5-4add-b46c-e43791d436b7",
-        "transition": "Cross dissolve"
+        "transition": "Hard cut"
       },
       {
         "id": "plan-05-landscape_s4",
@@ -1309,7 +1320,7 @@
         "title": "Grand Reveal",
         "shot_ref": 6,
         "move_ref": "b829b977-0aaf-487c-b0bd-c8da93e34ac0",
-        "transition": "Fade out"
+        "transition": "Hard cut"
       }
     ],
     "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.png",
@@ -1357,33 +1368,50 @@
           "n": 1,
           "type": "9422f296-8423-4174-91da-7517264c0bf9",
           "tip": "Start low on the trail, then tilt up to the peak.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "dur_s": 1.63,
+          "fx": [
+            "Slight slow-mo at the start, then normal speed",
+            "Speed-matched into shot 2"
+          ]
         },
         {
           "n": 2,
           "type": "a79fa1e8-da2a-4ca3-b7f2-5d6f83aa6443",
           "tip": "Hold a steady altitude flying straight over the ridge.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "dur_s": 1.53,
+          "fx": [
+            "Sped-up flythrough",
+            "Sky whoosh sound"
+          ]
         },
         {
           "n": 3,
           "type": "1a70b0ed-562b-411d-95de-a1bc6f931124",
           "tip": "Circle the peak while gently climbing.",
-          "transition": "Cross dissolve"
+          "transition": "Hard cut",
+          "dur_s": 1.6
         },
         {
           "n": 4,
           "type": "641f3c71-dab5-4add-b46c-e43791d436b7",
           "tip": "Cross the ridge line on a clean diagonal.",
-          "transition": "Hard cut"
+          "transition": "Hard cut",
+          "dur_s": 2.5
         },
         {
           "n": 5,
           "type": "aa2dd048-de17-430d-ad5e-81924f3d723e",
           "tip": "Glide sideways to build depth between ridgelines.",
-          "transition": "Fade out"
+          "transition": "Hard cut",
+          "dur_s": 2.13,
+          "fx": [
+            "Fade out with the music"
+          ]
         }
-      ]
+      ],
+      "end_transition": "Fade out"
     },
     "steps": [
       {
@@ -1405,7 +1433,7 @@
         "title": "Orbit Reveal",
         "shot_ref": 3,
         "move_ref": "1a70b0ed-562b-411d-95de-a1bc6f931124",
-        "transition": "Cross dissolve"
+        "transition": "Hard cut"
       },
       {
         "id": "plan-06-mountains_s4",
@@ -1419,7 +1447,7 @@
         "title": "Sideways Parallax",
         "shot_ref": 5,
         "move_ref": "aa2dd048-de17-430d-ad5e-81924f3d723e",
-        "transition": "Fade out"
+        "transition": "Hard cut"
       }
     ],
     "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.png",
