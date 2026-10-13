@@ -125,7 +125,7 @@
     top.insertBefore(cluster, closeBtn);
   }
 
-  // Plan montage line: make each clip a navigation target + an edit recipe.
+  // Plan montage line: make each clip a navigation target.
   // Navigates via the plan's own dots (#spv3Dots .spv3Dot[data-slide]) → goTo.
   // Additive only — plan-viewer-v3.js logic and the event bridge are untouched.
   function centerActiveClip(track){
@@ -154,25 +154,6 @@
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
       });
     });
-    // edit-recipe summary: N shots · M cuts · ~Xs
-    var flow = track.closest(".spv3TimelineFlow");
-    var label = flow && flow.querySelector(".spv3TimelineFlow__label");
-    if (label && !flow.querySelector(".sm-skin-tl-sum")){
-      var total = 0, parsed = 0;
-      clips.forEach(function(clip){
-        var d = clip.querySelector(".spv3TimelineFlow__dur");
-        var mm = d && d.textContent.match(/([\d.]+)/);
-        if (mm){ total += parseFloat(mm[1]); parsed++; }
-      });
-      var cuts = clips.length - 1;
-      var txt = clips.length + (clips.length === 1 ? " shot" : " shots")
-              + " · " + cuts + (cuts === 1 ? " cut" : " cuts");
-      if (parsed === clips.length && total > 0) txt += " · ~" + Math.round(total) + "s";
-      var sum = document.createElement("span");
-      sum.className = "sm-skin-tl-sum";
-      sum.textContent = txt;
-      label.insertAdjacentElement("afterend", sum);
-    }
     centerActiveClip(track);
   }
 

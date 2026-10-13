@@ -390,7 +390,7 @@ const root = document.getElementById("sm-plan-v3-root");
 
   function getStepShortName(step = {}, edit = {}, move = {}, index = 0) {
     return toShotName(
-      normalizeShotName(
+      stripFileExtension(normalizeShotName(
         firstFilled(
           step?.short_title,
           step?.shortTitle,
@@ -405,9 +405,14 @@ const root = document.getElementById("sm-plan-v3-root");
           move?.title,
           step?.title
         )
-      ),
+      )),
       `Shot ${index + 1}`
     );
+  }
+
+  // Catalog move titles carry the source file name ("Tilt Reveal.mp4").
+  function stripFileExtension(name) {
+    return String(name || "").replace(/\.(mp4|mov|m4v)$/i, "");
   }
 
   function getStepTitle(step = {}, edit = {}, move = {}, index = 0) {
@@ -654,7 +659,7 @@ const root = document.getElementById("sm-plan-v3-root");
     const timelineHtml = shots.map((shot, index) => {
       const tone = getClipTone(shot.shortName, index);
       const dur = Math.max(Number(shot.dur || 3), 2.5);
-      const width = Math.max(180, Math.round(dur * 30));
+      const width = Math.max(210, Math.round(dur * 30));
 
       const clip = `
         <div
