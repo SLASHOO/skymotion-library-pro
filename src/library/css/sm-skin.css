@@ -1856,9 +1856,9 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     min-height:0 !important;
     align-items:stretch !important;
   }
-  #sm-library-scope .sm-pro-move-row__media{ min-height:0 !important; width:100% !important; height:100% !important; aspect-ratio:auto !important; }
-  #sm-library-scope .sm-pro-move-row__media{ overflow:hidden !important; }
-  #sm-library-scope .sm-pro-move-row__media img{ width:100% !important; height:100% !important; object-fit:cover; }
+  /* the thumbnail never sets the row height (portrait 9:16 thumbs would stretch it): it fills the column */
+  #sm-library-scope .sm-pro-move-row__media{ position:relative !important; min-height:0 !important; width:100% !important; height:100% !important; aspect-ratio:auto !important; overflow:hidden !important; }
+  #sm-library-scope .sm-pro-move-row__media img{ position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; object-fit:cover !important; }
   #sm-library-scope .sm-pro-move-row__body{
     display:grid !important;
     align-content:start !important;
@@ -1868,8 +1868,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   #sm-library-scope .sm-pro-move-row__top{ margin:0 !important; align-items:flex-start !important; }
   #sm-library-scope .sm-pro-move-row__headline{
     display:grid !important;
-    grid-template-rows:auto auto !important;
-    row-gap:6px !important;
+    grid-template-rows:auto !important;
     flex:1 1 auto;
     min-width:0 !important;
   }
@@ -1884,7 +1883,33 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     -webkit-box-orient:vertical;
     overflow:hidden !important;
   }
-  #sm-library-scope .sm-pro-move-row__meta{ margin:0 !important; min-height:1.1em; }
+  /* difficulty sits on the thumbnail like on PC (bottom-left: time chip is top-left, play icon centred) */
+  #sm-library-scope .sm-pro-move-row__meta{ display:none !important; }
+  #sm-library-scope .sm-pro-move-row__media .sm-pro-move-row__difficulty{
+    position:absolute !important;
+    z-index:2 !important;
+    left:6px !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:6px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    max-width:calc(100% - 12px) !important;
+    min-height:0 !important;
+    padding:clamp(2px, .9vw, 4px) clamp(6px, 2vw, 9px) !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.13) !important;
+    background:rgba(0,0,0,.52) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    box-shadow:none !important;
+    font-size:clamp(8.5px, 2.4vw, 10.5px) !important;
+    font-weight:650 !important;
+    line-height:1.1 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
   #sm-library-scope .sm-pro-move-row__body p{
     margin:0 !important;
     min-height:2.64em;

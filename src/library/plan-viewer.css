@@ -343,7 +343,7 @@
   object-fit:cover;
   object-position:50% 58%;
   filter:saturate(1.04) contrast(1.03) brightness(.94);
-  transform:translateY(2.8%);
+  transform:none;
 }
 
 #sm-plan-v3-root .spv3Step__overlay{
