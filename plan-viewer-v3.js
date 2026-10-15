@@ -548,10 +548,7 @@ const root = document.getElementById("sm-plan-v3-root");
         resultVideo.volume = 1;
       } catch (_) {}
 
-      const p = resultVideo.play();
-      if (p && typeof p.catch === "function") {
-        p.catch(() => {});
-      }
+      playWithSoundOrMuted(resultVideo);
     } else {
       hardStopVideo(resultVideo, { reset: true, mute: true });
     }
@@ -922,11 +919,36 @@ const root = document.getElementById("sm-plan-v3-root");
       video.volume = 1;
     } catch (_) {}
 
+    await playWithSoundOrMuted(video);
+  }
+
+  // Browsers (iOS Safari first) refuse to start video WITH sound once the tap
+  // that opened the plan is gone — and the intro starts only after the signed
+  // URL + stream are ready, seconds later. Without a fallback the slide just
+  // sits on its poster with no controls. So: try with sound; if blocked, start
+  // muted (always allowed) and give the sound back on the viewer's next tap.
+  async function playWithSoundOrMuted(video) {
     try {
       await video.play();
+      return;
     } catch (err) {
-      console.warn("[SPV3] result video play failed:", err);
+      if (!err || err.name !== "NotAllowedError") {
+        console.warn("[SPV3] result video play failed:", err);
+        return;
+      }
     }
+    try {
+      video.muted = true;
+      await video.play();
+    } catch (err) {
+      console.warn("[SPV3] result video muted play failed:", err);
+      return;
+    }
+    const unmute = () => {
+      try { video.muted = false; video.defaultMuted = false; video.volume = 1; } catch (_) {}
+    };
+    document.addEventListener("pointerdown", unmute, { once: true, capture: true });
+    cleanupFns.push(() => document.removeEventListener("pointerdown", unmute, true));
   }
 
   function bindSlideEvents() {

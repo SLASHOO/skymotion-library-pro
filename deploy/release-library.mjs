@@ -21,6 +21,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { warmJsdelivr } from "./warm-jsdelivr.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -137,6 +138,10 @@ if (!head.ok) {
   );
 }
 log("  ✓ HTTP 200");
+
+// Pre-warm every asset of this commit so the first visitors after the switch
+// do not pay jsDelivr's cold-start (several seconds per file).
+await warmJsdelivr(hash, "webflow/library-loader.js", log);
 
 // --- 5. Generate the manifest (boot/library-release.json) -------------------
 const manifest = { release: hash, loader: loaderUrl };

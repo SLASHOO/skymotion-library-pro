@@ -17,6 +17,21 @@
     rs.forEach(function(el){ io.observe(el); });
   } else { rs.forEach(function(el){ el.classList.add('in'); }); }
 
+  // The Pro reel sits far below the fold and reuses the 8.7 MB hero clip. Starting
+  // it with the page made two big downloads fight on a first (cold, mobile) visit,
+  // so the hero stalled. It now loads only when it is about to scroll into view.
+  (function(){
+    var v = document.querySelector('.pro__vid');
+    if(!v) return;
+    function go(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+    if('IntersectionObserver' in window){
+      var vo = new IntersectionObserver(function(es){
+        if(es[0].isIntersecting){ vo.disconnect(); go(); }
+      }, { rootMargin:'500px 0px' });
+      vo.observe(v);
+    } else { go(); }
+  })();
+
   // SCHEME route: draw while the section is in view, reset when it leaves (no loop)
   (function(){
     var sc = document.querySelector('.scheme');
