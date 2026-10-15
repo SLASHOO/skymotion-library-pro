@@ -17,13 +17,34 @@
     rs.forEach(function(el){ io.observe(el); });
   } else { rs.forEach(function(el){ el.classList.add('in'); }); }
 
+  // Start a muted background clip robustly. iOS (Low Power Mode, data saver) can
+  // refuse autoplay: then we must not leave a frozen poster frame that looks like a
+  // broken placeholder. On refusal drop the poster (the dark hero stays clean) and
+  // start the clip on the visitor's first touch/scroll, when browsers allow it.
+  function startVideo(v){ if(!v) return;
+    function attempt(){
+      var p = v.play();
+      if(p && p.catch){
+        p.catch(function(err){
+          if(!err || err.name !== 'NotAllowedError') return;   // only a real autoplay refusal
+          v.removeAttribute('poster');
+          ['touchstart','pointerdown','scroll'].forEach(function(ev){
+            window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
+          });
+        });
+      }
+    }
+    attempt();
+  }
+  startVideo(document.querySelector('.hero__video'));
+
   // The Pro reel sits far below the fold and reuses the 8.7 MB hero clip. Starting
   // it with the page made two big downloads fight on a first (cold, mobile) visit,
   // so the hero stalled. It now loads only when it is about to scroll into view.
   (function(){
     var v = document.querySelector('.pro__vid');
     if(!v) return;
-    function go(){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+    function go(){ startVideo(v); }
     if('IntersectionObserver' in window){
       var vo = new IntersectionObserver(function(es){
         if(es[0].isIntersecting){ vo.disconnect(); go(); }
