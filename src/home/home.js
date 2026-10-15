@@ -27,11 +27,13 @@
     return window.matchMedia('(max-width:900px)').matches || !!(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')));
   }
   function startVideo(v){ if(!v) return;
-    if(!wantsLightClip() && !v.getAttribute('src')){ v.src = HERO_DESKTOP_SRC; v.load(); }
+    if(!wantsLightClip() && !v.getAttribute('src')){ v.src = HERO_DESKTOP_SRC + (v.classList.contains('pro__vid') ? '?pro' : ''); v.load(); }
     function attempt(){
       var p = v.play();
+      if(p && p.then){ p.then(function(){ v.__smPlay = 'ok'; }); }
       if(p && p.catch){
         p.catch(function(err){
+          v.__smPlay = (err && err.name) || 'error';
           if(!err || err.name !== 'NotAllowedError') return;   // only a real autoplay refusal
           ['touchstart','pointerdown','scroll'].forEach(function(ev){
             window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
@@ -324,4 +326,27 @@
           .catch(function(){ if(msg){ msg.className='cform__msg err'; msg.textContent='Network error. Please try again.'; } });
       });
     }
+  })();
+
+  // Diagnostics: open the page with ?smdebug=1 to see the live state of both background clips.
+  (function(){
+    if(!/[?&]smdebug=1/.test(location.search)) return;
+    var box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:6px;right:6px;bottom:6px;z-index:2147483647;background:rgba(0,0,0,.82);color:#9f9;font:10px/1.35 monospace;padding:6px 8px;border:1px solid #444;border-radius:6px;pointer-events:none;white-space:pre-wrap;';
+    document.body.appendChild(box);
+    function line(name, v){
+      if(!v) return name + ': (none)';
+      var cs = getComputedStyle(v.parentNode);
+      return name + ': ' + (v.paused ? 'PAUSED' : 'playing') + ' rs=' + v.readyState + ' ns=' + v.networkState +
+        ' err=' + (v.error ? v.error.code : '-') + ' t=' + v.currentTime.toFixed(1) + ' ' + v.videoWidth + 'x' + v.videoHeight +
+        ' play=' + (v.__smPlay || '-') + ' src=' + (v.currentSrc || '').split('/').slice(-2).join('/') +
+        ' | parent filter=' + cs.filter + ' transform=' + (cs.transform === 'none' ? 'none' : 'set') + ' bg=' + cs.backgroundColor;
+    }
+    setInterval(function(){
+      var m = window.matchMedia;
+      box.textContent = line('hero', document.querySelector('.hero__video')) + '\n' + line('pro ', document.querySelector('.pro__vid')) +
+        '\nmq<=900:' + m('(max-width:900px)').matches + ' coarse:' + m('(hover:none) and (pointer:coarse)').matches +
+        ' lowPower?:' + (navigator.connection ? JSON.stringify({sd:navigator.connection.saveData, t:navigator.connection.effectiveType}) : 'n/a') +
+        ' vw=' + innerWidth + ' ua=' + navigator.userAgent.replace(/.*\(([^)]*)\).*/, '$1').slice(0, 50);
+    }, 500);
   })();

@@ -403,12 +403,13 @@ html.sm-home-page body.sm-home-page{
   .pro__video{ height:64vh; }
   .pro__sloganStage{ padding-top:36vh; }
 }
-/* iOS/WebKit does not paint a <video> that sits inside an element with a CSS filter
-   (the clip shows as a black box). The blur-to-sharp pitch effect is therefore desktop-
-   only; phones/touch keep the scale+parallax but no filter (this also beats the inline
-   filter the scroll script writes). */
+/* iOS/WebKit can fail to paint a <video> that sits inside an element with a CSS filter or
+   a transform/will-change layer (the clip shows as a black box). The hero video, which has
+   none of those, plays fine - so on phones/touch the Pro reel is made structurally the same:
+   no filter, no transform, no compositing hint. This also beats the inline filter/transform
+   the scroll script writes. The blur-to-sharp + scale pitch effect stays desktop-only. */
 @media (max-width:900px), (hover:none) and (pointer:coarse){
-  .pro__video{ filter:none !important; will-change:transform; }
+  .pro__video{ filter:none !important; transform:none !important; will-change:auto !important; background:var(--bg); }
 }
 @media (prefers-reduced-motion:reduce){
   .pro__pitchSec{ height:auto; }
