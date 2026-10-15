@@ -63,18 +63,83 @@
   // Fixed elements that must sit at <body> level (no transformed ancestor).
   var MOVE_TO_BODY = ["nav", "proModal", "contactModal"];
 
-  // --- 1. CSS, injected into <head> as early as possible -------------------
-  function injectCss() {
-    for (var i = 0; i < CSS.length; i++) {
-      var link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = BASE + CSS[i];
-      document.head.appendChild(link);
-    }
+  var API_BASE = window.SM_API_BASE || "https://skymotion.onrender.com";
+  var CSS_REVEAL_MAX_MS = 12000; // hard cap: never keep the page hidden if a stylesheet hangs
+
+  // --- 0. First-visit hints (cold device: nothing cached) -------------------
+  // Until home.css has loaded the Home is HIDDEN behind a dark placeholder +
+  // spinner (class sm-boot-pending on <html>), so the unstyled markup never
+  // flashes. Also: early connection to the API, a wake-up ping for the API (so
+  // it is already awake when the visitor continues into the Library), and the
+  // script downloading in parallel with the CSS/template.
+  function earlyHints() {
+    var m = "#" + MOUNT_ID;
+    var pending = "html.sm-boot-pending ";
+    var st = document.createElement("style");
+    st.textContent =
+      pending + m + "{min-height:100vh;background:#121212}" +
+      pending + m + ">*," + pending + "#nav," + pending + "#proModal," + pending + "#contactModal{visibility:hidden!important}" +
+      pending + m + "::after{content:'';display:block;position:fixed;top:calc(50% - 14px);left:calc(50% - 14px);" +
+      "width:28px;height:28px;border-radius:50%;" +
+      "border:3px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.85);" +
+      "animation:sm-boot-spin .8s linear infinite}" +
+      "@keyframes sm-boot-spin{to{transform:rotate(360deg)}}";
+    document.head.appendChild(st);
+    document.documentElement.classList.add("sm-boot-pending");
+
+    var l = document.createElement("link");
+    l.rel = "preconnect";
+    l.href = API_BASE;
+    l.crossOrigin = "anonymous";
+    document.head.appendChild(l);
+    try {
+      fetch(API_BASE + "/", { mode: "no-cors", cache: "no-store" }).catch(function () {});
+    } catch (_) {}
+
+    JS_SEQUENCE.forEach(function (path) {
+      var p = document.createElement("link");
+      p.rel = "preload";
+      p.as = "script";
+      p.href = BASE + path;
+      document.head.appendChild(p);
+    });
   }
 
-  // --- 3. Fetch + inject the DOM template; relocate fixed elements to <body> -
-  function injectTemplate() {
+  // --- 1. CSS, injected into <head> as early as possible -------------------
+  // Settles when the stylesheet has loaded (or failed), or after
+  // CSS_REVEAL_MAX_MS. It does not delay the template/script work; it only
+  // controls when the hidden Home is revealed.
+  function injectCss() {
+    var waits = [];
+    for (var i = 0; i < CSS.length; i++) {
+      (function (href) {
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        waits.push(new Promise(function (resolve) {
+          link.onload = link.onerror = function () { resolve(); };
+        }));
+        link.href = href;
+        document.head.appendChild(link);
+      })(BASE + CSS[i]);
+    }
+    return Promise.race([
+      Promise.all(waits),
+      new Promise(function (resolve) { setTimeout(resolve, CSS_REVEAL_MAX_MS); })
+    ]);
+  }
+
+  // --- 2. Fetch the DOM template (starts immediately, parallel to CSS) -------
+  function fetchTemplate() {
+    var p = fetch(BASE + TEMPLATE_URL).then(function (r) {
+      if (!r.ok) throw new Error("template HTTP " + r.status);
+      return r.text();
+    });
+    p.catch(function () {}); // reported by boot(); avoids an early unhandled-rejection warning
+    return p;
+  }
+
+  // --- 3. Inject the DOM template; relocate fixed elements to <body> -------
+  function injectTemplate(html) {
     var mount = document.getElementById(MOUNT_ID);
     if (!mount) {
       console.error("[sm-home-loader] mount #" + MOUNT_ID + " not found; aborting.");
@@ -83,11 +148,7 @@
     // Tag the single Webflow wrapper around the mount so home.css can keep it
     // full-width without a global .w-* reset.
     if (mount.parentElement) mount.parentElement.classList.add("sm-home-host");
-    return fetch(BASE + TEMPLATE_URL)
-      .then(function (r) {
-        if (!r.ok) throw new Error("template HTTP " + r.status);
-        return r.text();
-      })
+    return Promise.resolve(html)
       .then(function (html) {
         var holder = document.createElement("template");
         holder.innerHTML = html; // inert parse (handles SVG + <style>)
@@ -112,23 +173,54 @@
       s.src = BASE + list[index];
       s.async = false;
       s.onload = function () { index++; next(); };
-      s.onerror = function () { console.error("[sm-home-loader] failed to load " + s.src); };
+      s.onerror = function () {
+        console.error("[sm-home-loader] failed to load " + s.src);
+        revealAll(); // script failed: never leave scroll-reveal sections invisible
+      };
       document.head.appendChild(s);
     }
     next();
   }
 
-  function boot() {
-    injectTemplate()
-      .then(function () { loadScriptsSequentially(JS_SEQUENCE); })
-      .catch(function (e) { console.error("[sm-home-loader] boot failed:", e); });
+  // home.css hides .r sections until home.js reveals them on scroll. If the
+  // script cannot run, show them anyway so the page is never a column of gaps.
+  function revealAll() {
+    var els = document.querySelectorAll(".r");
+    for (var i = 0; i < els.length; i++) els[i].classList.add("in");
   }
 
-  injectCss();
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { tagBody(); boot(); });
-  } else {
-    tagBody();
-    boot();
+  // Everything network-bound starts NOW and runs in parallel. The template is
+  // inserted as soon as it and the DOM are ready, but stays hidden until the
+  // stylesheet is in.
+  earlyHints();
+  var cssReady = injectCss();
+  var templateReady = fetchTemplate();
+  var domReady = new Promise(function (resolve) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { resolve(); });
+    } else {
+      resolve();
+    }
+  });
+
+  var revealed = false;
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    document.documentElement.classList.remove("sm-boot-pending");
   }
+  cssReady.then(function () {
+    // One frame so the just-applied styles are painted before the reveal; the
+    // timer covers background tabs, where rAF is paused.
+    requestAnimationFrame(reveal);
+    setTimeout(reveal, 120);
+  });
+
+  Promise.all([templateReady, domReady])
+    .then(function (r) { tagBody(); return injectTemplate(r[0]); })
+    .then(function () { loadScriptsSequentially(JS_SEQUENCE); })
+    .catch(function (e) {
+      reveal();
+      console.error("[sm-home-loader] boot failed:", e);
+    });
 })();

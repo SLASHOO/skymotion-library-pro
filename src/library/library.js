@@ -3591,27 +3591,24 @@
       throw new Error("HLS_NOT_SUPPORTED");
     }
 
+    // Adaptive, not locked to the top rendition. The ladder tops out at
+    // 1080x1920 (~8 Mbps peak); forcing it on every device meant a first visit
+    // on a normal mobile connection spent many seconds buffering — or never
+    // started — and a stall mid-clip had no way to step down.
+    // Start on ~720p (abrEwmaDefaultEstimate) so the first frame is quick and
+    // still sharp, then ABR steps UP to 1080p as soon as the link allows and
+    // DOWN to 480/360 when it does not. No player-size cap: a full-screen
+    // phone player needs the top rendition anyway and desktop keeps its sharpness.
     const hls = new Hls({
       enableWorker: true,
       lowLatencyMode: false,
       backBufferLength: 30,
-      // Both callers (move player, plan intro) already cover the initial
-      // wait with their own loading UI (poster-fill / spinner), so there's
-      // no benefit to hls.js's usual "start low, step up" behavior — it
-      // would just mean a few seconds of visibly blurry video for no
-      // shorter a wait. Force the top rendition from the first fragment.
-      capLevelToPlayerSize: false
-      // NOTE: previously also set startLevel:9999 here to win the race
-      // against hls.js's own first-fragment request. Real-site Network
-      // tab traces showed that combined with the hls.currentLevel lock
-      // below, several early segments (video1.ts, video2.ts, ...) were
-      // each being fetched TWICE at two different sizes — startLevel
-      // kicking off one request and the currentLevel assignment on
-      // MANIFEST_PARSED separately flushing/re-requesting another,
-      // wasting bandwidth and likely racing on which one actually renders
-      // first. Removed startLevel and rely solely on the currentLevel
-      // lock (set once, before any fragment has loaded) instead of
-      // stacking two different "pick a level" mechanisms.
+      capLevelToPlayerSize: false,
+      abrEwmaDefaultEstimate: 5500000,
+      manifestLoadingMaxRetry: 3,
+      levelLoadingMaxRetry: 4,
+      fragLoadingMaxRetry: 6,
+      fragLoadingRetryDelay: 800
     });
 
     await new Promise((resolve, reject) => {
@@ -3624,39 +3621,32 @@
       };
       const timeout = setTimeout(
         () => finish(reject, new Error("HLS_MANIFEST_TIMEOUT")),
-        15000
+        20000
       );
 
       hls.once(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-      hls.once(Hls.Events.MANIFEST_PARSED, (_event, data) => {
-        // startLevel above only decides the FIRST fragment. hls.js's ABR
-        // controller is still free to downgrade every fragment after that
-        // based on measured throughput — and a forced high-bitrate first
-        // fragment taking a while to download over a real (non-CDN-test)
-        // connection can itself convince the bandwidth estimator the link
-        // is slow, dropping quality for most of the clip and only
-        // recovering near the end as the estimate catches up. These clips
-        // are short (10-25s); lock the level for the whole session instead
-        // of leaving ABR free to react mid-clip. Picks by actual bitrate
-        // rather than assuming array order (see 69f7357's fix for why).
-        const levels = data?.levels;
-        if (Array.isArray(levels) && levels.length) {
-          let bestIndex = 0;
-          let bestBitrate = -1;
-          levels.forEach((level, index) => {
-            const bitrate = Number(level?.bitrate) || 0;
-            if (bitrate > bestBitrate) {
-              bestBitrate = bitrate;
-              bestIndex = index;
-            }
-          });
-          hls.currentLevel = bestIndex;
-        }
-        finish(resolve);
-      });
+      hls.once(Hls.Events.MANIFEST_PARSED, () => finish(resolve));
+
+      // Fatal errors AFTER the manifest parsed (network blip, decoder hiccup)
+      // used to be swallowed, leaving a black player forever. Recover in place:
+      // restart loading on network errors, re-init the decoder on media errors,
+      // and only surface the failure when recovery keeps failing.
+      let networkRetries = 0;
+      let mediaRetries = 0;
       hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data?.fatal) {
+        if (!data?.fatal) return;
+        if (!settled) {
           finish(reject, new Error(`HLS_${data?.details || "FATAL"}`));
+          return;
+        }
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR && networkRetries < 3) {
+          networkRetries += 1;
+          setTimeout(() => { try { hls.startLoad(); } catch (_) {} }, 600 * networkRetries);
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR && mediaRetries < 2) {
+          mediaRetries += 1;
+          try { hls.recoverMediaError(); } catch (_) {}
+        } else {
+          emit("sm:playback_error", { status: `hls_${data?.details || "fatal"}`, title: video?.title || "" });
         }
       });
       hls.attachMedia(player);
@@ -4555,6 +4545,10 @@
     updateFilterUi();
 
     loadItems();
+
+    // Warm the video engine while the user is still browsing, so the first tap
+    // on a move/plan does not also pay for downloading hls.js.
+    setTimeout(() => { loadHlsJs().catch(() => null); }, 1200);
 
     setTimeout(() => {
       if (!assistant.classList.contains("active")) {
