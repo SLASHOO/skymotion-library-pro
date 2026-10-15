@@ -203,6 +203,10 @@
     return v?.id || v?.slug || v?.videoUrl || v?.video_url || ((v?.title || "") + "|" + (v?.duration || ""));
   }
 
+  function stripVideoExtension(name) {
+    return String(name || "").replace(/\.(mp4|mov|m4v|webm)$/i, "");
+  }
+
   function hasMatch(itemValue, selectedValue) {
     if (!selectedValue) return true;
     const arr = Array.isArray(itemValue) ? itemValue.map((x) => String(x).toLowerCase()) : [];
@@ -846,53 +850,6 @@
     return () => {
       document.removeEventListener("fullscreenchange", sync);
       document.removeEventListener("webkitfullscreenchange", sync);
-    };
-  }
-
-  function isMobilePlayerUi() {
-    return window.matchMedia("(max-width: 900px)").matches;
-  }
-
-  function isPortraitViewport() {
-    return window.matchMedia("(orientation: portrait)").matches;
-  }
-
-  function shouldShowRotateHint() {
-    return isMobilePlayerUi() && isPortraitViewport();
-  }
-
-  function setRotateHintVisible(visible) {
-    const hint = $("rotateHint");
-    if (!hint) return;
-    hint.classList.toggle("is-visible", !!visible);
-  }
-
-  function bindRotateHint() {
-    let hideTimer = null;
-
-    const update = () => setRotateHintVisible(shouldShowRotateHint());
-
-    const showTemporarily = () => {
-      clearTimeout(hideTimer);
-      update();
-
-      if (shouldShowRotateHint()) {
-        hideTimer = setTimeout(() => {
-          setRotateHintVisible(false);
-        }, 2600);
-      }
-    };
-
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-
-    showTemporarily();
-
-    return () => {
-      clearTimeout(hideTimer);
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-      setRotateHintVisible(false);
     };
   }
 
@@ -3807,9 +3764,6 @@
 
           <div class="player__status" id="playerStatus" aria-live="polite">Loading video…</div>
 
-          <div class="player__rotateHint" id="rotateHint" aria-hidden="true">
-            Rotate phone for better view
-          </div>
 
           <div class="player__controls" id="playerControls">
             <div class="player__progressWrap">
@@ -3981,7 +3935,6 @@
 
       if (controls && controls.contains(target)) return;
       if (target.closest(".player__top")) return;
-      if (target.closest(".player__rotateHint")) return;
 
       togglePlayerPlayback(player, playPauseBtn);
     };
@@ -3991,7 +3944,6 @@
     }
 
     const removeFsBindings = bindFullscreenState(player);
-    const removeRotateHintBindings = bindRotateHint();
 
     if (fsBtn) {
       fsBtn.addEventListener("click", async () => {
@@ -4023,7 +3975,6 @@
       player?.removeEventListener("ended", onEnded);
 
       if (removeFsBindings) removeFsBindings();
-      if (removeRotateHintBindings) removeRotateHintBindings();
       if (removeAmbientBindings) removeAmbientBindings();
 
       setFsUiHidden(false);
@@ -4530,6 +4481,8 @@
               pilot: video?.pilot?.length ? video.pilot : metadata?.pilot || [],
               mood: video?.mood?.length ? video.mood : metadata?.mood || []
             };
+
+            merged.title = stripVideoExtension(merged.title);
 
             // Never carry a legacy public MP4 into a secure Bunny catalog item.
             delete merged.videoUrl;

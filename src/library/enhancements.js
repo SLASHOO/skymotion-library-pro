@@ -911,7 +911,7 @@
     setLast({
       type: type,
       id: String(d.item_id),
-      title: d.title || "",
+      title: String(d.title || "").replace(/\.(mp4|mov|m4v|webm)$/i, ""),
       cover: d.cover || "",
       meta: d.meta || "",
       ts: Date.now()
