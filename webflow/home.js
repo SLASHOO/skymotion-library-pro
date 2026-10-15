@@ -30,7 +30,7 @@
     if(!wantsLightClip() && !v.getAttribute('src')){ v.src = HERO_DESKTOP_SRC + (v.classList.contains('pro__vid') ? '?pro' : ''); v.load(); }
     function attempt(){
       var p = v.play();
-      if(p && p.then){ p.then(function(){ v.__smPlay = 'ok'; }); }
+      if(p && p.then){ p.then(function(){ v.__smPlay = 'ok'; }, function(){}); }
       if(p && p.catch){
         p.catch(function(err){
           v.__smPlay = (err && err.name) || 'error';
@@ -45,20 +45,9 @@
   }
   startVideo(document.querySelector('.hero__video'));
 
-  // The Pro reel sits far below the fold and reuses the 8.7 MB hero clip. Starting
-  // it with the page made two big downloads fight on a first (cold, mobile) visit,
-  // so the hero stalled. It now loads only when it is about to scroll into view.
-  (function(){
-    var v = document.querySelector('.pro__vid');
-    if(!v) return;
-    function go(){ startVideo(v); }
-    if('IntersectionObserver' in window){
-      var vo = new IntersectionObserver(function(es){
-        if(es[0].isIntersecting){ vo.disconnect(); go(); }
-      }, { rootMargin:'500px 0px' });
-      vo.observe(v);
-    } else { go(); }
-  })();
+  // The Pro reel starts together with the page, exactly like the hero (no scroll-triggered
+  // start): the clips are now light (0.9 MB on phones), so there is nothing to wait for.
+  startVideo(document.querySelector('.pro__vid'));
 
   // SCHEME route: draw while the section is in view, reset when it leaves (no loop)
   (function(){
