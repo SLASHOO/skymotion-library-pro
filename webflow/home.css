@@ -403,6 +403,13 @@ html.sm-home-page body.sm-home-page{
   .pro__video{ height:64vh; }
   .pro__sloganStage{ padding-top:36vh; }
 }
+/* iOS/WebKit does not paint a <video> that sits inside an element with a CSS filter
+   (the clip shows as a black box). The blur-to-sharp pitch effect is therefore desktop-
+   only; phones/touch keep the scale+parallax but no filter (this also beats the inline
+   filter the scroll script writes). */
+@media (max-width:900px), (hover:none) and (pointer:coarse){
+  .pro__video{ filter:none !important; will-change:transform; }
+}
 @media (prefers-reduced-motion:reduce){
   .pro__pitchSec{ height:auto; }
   .pro__pitch{ position:static; height:auto; padding:clamp(60px,8vw,90px) 24px 0; }
