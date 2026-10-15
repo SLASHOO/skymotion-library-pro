@@ -1795,9 +1795,10 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
   line-height:1.4;
 }
 
-/* Move player on phones: no vignette mask (it read as a black circle and dimmed the
-   on-screen text). Portrait phones whose screen is close to the 9:16 video fill the
-   screen; taller/other screens keep the whole frame (contain). */
+/* Move player on phones: no vignette mask (it read as a black circle and dimmed the on-screen
+   text). All moves are 9:16, so in portrait the video always fills the screen (no top/bottom
+   bars on any phone height); on taller screens the crop is taken from the right edge, where the
+   videos have no on-screen text. Landscape keeps the whole frame. */
 @media (max-width:900px){
   #sm-library-scope #modal .player video.is-ready{
     -webkit-mask-image:none !important;
@@ -1806,8 +1807,12 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     background:#000 !important;
   }
 }
-@media (max-width:900px) and (orientation:portrait) and (min-aspect-ratio:9/17){
-  #sm-library-scope #modal .player video.is-ready{ object-fit:cover !important; }
+@media (max-width:900px) and (orientation:portrait){
+  #sm-library-scope #modal .player video,
+  #sm-library-scope #modal .player video.is-ready{
+    object-fit:cover !important;
+    object-position:25% 50% !important;
+  }
 }
 
 /* Free users on the Saved sub-tab of Moves: only the Pro message, no empty-state card or "0/0 moves". */
