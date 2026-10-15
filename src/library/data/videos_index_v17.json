@@ -849,7 +849,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-01-beach.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-01-beach.jpg"
   },
   {
     "kind": "plan",
@@ -971,7 +971,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-02-buildings.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-02-buildings.jpg"
   },
   {
     "kind": "plan",
@@ -1080,7 +1080,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-03-coastline.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-03-coastline.jpg"
   },
   {
     "kind": "plan",
@@ -1189,7 +1189,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-04-ocean-island.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-04-ocean-island.jpg"
   },
   {
     "kind": "plan",
@@ -1333,7 +1333,7 @@
         "transition": "Hard cut"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.png",
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-05-landscape.jpg",
     "free": true
   },
   {
@@ -1460,7 +1460,7 @@
         "transition": "Hard cut"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.png",
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-06-mountains.jpg",
     "free": true
   },
   {
@@ -1569,7 +1569,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-07-water.png"
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-07-water.jpg"
   },
   {
     "kind": "plan",
@@ -1692,7 +1692,7 @@
         "transition": "Fade out"
       }
     ],
-    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.png",
+    "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.jpg",
     "teaser": true
   }
 ]

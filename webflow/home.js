@@ -17,17 +17,22 @@
     rs.forEach(function(el){ io.observe(el); });
   } else { rs.forEach(function(el){ el.classList.add('in'); }); }
 
-  // Start a muted background clip robustly. iOS (Low Power Mode, data saver) can
-  // refuse autoplay: then we must not leave a frozen poster frame that looks like a
-  // broken placeholder. On refusal drop the poster (the dark hero stays clean) and
-  // start the clip on the visitor's first touch/scroll, when browsers allow it.
+  // Background clips. Two faststart encodes of the same clip: a light 720p one (0.9 MB)
+  // for phones / data-saver — the HTML ships this one — and a 1080p one (2.8 MB) that
+  // large screens switch to. startVideo() also copes with iOS (Low Power Mode, data
+  // saver) refusing autoplay: it starts the clip on the visitor's first touch/scroll.
+  var HERO_DESKTOP_SRC = 'https://skymotion-cdn.b-cdn.net/home/hero-d.mp4';
+  function wantsLightClip(){
+    var c = navigator.connection;
+    return window.matchMedia('(max-width:900px)').matches || !!(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')));
+  }
   function startVideo(v){ if(!v) return;
+    if(!wantsLightClip() && !v.getAttribute('src')){ v.src = HERO_DESKTOP_SRC; v.load(); }
     function attempt(){
       var p = v.play();
       if(p && p.catch){
         p.catch(function(err){
           if(!err || err.name !== 'NotAllowedError') return;   // only a real autoplay refusal
-          v.removeAttribute('poster');
           ['touchstart','pointerdown','scroll'].forEach(function(ev){
             window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
           });
