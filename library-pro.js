@@ -3252,6 +3252,7 @@
   // Home preview: a few free moves + a couple locked previews. The free region mirrors
   // the gating free-set: items flagged free in the catalog, else the first 7 moves.
   const HOME_FREE_MOVES = 7;
+  const HOME_LOCKED_PLANS = 2;   // locked plan previews on Home (flagged teasers first, then catalog order)
   function homeMovePreview(moves, freeN, lockedN) {
     const flagged = moves.some((m) => m?.free === true);
     const freeAll = flagged ? moves.filter((m) => m?.free === true) : moves.slice(0, HOME_FREE_MOVES);
@@ -3264,7 +3265,7 @@
     return locked.filter((x) => x?.teaser === true).concat(locked.filter((x) => x?.teaser !== true)).slice(0, n);
   }
 
-  // Home plan strip: every free plan plus a locked teaser; the full list lives in the Plans tab.
+  // Home plan strip: every free plan plus locked teasers; the full list lives in the Plans tab.
   function homePlanPreview(plans, lockedN) {
     if (!plans.some((p) => p?.free === true)) return plans;
     return plans.filter((p) => p?.free === true).concat(pickTeasers(plans.filter((p) => p?.free !== true), lockedN));
@@ -3293,7 +3294,7 @@
     wrap.className = "sm-pro-mobile-home";
 
     const popularMoves = homeMovePreview(moves, 3, 1);   // mobile: 3 free + 1 locked
-    const cinematicPlans = homePlanPreview(plans, 1);    // free plans + 1 locked teaser
+    const cinematicPlans = homePlanPreview(plans, HOME_LOCKED_PLANS);    // free plans + 2 locked teasers
     const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
@@ -3357,7 +3358,7 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = homePlanPreview(plans, 1).map((item) => {   // free plans + 1 locked teaser
+    const planCards = homePlanPreview(plans, HOME_LOCKED_PLANS).map((item) => {   // free plans + 2 locked teasers
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
