@@ -34,14 +34,16 @@
       if(p && p.catch){
         p.catch(function(err){
           v.__smPlay = (err && err.name) || 'error';
-          if(!err || err.name !== 'NotAllowedError') return;   // only a real autoplay refusal
-          ['touchstart','pointerdown','scroll'].forEach(function(ev){
-            window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
-          });
         });
       }
     }
     attempt();
+    // Autoplay can be refused (iOS Low Power Mode): browsers only accept play() inside a real
+    // gesture, so retry on the visitor's first tap/click (touchend/pointerup/click count; scroll
+    // and touchstart do not on iOS). Registered once, harmless when the clip is already playing.
+    ['touchend','pointerup','click'].forEach(function(ev){
+      window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
+    });
   }
   startVideo(document.querySelector('.hero__video'));
 
