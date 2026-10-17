@@ -96,6 +96,8 @@ html.sm-home-page body.sm-home-page{
 /* Background clips are never interactive: hide iOS/WebKit's native "start playback" overlay
    (shown when autoplay is refused, e.g. Low Power Mode) and any native controls. */
 .hero__video, .pro__vid{ pointer-events:none; }
+/* Animated-WebP stand-in used when the OS refuses video autoplay (see home.js) */
+.sm-vidfb{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; pointer-events:none; }
 .hero__video::-webkit-media-controls, .pro__vid::-webkit-media-controls,
 .hero__video::-webkit-media-controls-panel, .pro__vid::-webkit-media-controls-panel,
 .hero__video::-webkit-media-controls-start-playback-button, .pro__vid::-webkit-media-controls-start-playback-button,

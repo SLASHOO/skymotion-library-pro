@@ -19,30 +19,65 @@
 
   // Background clips. Two faststart encodes of the same clip: a light 720p one (0.9 MB)
   // for phones / data-saver — the HTML ships this one — and a 1080p one (2.8 MB) that
-  // large screens switch to. startVideo() also copes with iOS (Low Power Mode, data
-  // saver) refusing autoplay: it starts the clip on the visitor's first touch/scroll.
+  // large screens switch to.
+  //
+  // Autoplay of a <video> is decided by the OS, not by the page: iOS in Low Power Mode refuses
+  // it (play() rejects with NotAllowedError) until the visitor taps. To make motion appear with
+  // NO tap in every case, a refusal is answered by an animated WebP of the same footage (images
+  // animate without any permission). It is fetched ONLY after a real refusal, so normal visits
+  // pay nothing. A later tap that lets the video play swaps the video back in.
   var HERO_DESKTOP_SRC = 'https://skymotion-cdn.b-cdn.net/home/hero-d.mp4';
+  var HERO_FALLBACK_SRC = 'https://skymotion-cdn.b-cdn.net/home/hero-fallback.webp';
   function wantsLightClip(){
     var c = navigator.connection;
     return window.matchMedia('(max-width:900px)').matches || !!(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || '')));
   }
+  function showMotionFallback(v){
+    if(v.__smFb || !v.parentNode || !window.matchMedia('(max-width:900px)').matches) return;   // phones only
+    var img = new Image();
+    img.className = 'sm-vidfb'; img.alt = ''; img.decoding = 'async'; img.setAttribute('aria-hidden', 'true');
+    img.src = HERO_FALLBACK_SRC;
+    v.parentNode.insertBefore(img, v.nextSibling);
+    v.style.visibility = 'hidden';
+    v.__smFb = img;
+  }
+  function hideMotionFallback(v){
+    if(!v.__smFb) return;
+    v.__smFb.parentNode && v.__smFb.parentNode.removeChild(v.__smFb);
+    v.__smFb = null; v.style.visibility = '';
+  }
   function startVideo(v){ if(!v) return;
     if(!wantsLightClip() && !v.getAttribute('src')){ v.src = HERO_DESKTOP_SRC + (v.classList.contains('pro__vid') ? '?pro' : ''); v.load(); }
+    var refused = 0;
+    var forceBlocked = /[?&]smforce=blocked/.test(location.search);   // preview/test: behave as if autoplay were refused
+    function refuse(){
+      v.__smPlay = 'NotAllowedError';
+      refused++;
+      if(refused < 3){ setTimeout(attempt, 500 * refused); }   // a couple of quick retries (cheap) ...
+      else { showMotionFallback(v); }                          // ... then motion without the video
+    }
     function attempt(){
+      if(!v.paused && v.__smPlay === 'ok') return;
+      if(forceBlocked){ refuse(); return; }
       var p = v.play();
-      if(p && p.then){ p.then(function(){ v.__smPlay = 'ok'; }, function(){}); }
-      if(p && p.catch){
-        p.catch(function(err){
-          v.__smPlay = (err && err.name) || 'error';
+      if(p && p.then){
+        p.then(function(){ v.__smPlay = 'ok'; hideMotionFallback(v); }, function(err){
+          if(err && err.name === 'NotAllowedError'){ refuse(); }
+          else { v.__smPlay = (err && err.name) || 'error'; }
         });
       }
     }
     attempt();
-    // Autoplay can be refused (iOS Low Power Mode): browsers only accept play() inside a real
-    // gesture, so retry on the visitor's first tap/click (touchend/pointerup/click count; scroll
-    // and touchstart do not on iOS). Registered once, harmless when the clip is already playing.
+    v.addEventListener('canplay', function(){ if(v.paused && !v.__smFb) attempt(); }, { once:true });
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden && v.paused && !v.__smFb) attempt(); });
+    // A real tap always counts as a gesture (touchend/pointerup/click; scroll and touchstart do not on iOS).
     ['touchend','pointerup','click'].forEach(function(ev){
-      window.addEventListener(ev, function(){ if(v.paused){ var q = v.play(); if(q && q.catch) q.catch(function(){}); } }, { passive:true, once:true });
+      window.addEventListener(ev, function(e){
+        if(!e.isTrusted || !v.paused) return;   // only a real gesture can unlock playback
+        forceBlocked = false;
+        var q = v.play();
+        if(q && q.then){ q.then(function(){ v.__smPlay = 'ok'; hideMotionFallback(v); }, function(){}); }
+      }, { passive:true });
     });
   }
   startVideo(document.querySelector('.hero__video'));
