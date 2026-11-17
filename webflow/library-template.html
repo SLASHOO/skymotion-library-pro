@@ -860,6 +860,17 @@
 #sm-pack-modal .sm-pkmodal__cta:hover{ transform:translateY(-1px); background:#fff; }
 #sm-pack-modal .sm-pkmodal__later{ width:100%; margin:10px 0 0; height:42px; border:0; background:transparent; color:var(--muted); font-size:13px; cursor:pointer; }
 #sm-pack-modal .sm-pkmodal__later:hover{ color:#fff; }
+/* free intro in the cover: play button, then the video replaces the picture */
+#sm-pack-modal .sm-pkmodal__playbtn{ position:absolute; z-index:2; left:50%; top:50%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; border:1px solid rgba(255,255,255,.35); background:rgba(0,0,0,.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); cursor:pointer; display:grid; place-items:center; padding:0; transition:transform .15s ease, background .15s ease; }
+#sm-pack-modal .sm-pkmodal__playbtn:hover{ transform:translate(-50%,-50%) scale(1.05); background:rgba(0,0,0,.6); }
+#sm-pack-modal .sm-pkmodal__playbtn::before{ content:""; margin-left:4px; border-style:solid; border-width:10px 0 10px 17px; border-color:transparent transparent transparent #fff; }
+#sm-pack-modal .sm-pkmodal__playbtn[hidden]{ display:none; }
+#sm-pack-modal .sm-pkmodal__cover.is-playing{ height:auto; aspect-ratio:16/9; }
+#sm-pack-modal .sm-pkmodal__cover.is-playing::after,
+#sm-pack-modal .sm-pkmodal__cover.is-playing > img,
+#sm-pack-modal .sm-pkmodal__cover.is-playing .sm-pkmodal__playbtn,
+#sm-pack-modal .sm-pkmodal__cover.is-playing .sm-pkmodal__pro{ display:none; }
+#sm-pack-modal .sm-pkmodal__vid{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; z-index:1; }
 @keyframes smPkIn{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
 @media (max-width:520px){ #sm-pack-modal{ padding:20px 14px; } }
 </style>

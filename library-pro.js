@@ -1025,6 +1025,7 @@
   }
 
   let allItems = [];
+  let packCatalog = [];   // creator packs from the catalog (kind:"pack", with their lessons) — not moves/plans
   let filtered = [];
   let visibleCount = 12;
   let activeProTab = "all";
@@ -2349,7 +2350,25 @@
   // Temporary: the only pack right now (by air4future) isn't ready to open
   // yet. Keep it visible everywhere with a "Coming soon" state instead of
   // pulling it — flip back to false once it's ready to open normally.
-  const PRO_PACK_COMING_SOON = true;
+  const PRO_PACK_COMING_SOON = false;
+
+  // Real lessons of a pack (from the catalog, kind:"pack"). Null when the catalog has none yet,
+  // so the placeholder lessons below keep the pack screen from being empty.
+  function getCatalogPackLessons(packId) {
+    const entry = packCatalog.find((p) => String(p?.id) === String(packId));
+    const list = Array.isArray(entry?.lessons) ? entry.lessons : [];
+    if (!list.length) return null;
+    return list.map((l, i) => ({
+      n: l.n ?? i + 1,
+      title: l.title || `Lesson ${i + 1}`,
+      desc: l.desc || "",
+      duration: formatSeconds(l.dur_s) || "",
+      thumb: l.thumb || "",
+      free: l.free === true,
+      desktop_id: l.desktop_id || "",
+      mobile_id: l.mobile_id || ""
+    }));
+  }
 
   function getProPackItems() {
     const plans = filtered.filter(isPlan);
@@ -2391,7 +2410,7 @@
         movesCount: 13,
         plansCount: 5,
         checklistTitle: "Open checklist",
-        lessons: [
+        lessons: getCatalogPackLessons("real_estate_creator_pack") || [
           {
             n: 1,
             title: "Intro",
@@ -2650,7 +2669,7 @@
 
   function renderPackLessonCard(lesson) {
     return `
-      <article class="sm-pro-pack-lesson" data-pro-lesson="${escapeHtml(lesson.title)}">
+      <article class="sm-pro-pack-lesson${lesson.desktop_id || lesson.mobile_id ? " is-playable" : ""}" data-pro-lesson="${escapeHtml(lesson.title)}" data-pro-lesson-n="${escapeHtml(lesson.n)}">
         <img src="${escapeHtml(lesson.thumb || FALLBACK_THUMB)}" alt="${escapeHtml(lesson.title)}" loading="lazy">
         <span class="sm-pro-pack-lesson__shade" aria-hidden="true"></span>
         <span class="sm-pro-pack-lesson__num">${escapeHtml(lesson.n)}</span>
@@ -2892,12 +2911,12 @@
         </button>
 
         <section class="sm-pro-pack-section sm-pro-pack-section--plans">
-          <div class="sm-pro-pack-section-head"><h2>Plans in this pack</h2></div>
+          <div class="sm-pro-pack-section-head"><h2>Plans in this pack <span class="sm-pro-devtag">In development</span></h2></div>
           ${renderPackPlansRail(plans)}
         </section>
 
         <section class="sm-pro-pack-section sm-pro-pack-section--moves">
-          <div class="sm-pro-pack-section-head"><h2>Moves in this pack</h2></div>
+          <div class="sm-pro-pack-section-head"><h2>Moves in this pack <span class="sm-pro-devtag">In development</span></h2></div>
           <div class="sm-pro-pack-move-row">
             ${visibleMoves.map((move, index) => renderPackMoveTile(move, index)).join("")}
             ${renderPackMoreMovesCard(hiddenMoves)}
@@ -2984,7 +3003,7 @@
 
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
-          <h2>Plans in this pack</h2>
+          <h2>Plans in this pack <span class="sm-pro-devtag">In development</span></h2>
           <button type="button" data-pro-go-tab="plans">View all</button>
         </div>
         ${renderPackPlansRail(plans)}
@@ -2992,7 +3011,7 @@
 
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
-          <h2>Moves in this pack</h2>
+          <h2>Moves in this pack <span class="sm-pro-devtag">In development</span></h2>
           <button type="button" data-pro-go-tab="moves">View all</button>
         </div>
         <div class="sm-pro-pack-move-row">
@@ -4126,6 +4145,49 @@
     await mountVideoPlayer(video, { onPrev: goPrev, onNext: goNext });
   }
 
+  // Pack lessons play in the same player as moves. Phones get the vertical (mobile) encode, larger
+  // screens the horizontal one — same rule as the plan intro videos.
+  function lessonAsVideo(lesson) {
+    const isPhone = window.matchMedia && window.matchMedia("(max-width:640px)").matches;
+    const guid = (isPhone ? lesson.mobile_id : lesson.desktop_id) || lesson.desktop_id || lesson.mobile_id || "";
+    return { id: guid, bunny_video_id: guid, title: lesson.title, thumb: lesson.thumb, duration: lesson.duration };
+  }
+
+  async function openPackLesson(packId, n) {
+    const pack = getProPackItems().find((p) => String(p.id) === String(packId));
+    const lessons = Array.isArray(pack?.lessons) ? pack.lessons : [];
+    const idx = lessons.findIndex((l) => Number(l.n) === Number(n));
+    const lesson = lessons[idx];
+    if (!lesson) return;
+
+    const video = lessonAsVideo(lesson);
+    if (!hasPlayableVideo(video)) return;   // placeholder lesson (no video yet)
+
+    returnToPlanAfterClose = false;
+    const go = (step) => {
+      const next = lessons[idx + step];
+      if (next) openPackLesson(packId, next.n);
+    };
+    await mountVideoPlayer(video, {
+      onPrev: idx > 0 ? () => go(-1) : null,
+      onNext: idx < lessons.length - 1 ? () => go(1) : null
+    });
+  }
+
+  // Read-only bridges for enhancements.js (separate script): the free intro lesson shown in the
+  // pack preview popup, and whether the member can open a pack without going through the popup.
+  window.SMPackIntro = {
+    get(packId) {
+      const lesson = (getCatalogPackLessons(packId) || []).find((l) => l.free && (l.desktop_id || l.mobile_id));
+      return lesson ? { title: lesson.title, desktop_id: lesson.desktop_id, mobile_id: lesson.mobile_id, thumb: lesson.thumb } : null;
+    }
+  };
+  window.SMAccess = {
+    ownsPack(packId) {
+      return Boolean(accessCache.isPro || accessCache.ownedPacks.includes(String(packId)));
+    }
+  };
+
   window.addEventListener("sm:open-move-player", (e) => {
     returnToPlanAfterClose = true;
 
@@ -4260,6 +4322,14 @@
       const nowSaved = toggleSaved(item);
       setMoveSaveUi(getVideoId(item), nowSaved);
       refreshSaveDependentViews();
+      return;
+    }
+
+    const lessonCard = e.target.closest("[data-pro-lesson-n]");
+    if (lessonCard) {
+      e.preventDefault();
+      e.stopPropagation();
+      openPackLesson(activeProPackId, Number(lessonCard.dataset.proLessonN));
       return;
     }
 
@@ -4440,7 +4510,16 @@
       const res = await fetch(window.SM_LIBRARY_DATA_URL || CDN_INDEX_URL, { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       const json = await res.json();
-      const legacyItems = Array.isArray(json) ? json : [];
+      const rawCatalog = Array.isArray(json) ? json : [];
+      packCatalog = rawCatalog.filter((x) => x?.kind === "pack");
+      const legacyItems = rawCatalog.filter((x) => x?.kind !== "pack");
+      // Pack lesson videos live in the same Bunny library as moves; they must never show up in Moves.
+      const lessonVideoIds = new Set(
+        packCatalog.flatMap((p) => (Array.isArray(p?.lessons) ? p.lessons : [])
+          .flatMap((l) => [l?.desktop_id, l?.mobile_id]))
+          .filter(Boolean)
+          .map((id) => String(id).toLowerCase())
+      );
 
       let items = legacyItems;
       if (SECURE_CATALOG_ENABLED) {
@@ -4450,7 +4529,8 @@
           // by Plan Viewer via intro_video — they are not moves and must not
           // show up in the Moves tab.
           const secureVideos = (Array.isArray(payload?.items) ? payload.items : [])
-            .filter((v) => !String(v?.title || "").toLowerCase().startsWith("plan-intro-"));
+            .filter((v) => !String(v?.title || "").toLowerCase().startsWith("plan-intro-"))
+            .filter((v) => !lessonVideoIds.has(String(v?.bunny_video_id || v?.guid || v?.id || "").toLowerCase()));
           const titleKey = (value) => String(value || "")
             .replace(/\.[a-z0-9]{2,5}$/i, "")
             .toLowerCase()
@@ -4568,6 +4648,7 @@
       .then(() => {
         renderResults();
         updateFilterUi();
+        window.dispatchEvent(new CustomEvent("sm:access_ready"));
       })
       .catch(() => null);
   })();

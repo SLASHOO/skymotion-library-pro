@@ -1934,3 +1934,12 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     padding:38px var(--spv3-gutter) 8px !important;
   }
 }
+
+/* Pack screen: parts that are not ready yet are tagged "In development"; lessons with a video are tappable. */
+#sm-library-scope .sm-pro-devtag{
+  display:inline-flex; align-items:center; margin-left:10px; padding:3px 8px; border-radius:100px;
+  border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08); color:rgba(255,255,255,.78);
+  font:600 9px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace; letter-spacing:.14em; text-transform:uppercase;
+  vertical-align:middle; white-space:nowrap;
+}
+#sm-library-scope .sm-pro-pack-lesson.is-playable{ cursor:pointer; }

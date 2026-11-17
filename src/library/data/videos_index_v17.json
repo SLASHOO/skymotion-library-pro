@@ -1694,5 +1694,41 @@
     ],
     "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/plan-08-waterfront-city.jpg",
     "teaser": true
+  },
+  {
+    "kind": "pack",
+    "id": "real_estate_creator_pack",
+    "title": "Real Estate Pack",
+    "creator": "air4future",
+    "lessons": [
+      {
+        "n": 1,
+        "title": "Intro",
+        "desc": "Start with the pack logic before flying.",
+        "free": true,
+        "dur_s": 90,
+        "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/pack-real-estate-lesson-1.jpg",
+        "desktop_id": "51d3aba6-5957-42d7-aa6f-b6e424c35cc4",
+        "mobile_id": "65aee154-ea63-423f-8d1d-64e770c736d8"
+      },
+      {
+        "n": 2,
+        "title": "Camera Settings",
+        "desc": "Set exposure, ND and basic capture settings.",
+        "dur_s": 146,
+        "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/pack-real-estate-lesson-2.jpg",
+        "desktop_id": "5f94f6c7-f2c7-45b7-94ec-77a8b6bfaafe",
+        "mobile_id": "0e4b4f7b-3255-47e7-ac23-ffd0b1228801"
+      },
+      {
+        "n": 3,
+        "title": "Editing Workflow",
+        "desc": "Turn the shots into a clean property sequence.",
+        "dur_s": 117,
+        "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/pack-real-estate-lesson-3.jpg",
+        "desktop_id": "2b04bf8f-72bf-4cc7-995e-193d36b07fab",
+        "mobile_id": "5067b536-35f0-4835-94e7-5da94ac5764a"
+      }
+    ]
   }
 ]

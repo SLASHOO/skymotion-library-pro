@@ -466,18 +466,60 @@
 (function(){
   var modal = document.getElementById("sm-pack-modal");
   if (!modal) return;
+  // Free intro of the pack, played inside the popup cover (the same HLS path as every other video).
+  var introCleanup = null;
+  function stopIntro(){
+    var cover = modal.querySelector(".sm-pkmodal__cover");
+    var v = cover && cover.querySelector(".sm-pkmodal__vid");
+    if (v){ try { v.pause(); } catch(_){} }
+    if (introCleanup){ try { introCleanup(); } catch(_){} introCleanup = null; }
+    if (v && v.parentNode) v.parentNode.removeChild(v);
+    if (cover) cover.classList.remove("is-playing");
+  }
+  function setupIntro(intro){
+    var cover = modal.querySelector(".sm-pkmodal__cover");
+    if (!cover) return;
+    var btn = cover.querySelector(".sm-pkmodal__playbtn");
+    if (!intro || !window.SMLibraryPlayback){
+      if (btn) btn.hidden = true;
+      cover.classList.remove("has-intro");
+      return;
+    }
+    if (!btn){
+      btn = document.createElement("button");
+      btn.type = "button"; btn.className = "sm-pkmodal__playbtn"; btn.setAttribute("aria-label", "Watch the intro");
+      cover.appendChild(btn);
+    }
+    btn.hidden = false;
+    cover.classList.add("has-intro");
+    btn.onclick = function(){
+      var guid = intro.desktop_id || intro.mobile_id;   // horizontal encode fits the popup width
+      var v = document.createElement("video");
+      v.className = "sm-pkmodal__vid"; v.controls = true; v.playsInline = true; v.setAttribute("playsinline", "");
+      cover.appendChild(v);
+      cover.classList.add("is-playing");
+      window.SMLibraryPlayback.attachSource(v, guid).then(function(cleanup){
+        if (!cover.classList.contains("is-playing")){ try { cleanup(); } catch(_){} return; }   // closed meanwhile
+        introCleanup = cleanup;
+        var pr = v.play(); if (pr && pr.catch) pr.catch(function(){});
+      }).catch(function(){ stopIntro(); });
+    };
+  }
+
   window.smPackModal = {
     open: function(d){
       d = d || {};
-      var cov = document.getElementById("smPkCover"); if (cov) cov.src = d.cover || "";
+      stopIntro();
+      var cov = document.getElementById("smPkCover"); if (cov) cov.src = (d.intro && d.intro.thumb) || d.cover || "";
       var by  = document.getElementById("smPkBy");    if (by)  by.textContent = d.by || "";
       var t   = document.getElementById("smPkTitle"); if (t)   t.textContent = d.title || "Creator pack";
       var ch  = document.getElementById("smPkChips");
       if (ch){ ch.innerHTML = ""; (d.chips || []).forEach(function(c){ var s = document.createElement("span"); s.textContent = c; ch.appendChild(s); }); }
       var ds  = document.getElementById("smPkDesc");  if (ds)  ds.textContent = d.desc || "";
+      setupIntro(d.intro);
       modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false");
     },
-    close: function(){ modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
+    close: function(){ stopIntro(); modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
   };
   modal.addEventListener("click", function(e){ if (e.target.closest("[data-sm-pkclose]")) window.smPackModal.close(); });
   var unlock = document.getElementById("smPkUnlock");
@@ -597,14 +639,19 @@
       by:    by ? by.textContent.trim() : "",
       title: ttl ? ttl.textContent.trim() : "Creator pack",
       chips: chips,
-      desc:  desc ? desc.textContent.trim() : ""
+      desc:  desc ? desc.textContent.trim() : "",
+      intro: window.SMPackIntro ? window.SMPackIntro.get(card.getAttribute("data-pro-pack")) : null
     });
+  }
+  function ownsPack(card){
+    var id = card.getAttribute("data-pro-pack");
+    return !!(id && window.SMAccess && window.SMAccess.ownsPack(id));
   }
   function processCard(card){
     if (!FREE_SET) return;
     var isPack = card.hasAttribute("data-pro-pack");
     if (!(card.hasAttribute("data-item-id") || isPack)) return;
-    var lock = !IS_PRO && !cardIsFree(card);
+    var lock = !IS_PRO && !cardIsFree(card) && !(isPack && ownsPack(card));
     if (isPack) card.classList.toggle("sm-pack-gated", lock);
     else card.classList.toggle("sm-locked", lock);
     if (lock) ensureBadge(card, isPack); else removeBadge(card);
@@ -613,6 +660,7 @@
     if (!FREE_SET) return;
     scopeEl.querySelectorAll("[data-item-id], [data-pro-pack]").forEach(processCard);
   }
+  window.addEventListener("sm:access_ready", processAll);   // pack ownership arrives after the first render
 
   // move tile: lift the duration chip out of .meta so CSS can pin it to the card's top-left
   function liftBadges(){
