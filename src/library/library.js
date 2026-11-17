@@ -4179,7 +4179,10 @@
   window.SMPackIntro = {
     get(packId) {
       const lesson = (getCatalogPackLessons(packId) || []).find((l) => l.free && (l.desktop_id || l.mobile_id));
-      return lesson ? { title: lesson.title, desktop_id: lesson.desktop_id, mobile_id: lesson.mobile_id, thumb: lesson.thumb } : null;
+      return lesson ? { title: lesson.title, duration: lesson.duration, desktop_id: lesson.desktop_id, mobile_id: lesson.mobile_id, thumb: lesson.thumb } : null;
+    },
+    lessons(packId) {
+      return (getCatalogPackLessons(packId) || []).map((l) => ({ n: l.n, title: l.title, duration: l.duration, thumb: l.thumb, free: l.free }));
     }
   };
   window.SMAccess = {

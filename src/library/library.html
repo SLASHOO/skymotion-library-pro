@@ -809,21 +809,27 @@
   <div class="sm-pkmodal__bd" data-sm-pkclose></div>
   <div class="sm-pkmodal__card">
     <button class="sm-pkmodal__x" type="button" data-sm-pkclose aria-label="Close">✕</button>
-    <div class="sm-pkmodal__cover">
-      <img id="smPkCover" alt="">
-      <span class="sm-pkmodal__pro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.4" fill="currentColor"/></svg>PRO</span>
+    <div class="sm-pkmodal__scroll">
+      <div class="sm-pkmodal__cover">
+        <img id="smPkCover" alt="">
+        <span class="sm-pkmodal__pro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.4" fill="currentColor"/></svg>PRO</span>
+        <span class="sm-pkmodal__introtag" id="smPkIntroTag" hidden><i></i>Watch the intro<b id="smPkIntroDur"></b><em>Free</em></span>
+      </div>
+      <div class="sm-pkmodal__body">
+        <span class="sm-pkmodal__by" id="smPkBy"></span>
+        <h3 class="sm-pkmodal__title" id="smPkTitle"></h3>
+        <div class="sm-pkmodal__chips" id="smPkChips"></div>
+        <p class="sm-pkmodal__desc" id="smPkDesc"></p>
+        <div class="sm-pkmodal__lessons" id="smPkLessons" hidden></div>
+        <ul class="sm-pkmodal__list">
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Step-by-step lessons — intro, camera settings, editing</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Ready-made cinematic plans</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Pre-flight checklist for the shoot</li>
+          <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Camera settings for every shot</li>
+        </ul>
+      </div>
     </div>
-    <div class="sm-pkmodal__body">
-      <span class="sm-pkmodal__by" id="smPkBy"></span>
-      <h3 class="sm-pkmodal__title" id="smPkTitle"></h3>
-      <div class="sm-pkmodal__chips" id="smPkChips"></div>
-      <p class="sm-pkmodal__desc" id="smPkDesc"></p>
-      <ul class="sm-pkmodal__list">
-        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Step-by-step lessons — intro, camera settings, editing</li>
-        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Ready-made cinematic plans</li>
-        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Pre-flight checklist for the shoot</li>
-        <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Camera settings for every shot</li>
-      </ul>
+    <div class="sm-pkmodal__foot">
       <button class="sm-pkmodal__cta" type="button" id="smPkUnlock">Unlock with Pro</button>
       <button class="sm-pkmodal__later" type="button" data-sm-pkclose>Maybe later</button>
     </div>
@@ -831,46 +837,125 @@
 </div>
 <style>
 #sm-pack-modal{
-  --ink:rgba(255,255,255,.92); --muted:rgba(255,255,255,.60); --faint:rgba(255,255,255,.40);
-  --line:rgba(255,255,255,.10); --accent:#c99a6e;
+  --ink:rgba(255,255,255,.94); --muted:rgba(255,255,255,.62); --faint:rgba(255,255,255,.40);
+  --line:rgba(255,255,255,.10); --accent:#c99a6e; --accent2:#e3bd93;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-family:"Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  position:fixed; inset:0; z-index:2147483001; display:none; overflow:auto; padding:48px 20px; color:var(--ink);
+  position:fixed; inset:0; z-index:2147483001; display:none; align-items:center; justify-content:center; padding:24px 20px; color:var(--ink);
 }
 #sm-pack-modal.is-open{ display:flex; }
 #sm-pack-modal *{ box-sizing:border-box; }
-#sm-pack-modal .sm-pkmodal__bd{ position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); }
-#sm-pack-modal .sm-pkmodal__card{ position:relative; z-index:1; margin:auto; width:min(440px,100%); border-radius:20px; overflow:hidden; background:#141414; border:1px solid rgba(255,255,255,.10); box-shadow:0 30px 80px rgba(0,0,0,.6); animation:smPkIn .35s cubic-bezier(.2,.7,.3,1); }
-#sm-pack-modal .sm-pkmodal__x{ position:absolute; top:12px; right:12px; z-index:3; width:36px; height:36px; border-radius:100px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.4); color:#fff; font-size:15px; cursor:pointer; }
-#sm-pack-modal .sm-pkmodal__cover{ position:relative; height:180px; background:#000; }
-#sm-pack-modal .sm-pkmodal__cover img{ width:100%; height:100%; object-fit:cover; display:block; }
-#sm-pack-modal .sm-pkmodal__cover::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,20,20,0) 38%, rgba(20,20,20,.92)); }
-#sm-pack-modal .sm-pkmodal__pro{ position:absolute; top:12px; left:12px; z-index:2; display:inline-flex; align-items:center; gap:5px; padding:5px 9px; border-radius:999px; background:rgba(0,0,0,.45); border:1px solid rgba(201,154,110,.55); color:var(--accent); font-family:var(--mono); font-size:10px; letter-spacing:.12em; }
+#sm-pack-modal .sm-pkmodal__bd{ position:fixed; inset:0; background:radial-gradient(120% 90% at 50% 40%, rgba(20,16,12,.55), rgba(0,0,0,.82)); backdrop-filter:blur(10px) saturate(120%); -webkit-backdrop-filter:blur(10px) saturate(120%); }
+
+/* card: fixed footer (the CTA never scrolls away), the rest scrolls */
+#sm-pack-modal .sm-pkmodal__card{
+  position:relative; z-index:1; display:flex; flex-direction:column; width:min(560px,100%); max-height:calc(100dvh - 48px);
+  border-radius:24px; overflow:hidden; background:linear-gradient(180deg,#181716,#121212 60%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 40px 100px rgba(0,0,0,.65), 0 0 0 1px rgba(201,154,110,.08), inset 0 1px 0 rgba(255,255,255,.06);
+  animation:smPkIn .42s cubic-bezier(.2,.8,.2,1);
+}
+#sm-pack-modal .sm-pkmodal__scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.18) transparent; }
+#sm-pack-modal .sm-pkmodal__x{ position:absolute; top:14px; right:14px; z-index:5; width:38px; height:38px; border-radius:100px; display:grid; place-items:center; border:1px solid rgba(255,255,255,.16); background:rgba(10,10,10,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:#fff; font-size:14px; cursor:pointer; transition:background .15s ease, transform .15s ease; }
+#sm-pack-modal .sm-pkmodal__x:hover{ background:rgba(10,10,10,.75); transform:scale(1.06); }
+
+/* cinematic 16:9 cover */
+#sm-pack-modal .sm-pkmodal__cover{ position:relative; aspect-ratio:16/9; background:#000; overflow:hidden; }
+#sm-pack-modal .sm-pkmodal__cover > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+#sm-pack-modal .sm-pkmodal__cover::after{ content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 28%, rgba(18,18,18,0) 52%, rgba(18,18,18,.96) 100%); }
+#sm-pack-modal .sm-pkmodal__pro{ position:absolute; top:16px; left:16px; z-index:2; display:inline-flex; align-items:center; gap:5px; padding:6px 10px; border-radius:999px; background:rgba(0,0,0,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:1px solid rgba(201,154,110,.55); color:var(--accent2); font-family:var(--mono); font-size:10px; letter-spacing:.14em; }
 #sm-pack-modal .sm-pkmodal__pro svg{ width:11px; height:11px; }
-#sm-pack-modal .sm-pkmodal__body{ position:relative; z-index:2; padding:18px 22px 22px; }
-#sm-pack-modal .sm-pkmodal__by{ font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
-#sm-pack-modal .sm-pkmodal__title{ margin:8px 0 0; font-size:24px; font-weight:600; letter-spacing:-.03em; color:#fff; }
-#sm-pack-modal .sm-pkmodal__chips{ display:flex; flex-wrap:wrap; gap:7px; margin:12px 0 0; }
-#sm-pack-modal .sm-pkmodal__chips span{ padding:5px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); font-size:12px; color:rgba(255,255,255,.82); }
-#sm-pack-modal .sm-pkmodal__desc{ margin:14px 0 0; font-size:13.5px; line-height:1.5; color:var(--muted); }
-#sm-pack-modal .sm-pkmodal__list{ list-style:none; margin:16px 0 0; padding:0; display:grid; gap:9px; }
-#sm-pack-modal .sm-pkmodal__list li{ display:flex; gap:9px; font-size:13.5px; line-height:1.4; color:var(--ink); }
-#sm-pack-modal .sm-pkmodal__list svg{ flex:0 0 auto; width:16px; height:16px; margin-top:2px; color:var(--accent); }
-#sm-pack-modal .sm-pkmodal__cta{ width:100%; margin:20px 0 0; height:48px; border:0; border-radius:100px; background:rgba(255,255,255,.92); color:#141414; font-weight:600; font-size:14.5px; cursor:pointer; transition:transform .15s ease, background .15s ease; }
-#sm-pack-modal .sm-pkmodal__cta:hover{ transform:translateY(-1px); background:#fff; }
-#sm-pack-modal .sm-pkmodal__later{ width:100%; margin:10px 0 0; height:42px; border:0; background:transparent; color:var(--muted); font-size:13px; cursor:pointer; }
-#sm-pack-modal .sm-pkmodal__later:hover{ color:#fff; }
-/* free intro in the cover: play button, then the video replaces the picture */
-#sm-pack-modal .sm-pkmodal__playbtn{ position:absolute; z-index:2; left:50%; top:50%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; border:1px solid rgba(255,255,255,.35); background:rgba(0,0,0,.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); cursor:pointer; display:grid; place-items:center; padding:0; transition:transform .15s ease, background .15s ease; }
-#sm-pack-modal .sm-pkmodal__playbtn:hover{ transform:translate(-50%,-50%) scale(1.05); background:rgba(0,0,0,.6); }
-#sm-pack-modal .sm-pkmodal__playbtn::before{ content:""; margin-left:4px; border-style:solid; border-width:10px 0 10px 17px; border-color:transparent transparent transparent #fff; }
+
+/* play button + "Watch the intro" tag */
+#sm-pack-modal .sm-pkmodal__playbtn{ position:absolute; z-index:2; left:50%; top:50%; width:76px; height:76px; margin:-38px 0 0 -38px; border-radius:50%; border:1px solid rgba(255,255,255,.4); background:rgba(0,0,0,.42); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); cursor:pointer; display:grid; place-items:center; padding:0; transition:transform .18s ease, background .18s ease, border-color .18s ease; }
+#sm-pack-modal .sm-pkmodal__playbtn::before{ content:""; margin-left:5px; border-style:solid; border-width:11px 0 11px 18px; border-color:transparent transparent transparent #fff; }
+#sm-pack-modal .sm-pkmodal__playbtn::after{ content:""; position:absolute; inset:-9px; border-radius:50%; border:1px solid rgba(255,255,255,.28); animation:smPkPulse 2.4s ease-out infinite; }
+#sm-pack-modal .sm-pkmodal__playbtn:hover{ transform:scale(1.07); background:rgba(0,0,0,.6); border-color:rgba(255,255,255,.65); }
 #sm-pack-modal .sm-pkmodal__playbtn[hidden]{ display:none; }
-#sm-pack-modal .sm-pkmodal__cover.is-playing{ height:auto; aspect-ratio:16/9; }
+#sm-pack-modal .sm-pkmodal__introtag{ position:absolute; z-index:2; left:16px; bottom:14px; display:inline-flex; align-items:center; gap:9px; padding:7px 12px 7px 10px; border-radius:999px; background:rgba(0,0,0,.5); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.18); font-size:12.5px; font-weight:600; color:#fff; }
+#sm-pack-modal .sm-pkmodal__introtag[hidden]{ display:none; }
+#sm-pack-modal .sm-pkmodal__introtag i{ width:0; height:0; border-style:solid; border-width:5px 0 5px 8px; border-color:transparent transparent transparent var(--accent2); }
+#sm-pack-modal .sm-pkmodal__introtag b{ font-family:var(--mono); font-weight:500; font-size:11px; letter-spacing:.06em; color:var(--muted); }
+#sm-pack-modal .sm-pkmodal__introtag em{ font-style:normal; font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; padding:2px 6px; border-radius:100px; background:rgba(201,154,110,.18); border:1px solid rgba(201,154,110,.5); color:var(--accent2); }
+
+/* playing state: the video replaces the picture, custom controls */
 #sm-pack-modal .sm-pkmodal__cover.is-playing::after,
 #sm-pack-modal .sm-pkmodal__cover.is-playing > img,
 #sm-pack-modal .sm-pkmodal__cover.is-playing .sm-pkmodal__playbtn,
+#sm-pack-modal .sm-pkmodal__cover.is-playing .sm-pkmodal__introtag,
 #sm-pack-modal .sm-pkmodal__cover.is-playing .sm-pkmodal__pro{ display:none; }
 #sm-pack-modal .sm-pkmodal__vid{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000; z-index:1; }
-@keyframes smPkIn{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
-@media (max-width:520px){ #sm-pack-modal{ padding:20px 14px; } }
+#sm-pack-modal .sm-pkmodal__msg{ position:absolute; inset:0; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:rgba(0,0,0,.72); text-align:center; padding:20px; font-size:14px; color:var(--muted); }
+#sm-pack-modal .sm-pkmodal__msg button{ height:36px; padding:0 18px; border-radius:100px; border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.08); color:#fff; font-size:13px; font-weight:600; cursor:pointer; }
+#sm-pack-modal .sm-pkctl{ position:absolute; left:0; right:0; bottom:0; z-index:4; display:flex; align-items:center; gap:12px; padding:26px 16px 12px; background:linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,0)); transition:opacity .25s ease; }
+#sm-pack-modal .sm-pkctl.is-idle{ opacity:0; pointer-events:none; }
+#sm-pack-modal .sm-pkctl button{ flex:0 0 auto; width:34px; height:34px; display:grid; place-items:center; padding:0; border:0; background:transparent; color:#fff; cursor:pointer; opacity:.92; }
+#sm-pack-modal .sm-pkctl button:hover{ opacity:1; }
+#sm-pack-modal .sm-pkctl svg{ width:20px; height:20px; fill:currentColor; }
+#sm-pack-modal .sm-pkctl__seek{ flex:1 1 auto; min-width:0; height:4px; -webkit-appearance:none; appearance:none; border-radius:4px; outline:none; cursor:pointer; background:linear-gradient(90deg, var(--accent2) var(--p,0%), rgba(255,255,255,.26) var(--p,0%)); }
+#sm-pack-modal .sm-pkctl__seek::-webkit-slider-thumb{ -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#fff; border:0; box-shadow:0 0 0 4px rgba(255,255,255,.14); }
+#sm-pack-modal .sm-pkctl__seek::-moz-range-thumb{ width:12px; height:12px; border-radius:50%; background:#fff; border:0; }
+#sm-pack-modal .sm-pkctl__time{ flex:0 0 auto; font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:rgba(255,255,255,.85); min-width:78px; text-align:right; }
+
+/* body */
+#sm-pack-modal .sm-pkmodal__body{ position:relative; z-index:2; padding:6px 28px 8px; margin-top:-8px; }
+#sm-pack-modal .sm-pkmodal__by{ font-family:var(--mono); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+#sm-pack-modal .sm-pkmodal__title{ margin:8px 0 0; font-size:30px; line-height:1.08; font-weight:600; letter-spacing:-.035em; color:#fff; }
+#sm-pack-modal .sm-pkmodal__chips{ display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 0; }
+#sm-pack-modal .sm-pkmodal__chips span{ padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); font-size:12.5px; color:rgba(255,255,255,.86); }
+#sm-pack-modal .sm-pkmodal__chips span.is-soon{ color:var(--muted); border-style:dashed; background:transparent; }
+#sm-pack-modal .sm-pkmodal__desc{ margin:16px 0 0; font-size:14.5px; line-height:1.55; color:var(--muted); }
+
+/* the three lessons: Intro is free, the others show what Pro unlocks */
+#sm-pack-modal .sm-pkmodal__lessons{ margin:22px 0 0; }
+#sm-pack-modal .sm-pkmodal__lessons[hidden]{ display:none; }
+#sm-pack-modal .sm-pklessons__head{ display:flex; align-items:baseline; justify-content:space-between; margin:0 0 10px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); }
+#sm-pack-modal .sm-pklessons__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+#sm-pack-modal .sm-pklesson{ position:relative; display:block; padding:0; text-align:left; border:0; background:transparent; color:inherit; font:inherit; min-width:0; }
+#sm-pack-modal .sm-pklesson.is-free{ cursor:pointer; }
+#sm-pack-modal .sm-pklesson__thumb{ position:relative; display:block; aspect-ratio:16/10; border-radius:12px; overflow:hidden; background:#0b0b0b; border:1px solid rgba(255,255,255,.12); transition:border-color .2s ease, transform .2s ease; }
+#sm-pack-modal .sm-pklesson.is-free:hover .sm-pklesson__thumb{ border-color:rgba(201,154,110,.7); transform:translateY(-2px); }
+#sm-pack-modal .sm-pklesson__thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+#sm-pack-modal .sm-pklesson.is-locked .sm-pklesson__thumb img{ filter:saturate(.6) brightness(.55); }
+#sm-pack-modal .sm-pklesson__thumb::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0) 40%, rgba(0,0,0,.45)); }
+#sm-pack-modal .sm-pklesson__num{ position:absolute; top:7px; left:8px; z-index:2; font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:rgba(255,255,255,.9); }
+#sm-pack-modal .sm-pklesson__state{ position:absolute; right:7px; bottom:7px; z-index:2; display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 7px; border-radius:100px; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.22); color:#fff; font-family:var(--mono); font-size:9px; letter-spacing:.12em; text-transform:uppercase; }
+#sm-pack-modal .sm-pklesson.is-free .sm-pklesson__state{ border-color:rgba(201,154,110,.6); color:var(--accent2); background:rgba(0,0,0,.6); }
+#sm-pack-modal .sm-pklesson__state svg{ width:11px; height:11px; }
+#sm-pack-modal .sm-pklesson strong{ display:block; margin:9px 0 0; font-size:13px; font-weight:600; letter-spacing:-.01em; line-height:1.25; color:#fff; }
+#sm-pack-modal .sm-pklesson.is-locked strong{ color:rgba(255,255,255,.78); }
+#sm-pack-modal .sm-pklesson small{ display:block; margin-top:2px; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--faint); }
+
+#sm-pack-modal .sm-pkmodal__list{ list-style:none; margin:20px 0 0; padding:0; display:grid; gap:10px; }
+#sm-pack-modal .sm-pkmodal__card.has-lessons .sm-pkmodal__list li:first-child{ display:none; }
+#sm-pack-modal .sm-pkmodal__list li{ display:flex; gap:10px; font-size:14px; line-height:1.4; color:var(--ink); }
+#sm-pack-modal .sm-pkmodal__list svg{ flex:0 0 auto; width:16px; height:16px; margin-top:2px; color:var(--accent); }
+
+/* sticky footer with the call to action */
+#sm-pack-modal .sm-pkmodal__foot{ flex:0 0 auto; padding:14px 28px 18px; background:linear-gradient(180deg, rgba(18,18,18,0), #121212 26%); border-top:1px solid rgba(255,255,255,.06); }
+#sm-pack-modal .sm-pkmodal__cta{ position:relative; overflow:hidden; width:100%; height:52px; border:0; border-radius:100px; background:linear-gradient(180deg,#fff,#ececec); color:#141414; font-weight:650; font-size:15px; letter-spacing:-.005em; cursor:pointer; box-shadow:0 8px 28px rgba(201,154,110,.18), inset 0 -1px 0 rgba(0,0,0,.06); transition:transform .15s ease, box-shadow .2s ease; }
+#sm-pack-modal .sm-pkmodal__cta::after{ content:""; position:absolute; inset:0; transform:translateX(-120%); background:linear-gradient(100deg, transparent 30%, rgba(201,154,110,.35) 50%, transparent 70%); animation:smPkShine 4.2s ease-in-out infinite 1.2s; }
+#sm-pack-modal .sm-pkmodal__cta:hover{ transform:translateY(-1px); box-shadow:0 12px 34px rgba(201,154,110,.3), inset 0 -1px 0 rgba(0,0,0,.06); }
+#sm-pack-modal .sm-pkmodal__later{ width:100%; margin:8px 0 0; height:38px; border:0; background:transparent; color:var(--muted); font-size:13px; cursor:pointer; }
+#sm-pack-modal .sm-pkmodal__later:hover{ color:#fff; }
+
+@keyframes smPkIn{ from{ opacity:0; transform:translateY(18px) scale(.975); } to{ opacity:1; transform:none; } }
+@keyframes smPkPulse{ 0%{ transform:scale(.9); opacity:.7; } 80%,100%{ transform:scale(1.28); opacity:0; } }
+@keyframes smPkShine{ 0%,55%{ transform:translateX(-120%); } 85%,100%{ transform:translateX(120%); } }
+@media (prefers-reduced-motion:reduce){
+  #sm-pack-modal .sm-pkmodal__card, #sm-pack-modal .sm-pkmodal__playbtn::after, #sm-pack-modal .sm-pkmodal__cta::after{ animation:none; }
+}
+
+/* phones: bottom sheet, video edge to edge, CTA always visible */
+@media (max-width:560px){
+  #sm-pack-modal{ padding:0; align-items:flex-end; }
+  #sm-pack-modal .sm-pkmodal__card{ width:100%; max-height:94dvh; border-radius:24px 24px 0 0; border-bottom:0; animation:smPkSheet .38s cubic-bezier(.2,.8,.2,1); }
+  #sm-pack-modal .sm-pkmodal__body{ padding:4px 20px 6px; }
+  #sm-pack-modal .sm-pkmodal__title{ font-size:26px; }
+  #sm-pack-modal .sm-pkmodal__foot{ padding:12px 20px calc(14px + env(safe-area-inset-bottom)); }
+  #sm-pack-modal .sm-pkmodal__playbtn{ width:68px; height:68px; margin:-34px 0 0 -34px; }
+  #sm-pack-modal .sm-pklessons__grid{ gap:8px; }
+  #sm-pack-modal .sm-pklesson strong{ font-size:12px; }
+}
+@keyframes smPkSheet{ from{ transform:translateY(40px); opacity:0; } to{ transform:none; opacity:1; } }
 </style>
