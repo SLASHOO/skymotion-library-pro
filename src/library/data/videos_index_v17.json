@@ -1706,10 +1706,10 @@
         "title": "Intro",
         "desc": "Start with the pack logic before flying.",
         "free": true,
-        "dur_s": 90,
+        "dur_s": 42,
         "thumb": "https://skymotion-cdn.b-cdn.net/thumbs/pack-real-estate-lesson-1.jpg",
-        "desktop_id": "51d3aba6-5957-42d7-aa6f-b6e424c35cc4",
-        "mobile_id": "65aee154-ea63-423f-8d1d-64e770c736d8"
+        "desktop_id": "a0d3d8a0-1c73-4148-9143-1eced234a04b",
+        "mobile_id": "9eeb5856-6ac9-430e-9681-64c67a49689e"
       },
       {
         "n": 2,
