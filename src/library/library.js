@@ -2412,6 +2412,7 @@
         bestFor: ["Real estate", "Property videos", "Client-ready sequences"],
         movesCount: 13,
         plansCount: 5,
+        contentInDev: true, // Fabian has no own moves/plans yet — show them as "In development"
         checklistTitle: "Open checklist",
         lessons: getCatalogPackLessons("real_estate_creator_pack") || [
           {
@@ -2501,7 +2502,10 @@
     const moves = (meta.match(/(\d+)\s*moves/i) || [])[1] || "—";
     const plans = (meta.match(/(\d+)\s*plans/i) || [])[1] || "—";
     const hasChecklist = /checklist/i.test(meta);
-    const inside = `${moves} moves · ${plans} plans${hasChecklist ? " · checklist" : ""}`;
+    const lessonsN = Array.isArray(pack?.lessons) ? pack.lessons.length : 0;
+    const inside = pack?.contentInDev
+      ? `${lessonsN ? `${lessonsN} lessons · ` : ""}checklist · moves & plans soon`
+      : `${moves} moves · ${plans} plans${hasChecklist ? " · checklist" : ""}`;
     const rawCreator = String(pack?.creator || "").trim();
     const creatorName = (!rawCreator || rawCreator.toLowerCase() === "creator name") ? "air4future" : rawCreator;
     const creatorBadge = `BY ${creatorName.toUpperCase()}`;
@@ -2716,6 +2720,41 @@
     `;
   }
 
+  // Creator has not delivered moves/plans yet: show unavailable black tiles instead of generic catalog items.
+  function renderPackSoonTile(kind, slotIndex = 0) {
+    const cls = kind === "plan"
+      ? `sm-pro-pack-plan-card ${slotIndex === 0 ? "is-featured" : ""}`
+      : "sm-pro-pack-move-card";
+    return `
+      <article class="${cls} is-soon" aria-disabled="true" aria-label="${kind === "plan" ? "Plan" : "Move"} — in development">
+        <span class="sm-pro-pack-soon-label">In development</span>
+      </article>
+    `;
+  }
+
+  function renderPackSoonPlansRail() {
+    return `
+      <div class="sm-pro-pack-plans-rail">
+        ${Array.from({ length: 5 }, (_, i) => renderPackSoonTile("plan", i)).join("")}
+      </div>
+    `;
+  }
+
+  function renderPackSoonMoves(count) {
+    return Array.from({ length: count }, (_, i) => renderPackSoonTile("move", i)).join("");
+  }
+
+  function renderPackStatsChips(pack, moves, plans) {
+    if (pack && pack.contentInDev) {
+      const n = Array.isArray(pack.lessons) ? pack.lessons.length : 0;
+      return `${n ? `<span>${n} lessons</span>` : ""}<span>Checklist</span><span>Moves &amp; plans soon</span>`;
+    }
+    return `
+      <span>${Number(pack.movesCount || moves.length || 0)} moves</span>
+      <span>${Number(pack.plansCount || plans.length || 0)} plans</span>
+      <span>Checklist</span>`;
+  }
+
   function renderPackMoreMovesCard(hiddenCount = 0) {
     if (hiddenCount <= 0) return "";
     return `
@@ -2891,9 +2930,7 @@
           <p class="sm-pro-pack-powered">powered by <strong>${escapeHtml(pack.creator || "SkyMotion")}</strong></p>
           <p class="sm-pro-pack-description">${escapeHtml(pack.description || "A ready-to-use shooting workflow for this situation.")}</p>
           <div class="sm-pro-pack-stats" aria-label="Pack contents">
-            <span>${Number(pack.movesCount || moves.length || 0)} moves</span>
-            <span>${Number(pack.plansCount || plans.length || 0)} plans</span>
-            <span>Checklist</span>
+            ${renderPackStatsChips(pack, moves, plans)}
           </div>
         </section>
 
@@ -2915,14 +2952,14 @@
 
         <section class="sm-pro-pack-section sm-pro-pack-section--plans">
           <div class="sm-pro-pack-section-head"><h2>Plans in this pack</h2></div>
-          ${renderPackPlansRail(plans)}
+          ${pack.contentInDev ? renderPackSoonPlansRail() : renderPackPlansRail(plans)}
         </section>
 
         <section class="sm-pro-pack-section sm-pro-pack-section--moves">
           <div class="sm-pro-pack-section-head"><h2>Moves in this pack</h2></div>
           <div class="sm-pro-pack-move-row">
-            ${visibleMoves.map((move, index) => renderPackMoveTile(move, index)).join("")}
-            ${renderPackMoreMovesCard(hiddenMoves)}
+            ${pack.contentInDev ? renderPackSoonMoves(6) : visibleMoves.map((move, index) => renderPackMoveTile(move, index)).join("")}
+            ${pack.contentInDev ? "" : renderPackMoreMovesCard(hiddenMoves)}
           </div>
         </section>
 
@@ -2972,9 +3009,7 @@
           <p class="sm-pro-pack-description">${escapeHtml(pack.description || "A ready-to-use shooting workflow for this situation.")}</p>
 
           <div class="sm-pro-pack-stats" aria-label="Pack contents">
-            <span>${Number(pack.movesCount || moves.length || 0)} moves</span>
-            <span>${Number(pack.plansCount || plans.length || 0)} plans</span>
-            <span>Checklist</span>
+            ${renderPackStatsChips(pack, moves, plans)}
           </div>
         </div>
       </section>
@@ -3007,18 +3042,18 @@
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
           <h2>Plans in this pack</h2>
-          <button type="button" data-pro-go-tab="plans">View all</button>
+          ${pack.contentInDev ? "" : `<button type="button" data-pro-go-tab="plans">View all</button>`}
         </div>
-        ${renderPackPlansRail(plans)}
+        ${pack.contentInDev ? renderPackSoonPlansRail() : renderPackPlansRail(plans)}
       </section>
 
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
           <h2>Moves in this pack</h2>
-          <button type="button" data-pro-go-tab="moves">View all</button>
+          ${pack.contentInDev ? "" : `<button type="button" data-pro-go-tab="moves">View all</button>`}
         </div>
         <div class="sm-pro-pack-move-row">
-          ${moves.slice(0, 13).map(renderPackMoveTile).join("")}
+          ${pack.contentInDev ? renderPackSoonMoves(6) : moves.slice(0, 13).map(renderPackMoveTile).join("")}
         </div>
       </section>
 
@@ -3231,9 +3266,7 @@
             <span class="sm-pro-pack-badge">${escapeHtml(badge)}</span>
             <h3>${escapeHtml(title)}</h3>
             <div class="sm-pro-pack-meta">
-              <span>${movesCount} moves</span>
-              <span>${plansCount} plans</span>
-              <span>Checklist</span>
+              ${renderPackStatsChips(Object.assign({}, pack, { movesCount, plansCount }), [], [])}
             </div>
             <p>${escapeHtml(line)}</p>
           </div>
@@ -3256,9 +3289,7 @@
           <span class="sm-pro-pack-badge">POWERED BY ${escapeHtml(pack.creator || "SkyMotion")}</span>
           <h3>${escapeHtml(pack.title)}</h3>
           <div class="sm-pro-pack-meta">
-            <span>${movesCount} moves</span>
-            <span>${plansCount} plans</span>
-            <span>Checklist</span>
+            ${renderPackStatsChips(Object.assign({}, pack, { movesCount, plansCount }), [], [])}
           </div>
           <p>${escapeHtml((pack.bestFor || []).length ? `Best for: ${pack.bestFor.join(", ")}` : pack.description)}</p>
         </div>
