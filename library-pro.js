@@ -2401,6 +2401,9 @@
         id: "real_estate_creator_pack",
         title: window.SM_PRO_PACK_TITLE || "Real Estate Pack",
         creator: window.SM_PRO_PACK_CREATOR || "air4future",
+        authorName: window.SM_PRO_PACK_AUTHOR || "Air4Future",
+        instagram: window.SM_PRO_PACK_INSTAGRAM || "https://www.instagram.com/air4future",
+        authorPhoto: window.SM_PRO_PACK_AUTHOR_PHOTO || "",
         comingSoon: PRO_PACK_COMING_SOON,
         label: "PACK",
         thumb: heroCover,
@@ -4181,8 +4184,17 @@
       const lesson = (getCatalogPackLessons(packId) || []).find((l) => l.free && (l.desktop_id || l.mobile_id));
       return lesson ? { title: lesson.title, duration: lesson.duration, desktop_id: lesson.desktop_id, mobile_id: lesson.mobile_id, thumb: lesson.thumb } : null;
     },
-    lessons(packId) {
-      return (getCatalogPackLessons(packId) || []).map((l) => ({ n: l.n, title: l.title, duration: l.duration, thumb: l.thumb, free: l.free }));
+    info(packId) {
+      const pack = getProPackItems().find((p) => String(p.id) === String(packId));
+      if (!pack) return null;
+      return {
+        title: pack.title,
+        description: String(pack.description || "").split(/(?<=\.)\s/)[0],
+        author: pack.authorName,
+        instagram: pack.instagram,
+        photo: pack.authorPhoto,
+        price: window.SM_PACK_PRICE || ""
+      };
     }
   };
   window.SMAccess = {

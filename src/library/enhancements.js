@@ -462,23 +462,21 @@
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) close(); });
 })();
 
-/* [4/7] Pack value modal (index.html 1383-1403) */
+/* [4/7] Pack popup: free intro video, who made the pack, and how to get it */
 (function(){
   var modal = document.getElementById("sm-pack-modal");
   if (!modal) return;
-  var card = modal.querySelector(".sm-pkmodal__card");
   var cover = modal.querySelector(".sm-pkmodal__cover");
   var scroller = modal.querySelector(".sm-pkmodal__scroll");
+  var $ = function(id){ return document.getElementById(id); };
 
   var ICON = {
     play:  '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
     pause: '<svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',
     vol:   '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>',
     mute:  '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.6 3 2.4-2.4-1.4-1.4-2.4 2.4-2.4-2.4-1.4 1.4 2.4 2.4-2.4 2.4 1.4 1.4 2.4-2.4 2.4 2.4 1.4-1.4z"/></svg>',
-    fs:    '<svg viewBox="0 0 24 24"><path d="M5 5h5v2H7v3H5V5zm9 0h5v5h-2V7h-3V5zM5 14h2v3h3v2H5v-5zm12 0h2v5h-5v-2h3v-3z"/></svg>',
-    lock:  '<svg viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.4" fill="currentColor"/></svg>'
+    fs:    '<svg viewBox="0 0 24 24"><path d="M5 5h5v2H7v3H5V5zm9 0h5v5h-2V7h-3V5zM5 14h2v3h3v2H5v-5zm12 0h2v5h-5v-2h3v-3z"/></svg>'
   };
-  function esc(v){ return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
   function fmt(t){ t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); }
 
   // ---- free intro video inside the cover (same HLS path as every other video) ----
@@ -545,7 +543,8 @@
     if (!intro || !window.SMLibraryPlayback || cover.classList.contains("is-playing")) return;   // one player at a time
     clearPlayer();
     var token = introToken;
-    var guid = intro.desktop_id || intro.mobile_id;           // the horizontal encode fits the popup width
+    var phone = window.matchMedia && window.matchMedia("(max-width:560px)").matches;
+    var guid = (phone ? intro.mobile_id : intro.desktop_id) || intro.desktop_id || intro.mobile_id;   // vertical encode on phones
     var v = document.createElement("video");
     v.className = "sm-pkmodal__vid"; v.playsInline = true; v.setAttribute("playsinline", ""); v.preload = "metadata";
     cover.appendChild(v);
@@ -559,63 +558,61 @@
     }).catch(function(){ if (token === introToken) failed(intro); });
   }
 
-  // ---- the three lessons: Intro is free, the others show what Pro unlocks ----
-  function renderLessons(lessons){
-    var box = document.getElementById("smPkLessons");
-    if (!box) return;
-    if (!lessons || !lessons.length){ box.hidden = true; box.innerHTML = ""; card.classList.remove("has-lessons"); return; }
-    box.innerHTML = '<div class="sm-pklessons__head"><span>Inside the pack</span><span>' + lessons.length + ' video lessons</span></div>' +
-      '<div class="sm-pklessons__grid">' + lessons.map(function(l){
-        var free = !!l.free, tag = free ? 'button type="button"' : 'div', end = free ? 'button' : 'div';
-        return '<' + tag + ' class="sm-pklesson ' + (free ? 'is-free' : 'is-locked') + '"' + (free ? ' data-pk-intro="1"' : '') + '>' +
-          '<span class="sm-pklesson__thumb"><img alt="" loading="lazy" src="' + esc(l.thumb) + '">' +
-          '<span class="sm-pklesson__num">' + String(l.n).padStart(2, "0") + '</span>' +
-          '<span class="sm-pklesson__state">' + (free ? 'Free' : ICON.lock) + '</span></span>' +
-          '<strong>' + esc(l.title) + '</strong><small>' + esc(l.duration) + '</small></' + end + '>';
-      }).join("") + '</div>';
-    box.hidden = false;
-    card.classList.add("has-lessons");
-  }
-
   function setupIntro(intro){
     currentIntro = (intro && window.SMLibraryPlayback) ? intro : null;
-    var btn = cover.querySelector(".sm-pkmodal__playbtn");
-    var tag = document.getElementById("smPkIntroTag"), dur = document.getElementById("smPkIntroDur");
-    if (!currentIntro){
-      if (btn) btn.hidden = true;
-      if (tag) tag.hidden = true;
-      cover.classList.remove("has-intro");
-      return;
+    var btn = $("smPkIntroBtn");
+    if (!btn) return;
+    btn.hidden = !currentIntro;
+    var dur = $("smPkIntroDur");
+    if (dur) dur.textContent = currentIntro && currentIntro.duration ? currentIntro.duration : "";
+  }
+
+  // ---- author row + price bar ----
+  function setupAuthor(info){
+    var box = $("smPkAuthor");
+    if (!box) return;
+    if (!info || !info.author){ box.hidden = true; return; }
+    box.hidden = false;
+    var av = $("smPkAvatar");
+    if (av){
+      av.textContent = info.photo ? "" : String(info.author).charAt(0).toUpperCase();
+      av.style.backgroundImage = info.photo ? 'url("' + String(info.photo).replace(/"/g, "") + '")' : "";
     }
-    if (!btn){
-      btn = document.createElement("button");
-      btn.type = "button"; btn.className = "sm-pkmodal__playbtn"; btn.setAttribute("aria-label", "Watch the intro");
-      cover.appendChild(btn);
-    }
-    btn.hidden = false;
-    if (tag){ tag.hidden = false; }
-    if (dur) dur.textContent = currentIntro.duration ? " \u00b7 " + currentIntro.duration : "";
-    cover.classList.add("has-intro");
+    $("smPkAuthorName").textContent = info.author;
+    var link = $("smPkAuthorLink");
+    if (info.instagram){
+      link.href = info.instagram; link.hidden = false;
+      var handle = String(info.instagram).replace(/[?#].*$/, "").replace(/\/+$/, "").split("/").pop();
+      link.textContent = "Instagram @" + handle + " \u2197";
+    } else { link.hidden = true; }
+  }
+
+  function setupBar(info){
+    var amt = $("smPkAmt"), note = $("smPkAmtNote");
+    // Real price only when it is configured (window.SM_PACK_PRICE); never a made-up number.
+    var price = info && info.price;
+    if (amt) amt.textContent = price || "Own this pack";
+    if (note) note.textContent = price ? "One payment, yours forever" : "One payment, yours forever";
+    var n = $("smPkNote"); if (n){ n.hidden = true; n.textContent = ""; }
+  }
+
+  function act(source, message){
+    // Purchases are not wired yet: record the click (analytics) and say so. When the
+    // upgrade UI is switched on (SM_PRO_UPGRADE_UI) this hands over to the real flow.
+    if (window.SM_PRO_UPGRADE_UI === true && window.smOpenProModal){ window.smPackModal.close(); window.smOpenProModal(source); return; }
+    if (window.smOpenProModal) window.smOpenProModal(source);
+    var n = $("smPkNote"); if (n){ n.textContent = message; n.hidden = false; }
   }
 
   window.smPackModal = {
     open: function(d){
       d = d || {};
       clearPlayer();
-      var cov = document.getElementById("smPkCover"); if (cov) cov.src = (d.intro && d.intro.thumb) || d.cover || "";
-      var by  = document.getElementById("smPkBy");    if (by)  by.textContent = d.by || "";
-      var t   = document.getElementById("smPkTitle"); if (t)   t.textContent = d.title || "Creator pack";
-      var ch  = document.getElementById("smPkChips");
-      if (ch){
-        ch.innerHTML = "";
-        // With real lessons the chips say what is real today (no placeholder counts).
-        var chips = (d.lessons && d.lessons.length)
-          ? [d.lessons.length + " video lessons", "Checklist", { text: "Plans & moves \u00b7 in development", soon: true }]
-          : (d.chips || []);
-        chips.forEach(function(c){ var s = document.createElement("span"); s.textContent = c.text || c; if (c.soon) s.className = "is-soon"; ch.appendChild(s); });
-      }
-      var ds  = document.getElementById("smPkDesc");  if (ds)  ds.textContent = d.desc || "";
-      renderLessons(d.lessons);
+      var cov = $("smPkCover"); if (cov) cov.src = (d.intro && d.intro.thumb) || d.cover || "";
+      var t = $("smPkTitle"); if (t) t.textContent = (d.info && d.info.title) || d.title || "Creator pack";
+      var ds = $("smPkDesc"); if (ds) ds.textContent = (d.info && d.info.description) || d.desc || "";
+      setupAuthor(d.info);
+      setupBar(d.info);
       setupIntro(d.intro);
       if (scroller) scroller.scrollTop = 0;
       modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false");
@@ -624,11 +621,10 @@
   };
   modal.addEventListener("click", function(e){
     if (e.target.closest("[data-sm-pkclose]")){ window.smPackModal.close(); return; }
-    if (e.target.closest("[data-pk-intro]")){ playIntro(currentIntro); return; }
+    if (e.target.closest("#smPkBuy")){ act("pack_buy", "Purchases are opening soon."); return; }
+    if (e.target.closest("#smPkPro")){ act("pack_pro", "Pro is opening soon."); return; }
     if (currentIntro && !cover.classList.contains("is-playing") && e.target.closest(".sm-pkmodal__cover") && !e.target.closest(".sm-pkmodal__msg") && !e.target.closest(".sm-pkmodal__x")) playIntro(currentIntro);
   });
-  var unlock = document.getElementById("smPkUnlock");
-  if (unlock) unlock.addEventListener("click", function(){ window.smPackModal.close(); if (window.smOpenProModal) window.smOpenProModal(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape" && modal.classList.contains("is-open")) window.smPackModal.close(); });
 })();
 
@@ -746,7 +742,7 @@
       chips: chips,
       desc:  desc ? desc.textContent.trim() : "",
       intro: window.SMPackIntro ? window.SMPackIntro.get(card.getAttribute("data-pro-pack")) : null,
-      lessons: window.SMPackIntro && window.SMPackIntro.lessons ? window.SMPackIntro.lessons(card.getAttribute("data-pro-pack")) : null
+      info: window.SMPackIntro && window.SMPackIntro.info ? window.SMPackIntro.info(card.getAttribute("data-pro-pack")) : null
     });
   }
   function ownsPack(card){
