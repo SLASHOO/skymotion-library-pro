@@ -2403,7 +2403,7 @@
         creator: window.SM_PRO_PACK_CREATOR || "air4future",
         authorName: window.SM_PRO_PACK_AUTHOR || "Air4Future",
         instagram: window.SM_PRO_PACK_INSTAGRAM || "https://www.instagram.com/air4future",
-        authorPhoto: window.SM_PRO_PACK_AUTHOR_PHOTO || "",
+        authorPhoto: window.SM_PRO_PACK_AUTHOR_PHOTO || "https://skymotion-cdn.b-cdn.net/authors/air4future.jpg",
         comingSoon: PRO_PACK_COMING_SOON,
         label: "PACK",
         thumb: heroCover,
@@ -2509,7 +2509,7 @@
     if (id.includes("real") || title.includes("test")) {
       return {
         badge: creatorBadge,
-        cardTitle: "Real Estate Starter Pack",
+        cardTitle: "Real Estate Pack",
         intent: "For paid property shoots",
         output: "30–60s property reel · 5 hero shots",
         useCase: "Real estate / rentals",
@@ -2914,12 +2914,12 @@
         </button>
 
         <section class="sm-pro-pack-section sm-pro-pack-section--plans">
-          <div class="sm-pro-pack-section-head"><h2>Plans in this pack <span class="sm-pro-devtag">In development</span></h2></div>
+          <div class="sm-pro-pack-section-head"><h2>Plans in this pack</h2></div>
           ${renderPackPlansRail(plans)}
         </section>
 
         <section class="sm-pro-pack-section sm-pro-pack-section--moves">
-          <div class="sm-pro-pack-section-head"><h2>Moves in this pack <span class="sm-pro-devtag">In development</span></h2></div>
+          <div class="sm-pro-pack-section-head"><h2>Moves in this pack</h2></div>
           <div class="sm-pro-pack-move-row">
             ${visibleMoves.map((move, index) => renderPackMoveTile(move, index)).join("")}
             ${renderPackMoreMovesCard(hiddenMoves)}
@@ -3006,7 +3006,7 @@
 
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
-          <h2>Plans in this pack <span class="sm-pro-devtag">In development</span></h2>
+          <h2>Plans in this pack</h2>
           <button type="button" data-pro-go-tab="plans">View all</button>
         </div>
         ${renderPackPlansRail(plans)}
@@ -3014,7 +3014,7 @@
 
       <section class="sm-pro-pack-section">
         <div class="sm-pro-pack-section-head">
-          <h2>Moves in this pack <span class="sm-pro-devtag">In development</span></h2>
+          <h2>Moves in this pack</h2>
           <button type="button" data-pro-go-tab="moves">View all</button>
         </div>
         <div class="sm-pro-pack-move-row">
@@ -3216,7 +3216,7 @@
     // Desktop home must use the new black Promo Real Estate card.
     // Mobile home and the Packs tab keep the existing card behavior.
     if (activeProTab === "all" && isProDesktopLayout()) {
-      const title = "Promo Real Estate Pack";
+      const title = "Real Estate Pack";
       const badge = "BY AIR4FUTURE";
       const line = "For paid property shoots · 30–60s property reel · 5 hero shots";
 
