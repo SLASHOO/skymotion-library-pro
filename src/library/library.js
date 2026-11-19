@@ -3097,7 +3097,7 @@
     const tiles = lessons.map((l, i) => `
       <button class="sm-pk__tile${i === 0 ? " is-lead" : ""}" type="button" style="--i:${i}" data-pro-lesson="${escapeHtml(l.title)}" data-pro-lesson-n="${escapeHtml(l.n)}" aria-label="Play ${escapeHtml(l.title)}">
         <img class="sm-pk__img" src="${escapeHtml(l.thumb || FALLBACK_THUMB)}" alt="" loading="lazy" decoding="async">
-        <span class="sm-pk__num">${escapeHtml(l.n)}${l.free ? ` · <span class="sm-pk__free">Free</span>` : ""}</span>
+        <span class="sm-pk__num">${escapeHtml(l.n)}</span>
         <span class="sm-pk__play" aria-hidden="true">${playSvg}</span>
         <span class="sm-pk__tt">${escapeHtml(l.title)}${l.duration ? `<small>${escapeHtml(l.duration)}</small>` : ""}</span>
       </button>`).join("");
