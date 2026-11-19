@@ -240,15 +240,15 @@
     muts.forEach(function(m){
       (m.addedNodes || []).forEach(function(n){
         if (n.nodeType !== 1) return;
-        var s = (n.classList && n.classList.contains("sm-pro-checklist-sheet")) ? n
-              : (n.querySelector && n.querySelector(".sm-pro-checklist-sheet"));
+        var s = (n.classList && (n.classList.contains("sm-pro-checklist-sheet") || n.classList.contains("sm-tips"))) ? n
+              : (n.querySelector && n.querySelector(".sm-pro-checklist-sheet, .sm-tips"));
         if (s){ enhanceSheet(s); pageScroll("lock"); }
       });
       (m.removedNodes || []).forEach(function(n){
         if (n.nodeType !== 1) return;
-        var was = (n.classList && n.classList.contains("sm-pro-checklist-sheet"))
-               || (n.querySelector && n.querySelector(".sm-pro-checklist-sheet"));
-        if (was && !document.querySelector(".sm-pro-checklist-sheet")){
+        var was = (n.classList && (n.classList.contains("sm-pro-checklist-sheet") || n.classList.contains("sm-tips")))
+               || (n.querySelector && n.querySelector(".sm-pro-checklist-sheet, .sm-tips"));
+        if (was && !document.querySelector(".sm-pro-checklist-sheet, .sm-tips")){
           pageScroll("single");   // restore single scrollbar (not double) after closing
         }
       });
@@ -260,7 +260,7 @@
     if (e.target && e.target.closest && e.target.closest("[data-pro-close-checklist]")) pageScroll("single");
   }, true);
   document.addEventListener("keydown", function(e){
-    if (e.key === "Escape" && document.querySelector(".sm-pro-checklist-sheet")) pageScroll("single");
+    if (e.key === "Escape" && document.querySelector(".sm-pro-checklist-sheet, .sm-tips")) pageScroll("single");
   }, true);
 })();
 

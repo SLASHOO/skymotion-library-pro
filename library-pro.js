@@ -2437,35 +2437,82 @@
             thumb: "https://skymotion-cdn.b-cdn.net/Editing-Workflow-test.png"
           }
         ],
+        // Creator tips: 3 phases, each step { title, text }. DRAFT copy written for the creator to review and
+        // replace with his own words before it goes live (see the pack tips panel, openProChecklist).
         checklistGroups: [
           {
             title: "Before the shoot",
             items: [
-              "Check weather & wind",
-              "Inspect location on map",
-              "Confirm battery levels",
-              "Format SD cards",
-              "Check drone firmware",
-              "Scout takeoff/landing spots"
+              {
+                title: "Check weather & wind",
+                text: "Smooth, slow movement is what makes property footage look expensive, and wind is what ruins it. I check the forecast the evening before and again an hour before I leave, and I look at gusts, not just the average wind. Light matters just as much: soft, even light makes a home look clean and inviting, while harsh midday sun burns the roof and fills everything with dark shadows."
+              },
+              {
+                title: "Inspect location on map",
+                text: "Before I arrive I study the property on a satellite map. I note which way the house faces, where the sun will be, and what is around it: power lines, tall trees, neighbours, roads. Then I plan my first shot, usually the main reveal. Ten minutes at home saves an hour on location."
+              },
+              {
+                title: "Confirm battery levels",
+                text: "Every battery is fully charged the night before, and I bring at least one spare. A property shoot is a lot of short flights, and waiting around for a charge costs you the best light. I check the controller and the phone too, not just the drone."
+              },
+              {
+                title: "Format SD cards",
+                text: "I start each job with a freshly formatted card, formatted in the drone itself after I have backed up the previous shoot. It prevents file errors, and I never find out in the middle of a flight that the card is full. A second card in the bag is cheap insurance."
+              },
+              {
+                title: "Check drone firmware",
+                text: "I update the drone, the controller and the app at home, with a full battery and a good connection, never on location. An update right before a client shoot can change settings or cause errors you have no time to fix. If an update appears the day before, I install it then and do a short test flight."
+              },
+              {
+                title: "Scout takeoff/landing spots",
+                text: "On site, before I fly, I walk around and choose a flat, open spot to take off and land, away from people, cars and trees. I always pick a backup spot too, in case the wind changes or someone walks into the area. And I make sure I am allowed to fly there: local rules first, shot second."
+              }
             ]
           },
           {
             title: "During the shoot",
             items: [
-              "Keep line of sight",
-              "Monitor battery (30% RTH)",
-              "Check ND filter if needed",
-              "Vary angles & heights",
-              "Capture establishing shots"
+              {
+                title: "Keep line of sight",
+                text: "The screen shows what the camera sees, not what is around the drone. I keep looking up at the drone itself, especially near trees, wires and walls, which are easy to miss when you are focused on the frame. On complex shots I ask a second person to watch the drone while I watch the screen."
+              },
+              {
+                title: "Monitor battery (30% RTH)",
+                text: "My rule is to start heading back when the battery reaches about 30%, and sooner if the wind is against me on the way home. Batteries drain faster in the cold and in wind. One more shot is never worth losing the drone, and a calm landing with margin is part of the job."
+              },
+              {
+                title: "Check ND filter if needed",
+                text: "In bright light, an ND filter lets you keep a shutter speed of about double your frame rate. That gives footage natural, smooth motion. Without it the picture looks sharp and nervous, and that is hard to fix later. I recheck the filter whenever the light changes, for example when a cloud passes or the sun gets lower."
+              },
+              {
+                title: "Vary angles & heights",
+                text: "One height gets boring fast. I shoot the same subject from different heights and angles: low and close to show details and materials, higher to show the plot and the surroundings. Variety gives me options in the edit, and the viewer gets a real sense of the property instead of a single view."
+              },
+              {
+                title: "Capture establishing shots",
+                text: "Every property video needs a wide shot that shows where it is: the street, the neighbourhood, the view. Buyers want context before details. I shoot these early, while the light is good, and I always record a few extra seconds at the start and end of each move so the edit has room to breathe."
+              }
             ]
           },
           {
             title: "After the shoot",
             items: [
-              "Backup all footage",
-              "Review key shots",
-              "Note ideas for edits",
-              "Charge batteries"
+              {
+                title: "Backup all footage",
+                text: "I copy everything the same day, to two places if I can, before I format anything. A paid shoot cannot be repeated, and cards fail more often than people expect. If possible I check that the files open before I leave the location."
+              },
+              {
+                title: "Review key shots",
+                text: "Before I pack up, I look through the main shots on a bigger screen: focus, exposure, shaky moments, anything that wandered into the frame. If something went wrong, it is far easier to reshoot while I am still there than to come back another day."
+              },
+              {
+                title: "Note ideas for edits",
+                text: "While it is fresh, I write a short list: which shot opens the video, which one closes it, what is still missing, what worked best. Ten minutes of notes now make the edit faster and more consistent, and they help me plan the next shoot better."
+              },
+              {
+                title: "Charge batteries",
+                text: "I put everything on charge the same evening and check each battery for swelling or damage. That way the next job starts with full batteries and no surprises. It is a small habit, but it is the difference between being ready and being late."
+              }
             ]
           }
         ],
@@ -2504,7 +2551,7 @@
     const hasChecklist = /checklist/i.test(meta);
     const lessonsN = Array.isArray(pack?.lessons) ? pack.lessons.length : 0;
     const inside = pack?.contentInDev
-      ? `${lessonsN ? `${lessonsN} lessons · ` : ""}checklist · moves & plans soon`
+      ? `${lessonsN ? `${lessonsN} lessons · ` : ""}tips · moves & plans soon`
       : `${moves} moves · ${plans} plans${hasChecklist ? " · checklist" : ""}`;
     const rawCreator = String(pack?.creator || "").trim();
     const creatorName = (!rawCreator || rawCreator.toLowerCase() === "creator name") ? "air4future" : rawCreator;
@@ -2747,7 +2794,7 @@
   function renderPackStatsChips(pack, moves, plans) {
     if (pack && pack.contentInDev) {
       const n = Array.isArray(pack.lessons) ? pack.lessons.length : 0;
-      return `${n ? `<span>${n} lessons</span>` : ""}<span>Checklist</span><span>Moves &amp; plans soon</span>`;
+      return `${n ? `<span>${n} lessons</span>` : ""}<span>Tips</span><span>Moves &amp; plans soon</span>`;
     }
     return `
       <span>${Number(pack.movesCount || moves.length || 0)} moves</span>
@@ -2860,13 +2907,16 @@
             <section class="sm-pro-pack-checklist-group">
               <h3>${escapeHtml(group.title)}</h3>
               <div class="sm-pro-pack-checklist-items">
-                ${(group.items || []).map((item) => `
+                ${(group.items || []).map((item) => {
+                  const label = item && typeof item === "object" ? item.title : item;
+                  return `
                   <label class="sm-pro-pack-checklist-item">
-                    <input type="checkbox" aria-label="${escapeHtml(item)}">
+                    <input type="checkbox" aria-label="${escapeHtml(label)}">
                     <span class="sm-pro-pack-checklist-box" aria-hidden="true"></span>
-                    <span class="sm-pro-pack-checklist-copy">${escapeHtml(item)}</span>
+                    <span class="sm-pro-pack-checklist-copy">${escapeHtml(label)}</span>
                   </label>
-                `).join("")}
+                `;
+                }).join("")}
               </div>
             </section>
           `).join("")}
@@ -3089,10 +3139,10 @@
 
     const playSvg = `<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18l16-9z" fill="#fff"/></svg>`;
     const arrowSvg = `<svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
-    const checkSvg = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const routeSvg = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="18" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 6H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
 
     const checklistBtn = (cls) => `
-      <button class="sm-pk__chk ${cls}" type="button" data-pro-open-checklist="1">${checkSvg}<span>Open checklist</span><em aria-hidden="true">›</em></button>`;
+      <button class="sm-pk__chk ${cls}" type="button" data-pro-open-checklist="1">${routeSvg}<span>${escapeHtml(authorName ? `Tips from ${authorName}` : "Shoot tips")}</span><em aria-hidden="true">›</em></button>`;
 
     const tiles = lessons.map((l, i) => `
       <button class="sm-pk__tile${i === 0 ? " is-lead" : ""}" type="button" style="--i:${i}" data-pro-lesson="${escapeHtml(l.title)}" data-pro-lesson-n="${escapeHtml(l.n)}" aria-label="Play ${escapeHtml(l.title)}">
@@ -3193,42 +3243,139 @@
     return renderProPackDetailScreenDesktopV125();
   }
 
+  // Pack tips panel ("one at a time"): the creator's playbook — phases -> steps, one step on screen.
+  // Slides in from the left. Data = pack.checklistGroups [{ title, items: [ "Step" | { title, text } ] }].
+  // The optional explanation text per step comes from the creator; without it only the step title shows.
+  function getPackTipSteps(pack) {
+    const steps = [];
+    getChecklistGroups(pack).forEach((group, gi) => {
+      const items = Array.isArray(group.items) ? group.items : [];
+      items.forEach((item, i) => {
+        const obj = item && typeof item === "object";
+        steps.push({
+          phase: gi,
+          phaseTitle: String(group.title || ""),
+          n: i + 1,
+          count: items.length,
+          title: String(obj ? (item.title || "") : (item || "")),
+          text: String(obj ? (item.text || item.tip || "") : "")
+        });
+      });
+    });
+    return steps;
+  }
+
   function openProChecklist(pack) {
     const current = pack || getActivePackItem();
-    if (!current) return;
+    if (!current || document.querySelector(".sm-tips.is-open")) return;
 
-    const sheet = document.createElement("div");
-    sheet.className = "sm-pro-checklist-sheet sm-pro-checklist-sheet--svg";
-    sheet.setAttribute("role", "dialog");
-    sheet.setAttribute("aria-modal", "true");
-    sheet.innerHTML = `
-      <div class="sm-pro-checklist-sheet__backdrop" data-pro-close-checklist="1"></div>
-      <div class="sm-pro-checklist-sheet__panel sm-pro-checklist-sheet__panel--svg">
-        <button class="sm-pro-checklist-sheet__close" type="button" aria-label="Close checklist" data-pro-close-checklist="1">×</button>
-        <img
-          class="sm-pro-pack-checklist-paper-img"
-          src="${escapeHtml(CHECKLIST_PAPER_ASSET_URL)}"
-          alt=""
-          loading="eager"
-          decoding="async"
-          draggable="false"
-          aria-hidden="true"
-        >
-        ${renderChecklistContentOverlay(current)}
-      </div>
+    const steps = getPackTipSteps(current);
+    if (!steps.length) return;
+
+    const posKey = `sm_tips_pos:${current.id}`;
+    let pos = 0;
+    try { pos = Math.min(steps.length - 1, Math.max(0, parseInt(localStorage.getItem(posKey) || "0", 10) || 0)); } catch (_) {}
+
+    const author = String(current.authorName || current.creator || "").trim();
+    const avatar = current.authorPhoto
+      ? `<img class="sm-tips__av" src="${escapeHtml(current.authorPhoto)}" alt="">`
+      : `<span class="sm-tips__av sm-tips__av--letter" aria-hidden="true">${escapeHtml((author || "S").charAt(0).toUpperCase())}</span>`;
+
+    const segs = steps.map((s, i) =>
+      `<button class="sm-tips__seg${i > 0 && s.phase !== steps[i - 1].phase ? " is-phase-start" : ""}" type="button" data-tip="${i}" aria-label="Tip ${i + 1} of ${steps.length}"><i></i></button>`
+    ).join("");
+
+    const arrowL = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const arrowR = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const checkI = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    const root = document.createElement("div");
+    root.className = "sm-tips";
+    root.setAttribute("role", "dialog");
+    root.setAttribute("aria-modal", "true");
+    root.setAttribute("aria-label", author ? `Tips from ${author}` : "Shoot tips");
+    root.innerHTML = `
+      <div class="sm-tips__backdrop" data-pro-close-checklist="1"></div>
+      <aside class="sm-tips__panel">
+        <header class="sm-tips__head">
+          <div class="sm-tips__who">${avatar}<div><b>${escapeHtml(author || "SkyMotion")}</b><span>${escapeHtml(current.title || "")}</span></div></div>
+          <button class="sm-tips__x" type="button" aria-label="Close" data-pro-close-checklist="1">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+        <div class="sm-tips__segs">${segs}</div>
+        <div class="sm-tips__body" aria-live="polite">
+          <div class="sm-tips__chap"></div>
+          <h2 class="sm-tips__title"></h2>
+          <p class="sm-tips__text"></p>
+        </div>
+        <footer class="sm-tips__nav">
+          <button class="sm-tips__ar sm-tips__prev" type="button" aria-label="Previous tip">${arrowL}</button>
+          <span class="sm-tips__ct"></span>
+          <button class="sm-tips__ar sm-tips__ar--pri sm-tips__next" type="button" aria-label="Next tip">${arrowR}</button>
+        </footer>
+      </aside>
     `;
 
-    document.body.appendChild(sheet);
+    const $ = (sel) => root.querySelector(sel);
+    const bodyEl = $(".sm-tips__body");
+    const segEls = Array.from(root.querySelectorAll(".sm-tips__seg"));
+    const prevBtn = $(".sm-tips__prev");
+    const nextBtn = $(".sm-tips__next");
+    const last = steps.length - 1;
+
+    function show(i) {
+      pos = Math.min(last, Math.max(0, i));
+      const s = steps[pos];
+      $(".sm-tips__chap").textContent = `${s.phaseTitle}${s.phaseTitle ? " · " : ""}${s.n} of ${s.count}`;
+      $(".sm-tips__title").textContent = s.title;
+      const t = $(".sm-tips__text");
+      t.textContent = s.text;
+      t.hidden = !s.text;
+      $(".sm-tips__ct").textContent = `${pos + 1} / ${steps.length}`;
+      segEls.forEach((el, k) => {
+        el.classList.toggle("is-on", k < pos);
+        el.classList.toggle("is-cur", k === pos);
+        if (k === pos) el.setAttribute("aria-current", "step"); else el.removeAttribute("aria-current");
+      });
+      prevBtn.disabled = pos === 0;
+      nextBtn.innerHTML = pos === last ? checkI : arrowR;
+      nextBtn.setAttribute("aria-label", pos === last ? "Finish" : "Next tip");
+      bodyEl.classList.remove("is-swap");
+      void bodyEl.offsetWidth;
+      bodyEl.classList.add("is-swap");
+      try { localStorage.setItem(posKey, String(pos)); } catch (_) {}
+    }
+
+    root.addEventListener("click", (e) => {
+      const seg = e.target.closest("[data-tip]");
+      if (seg) { show(Number(seg.dataset.tip)); return; }
+      if (e.target.closest(".sm-tips__prev")) { show(pos - 1); return; }
+      if (e.target.closest(".sm-tips__next")) { if (pos >= last) closeProChecklist(); else show(pos + 1); }
+    });
+
+    root.__onKey = (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); if (pos < last) show(pos + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); show(pos - 1); }
+    };
+    document.addEventListener("keydown", root.__onKey);
+
+    show(pos);
+    document.body.appendChild(root);
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
-    requestAnimationFrame(() => sheet.classList.add("is-open"));
+    void root.offsetWidth; // flush layout so the slide-in transition runs (no dependence on animation frames)
+    root.classList.add("is-open");
+    const closeBtn = root.querySelector(".sm-tips__x");
+    if (closeBtn) closeBtn.focus({ preventScroll: true });
   }
 
   function closeProChecklist() {
-    const sheet = document.querySelector(".sm-pro-checklist-sheet");
+    const sheet = document.querySelector(".sm-tips, .sm-pro-checklist-sheet");
     if (!sheet) return;
     sheet.classList.remove("is-open");
-    setTimeout(() => sheet.remove(), 180);
+    if (sheet.__onKey) document.removeEventListener("keydown", sheet.__onKey);
+    setTimeout(() => sheet.remove(), 260);
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
   }
