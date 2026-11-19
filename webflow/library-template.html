@@ -854,7 +854,14 @@
 #sm-pack-modal .sm-pkmodal__scroll::-webkit-scrollbar{ display:none; }
 
 /* cover: the picture first, the intro video takes its place on play */
-#sm-pack-modal .sm-pkmodal__cover{ position:relative; aspect-ratio:16/10; background:#000; overflow:hidden; }
+/* the picture never takes more height than is left after the text and the price bar (~330px, room for a
+   two-line title), so title, description and author are always visible without scrolling, on any screen height */
+/* height only (an aspect-ratio + max-height would also shrink the width): 16:10 of the card, capped by the screen */
+#sm-pack-modal .sm-pkmodal__cover{
+  position:relative; width:100%; background:#000; overflow:hidden;
+  height:min(calc(min(460px, 100vw - 40px) * .625), max(160px, calc(100vh - 48px - 330px)));
+  height:min(calc(min(460px, 100vw - 40px) * .625), max(160px, calc(100dvh - 48px - 330px)));
+}
 #sm-pack-modal .sm-pkmodal__cover > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:62% 50%; display:block; }
 #sm-pack-modal .sm-pkmodal__cover::after{ content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,0) 24%, rgba(16,16,16,0) 76%, #101010); }
 #sm-pack-modal .sm-pkmodal__x{ position:absolute; top:14px; right:14px; z-index:5; width:36px; height:36px; border-radius:50%; display:grid; place-items:center; border:0; background:rgba(0,0,0,.55); color:#fff; font-size:13px; cursor:pointer; transition:background .15s ease; }
@@ -907,13 +914,63 @@
 @keyframes smPkIn{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
 @media (prefers-reduced-motion:reduce){ #sm-pack-modal .sm-pkmodal__card{ animation:none; } }
 
-/* phones: bottom sheet, taller picture */
+/* phones: full screen (there is no room to spare for a floating card), price bar pinned to the bottom */
 @media (max-width:560px){
-  #sm-pack-modal{ padding:0; align-items:flex-end; }
-  #sm-pack-modal .sm-pkmodal__card{ width:100%; max-height:94dvh; border-radius:26px 26px 0 0; border-bottom:0; animation:smPkSheet .34s cubic-bezier(.2,.8,.2,1); }
-  #sm-pack-modal .sm-pkmodal__cover{ aspect-ratio:9/10; }
+  #sm-pack-modal{ padding:0; align-items:stretch; }
+  #sm-pack-modal .sm-pkmodal__card{
+    width:100%; height:100vh; height:100dvh; max-height:none;
+    border-radius:0; border:0; box-shadow:none; animation:smPkSheet .34s cubic-bezier(.2,.8,.2,1);
+  }
+  #sm-pack-modal .sm-pkmodal__x{ top:calc(14px + env(safe-area-inset-top)); }
+  /* up to 4:5 of the full width on tall phones, capped by the screen height */
+  #sm-pack-modal .sm-pkmodal__cover{
+    height:min(calc(100vw * 1.25), max(180px, calc(100vh - 330px)));
+    height:min(calc(100vw * 1.25), max(180px, calc(100dvh - 330px)));
+  }
   #sm-pack-modal .sm-pkmodal__body{ padding:18px 22px 6px; }
   #sm-pack-modal .sm-pkmodal__foot{ padding:12px 14px calc(16px + env(safe-area-inset-bottom)); }
 }
 @keyframes smPkSheet{ from{ transform:translateY(40px); opacity:0; } to{ transform:none; opacity:1; } }
+
+/* low, wide screens (phone on its side, short laptop window): there is no height for picture-over-text,
+   so the picture goes left at full height and the text + price bar sit on the right */
+@media (max-height:560px) and (min-width:520px){
+  #sm-pack-modal{ padding:12px 16px; align-items:center; }
+  #sm-pack-modal .sm-pkmodal__card{
+    display:grid; grid-template-columns:minmax(0,46%) minmax(0,1fr); grid-template-rows:minmax(0,1fr) auto;
+    width:min(840px,100%); max-height:calc(100vh - 24px); max-height:calc(100dvh - 24px);
+    border-radius:24px; border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  #sm-pack-modal .sm-pkmodal__scroll{ display:contents; }
+  #sm-pack-modal .sm-pkmodal__cover{ grid-column:1; grid-row:1 / span 2; height:auto; min-height:220px; }
+  #sm-pack-modal .sm-pkmodal__cover::after{ background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,0) 26%, rgba(0,0,0,0) 72%, rgba(0,0,0,.5)); }
+  #sm-pack-modal .sm-pkmodal__body{ grid-column:2; grid-row:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding:22px 24px 4px; }
+  #sm-pack-modal .sm-pkmodal__body::-webkit-scrollbar{ display:none; }
+  #sm-pack-modal .sm-pkmodal__title{ font-size:26px; }
+  #sm-pack-modal .sm-pkmodal__author{ margin-top:16px; }
+  #sm-pack-modal .sm-pkmodal__foot{ grid-column:2; grid-row:2; padding:10px 16px calc(14px + env(safe-area-inset-bottom)); }
+  #sm-pack-modal .sm-pkmodal__bar{ padding:12px 14px; }
+  #sm-pack-modal .sm-pkmodal__amt{ font-size:19px; white-space:nowrap; }
+  #sm-pack-modal .sm-pkmodal__bar small{ font-size:12px; }
+  #sm-pack-modal .sm-pkmodal__buy{ height:46px; padding:0 22px; }
+  #sm-pack-modal .sm-pkmodal__alt{ margin-top:10px; }
+}
+/* a phone on its side: full screen too, no card around it */
+@media (max-height:560px) and (min-width:520px) and (max-width:1000px){
+  #sm-pack-modal{ padding:0; align-items:stretch; }
+  #sm-pack-modal .sm-pkmodal__card{
+    width:100%; height:100vh; height:100dvh; max-height:none;
+    border-radius:0; border:0; box-shadow:none;
+  }
+  #sm-pack-modal .sm-pkmodal__body{ padding-top:calc(22px + env(safe-area-inset-top)); padding-right:calc(24px + env(safe-area-inset-right)); }
+  #sm-pack-modal .sm-pkmodal__foot{ padding-right:calc(16px + env(safe-area-inset-right)); }
+  #sm-pack-modal .sm-pkmodal__cover .sm-pkmodal__introbtn{ left:calc(16px + env(safe-area-inset-left)); }
+}
+/* the smallest of those (e.g. a small phone on its side): a narrower picture leaves room for the text */
+@media (max-height:560px) and (min-width:520px) and (max-width:700px){
+  #sm-pack-modal .sm-pkmodal__card{ grid-template-columns:minmax(0,40%) minmax(0,1fr); }
+  #sm-pack-modal .sm-pkmodal__body{ padding:calc(18px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) 2px 20px; }
+  #sm-pack-modal .sm-pkmodal__title{ font-size:23px; }
+  #sm-pack-modal .sm-pkmodal__desc{ font-size:14px; }
+}
 </style>
