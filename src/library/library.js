@@ -3808,16 +3808,27 @@
     });
   }
 
+  // Re-render only when the layout can actually change: a new width, or a switch between the
+  // phone / desktop / other layouts. Mobile browsers fire "resize" every time the address bar
+  // hides or shows while scrolling (height only) — re-rendering then replayed every entrance
+  // animation and reloaded the screen on each scroll.
   let smRenderResizeTimer = null;
+  const smLayoutKey = () => `${window.innerWidth}|${isProMobilePortrait() ? "m" : ""}|${isProDesktopLayout() ? "d" : ""}`;
+  let smLastLayoutKey = smLayoutKey();
   window.addEventListener("resize", () => {
     if (isInitialLoading) return;
     clearTimeout(smRenderResizeTimer);
-    smRenderResizeTimer = setTimeout(() => renderResults(), 120);
+    smRenderResizeTimer = setTimeout(() => {
+      const key = smLayoutKey();
+      if (key === smLastLayoutKey) return;
+      smLastLayoutKey = key;
+      renderResults();
+    }, 120);
   });
 
   window.addEventListener("orientationchange", () => {
     if (isInitialLoading) return;
-    setTimeout(() => renderResults(), 180);
+    setTimeout(() => { smLastLayoutKey = smLayoutKey(); renderResults(); }, 180);
   });
 
   let hlsJsPromise = null;
