@@ -26,7 +26,14 @@
     }
   }
   function inject(bg){
-    if(!bg || bg.querySelector("video.sm-skin-hero-vid")) return;
+    if(!bg || bg.querySelector("video.sm-skin-hero-vid") || bg.__smBgDone) return;
+    // Pack backdrop is turned off (it competes with the content; CSS hides .sm-pro-pack-bg).
+    // Do not download the video at all — only keep the single-scrollbar behaviour. To bring it back: set SM_PACK_BACKDROP_VIDEO=true AND delete the "no backdrop" block at the end of sm-skin.css.
+    if (window.SM_PACK_BACKDROP_VIDEO !== true) {
+      bg.__smBgDone = true;
+      setTimeout(function(){ pageScroll("single"); }, 0);
+      return;
+    }
     var v = document.createElement("video");
     v.className = "sm-skin-hero-vid";
     v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true;

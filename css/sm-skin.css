@@ -1957,3 +1957,150 @@ body #sm-library-scope .sm-pro-pack-soon-label{
   font:600 10.5px/1.2 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.46);
 }
+
+/* Pack screen: no photo/video backdrop behind the hero — it competes with the content.
+   Flat #121212 (PHASE 8) shows instead. To bring the backdrop back, delete this block. */
+body #sm-library-scope .sm-pro-pack-bg,
+body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !important; }
+
+/* =============================================================
+   Pack screen "Split + Bento" (design R). One markup, layout by width:
+   single column below 900px, info panel + content from 900px.
+   Calm fintech look: flat #121212, hairlines, one accent (#c99a6e).
+   ============================================================= */
+#sm-library-scope .sm-pk{ color:#fff; font-variant-numeric:tabular-nums; }
+#sm-library-scope .sm-pk__wrap{
+  max-width:1120px; margin:0 auto; padding:28px 16px 40px;
+  display:grid; grid-template-columns:minmax(0,1fr); gap:28px;
+}
+@media (min-width:900px){
+  #sm-library-scope .sm-pk__wrap{ grid-template-columns:260px minmax(0,1fr); gap:44px; padding:44px 8px 56px; }
+  #sm-library-scope .sm-pk__info{ position:sticky; top:24px; align-self:start; }
+}
+
+/* info panel */
+#sm-library-scope .sm-pk__back{
+  width:44px; height:44px; padding:0; border:0; border-radius:50%;
+  background:#1d1d1d; color:#fff; display:grid; place-items:center; cursor:pointer;
+}
+#sm-library-scope .sm-pk__back:hover{ background:#262626; }
+#sm-library-scope .sm-pk__title{
+  margin:24px 0 0 !important; padding:0 !important; color:#fff !important; text-transform:none !important;
+  font-size:32px !important; font-weight:600 !important; letter-spacing:-.03em !important; line-height:1.08 !important;
+}
+#sm-library-scope .sm-pk__desc{
+  margin:10px 0 0 !important; max-width:none !important;
+  font-size:15px !important; line-height:1.5 !important; font-weight:400 !important; color:#8c8c8c !important;
+}
+@media (min-width:900px){ #sm-library-scope .sm-pk__title{ font-size:36px !important; } }
+#sm-library-scope .sm-pk__author{ display:flex; align-items:center; gap:12px; margin-top:18px; }
+#sm-library-scope .sm-pk__avatar{ flex:0 0 40px; width:40px; height:40px; border-radius:50%; object-fit:cover; background:#262626; display:block; }
+#sm-library-scope .sm-pk__avatar--letter{ display:grid; place-items:center; font-size:15px; font-weight:600; color:#cfcfcf; }
+#sm-library-scope .sm-pk__author b{ display:block; font-size:14px; font-weight:500; color:#fff; }
+#sm-library-scope .sm-pk__author a{
+  display:inline-flex; align-items:center; gap:4px; margin-top:2px;
+  font-size:13px; color:#8c8c8c; text-decoration:none;
+}
+#sm-library-scope .sm-pk__author a:hover{ color:#fff; }
+#sm-library-scope .sm-pk__kv{ margin:24px 0 0; padding:0; list-style:none; }
+#sm-library-scope .sm-pk__kv li{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 0; border-top:1px solid #232323; font-size:14.5px; color:#fff;
+}
+#sm-library-scope .sm-pk__kv li:last-child{ border-bottom:1px solid #232323; }
+#sm-library-scope .sm-pk__kv li span{ color:#8c8c8c; }
+#sm-library-scope .sm-pk__kv li b{ font-weight:500; }
+#sm-library-scope .sm-pk__kv li b.is-dim{ font-weight:400; color:#8c8c8c; }
+#sm-library-scope .sm-pk__chk{
+  display:flex; align-items:center; gap:12px; width:100%; min-height:52px; margin-top:20px; padding:0 16px;
+  border:0; border-radius:14px; background:#1a1a1a; color:#fff; cursor:pointer;
+  font-size:15px; font-weight:500; text-align:left; transition:background .15s ease, transform .15s ease;
+}
+#sm-library-scope .sm-pk__chk svg{ color:#c99a6e; flex:0 0 auto; }
+#sm-library-scope .sm-pk__chk em{ margin-left:auto; font-style:normal; color:#c99a6e; }
+#sm-library-scope .sm-pk__chk:hover{ background:#202020; }
+#sm-library-scope .sm-pk__chk:active{ transform:scale(.98); }
+/* checklist sits in the side panel on wide screens, at the end of the content on narrow ones */
+#sm-library-scope .sm-pk__chk--side{ display:none; }
+@media (min-width:900px){
+  #sm-library-scope .sm-pk__chk--side{ display:flex; }
+  #sm-library-scope .sm-pk__chk--end{ display:none; }
+}
+
+/* content */
+#sm-library-scope .sm-pk__main{ min-width:0; }
+#sm-library-scope .sm-pk__sec{
+  margin:30px 0 0 !important; padding:0 !important; color:#8c8c8c !important;
+  font-size:12.5px !important; font-weight:500 !important; letter-spacing:.06em !important; text-transform:uppercase !important; line-height:1.2 !important;
+}
+#sm-library-scope .sm-pk__sec:first-child{ margin-top:0 !important; }
+@media (min-width:900px){
+  #sm-library-scope .sm-pk__sec{ margin-top:34px !important; }
+  #sm-library-scope .sm-pk__sec:first-child{ margin-top:6px !important; }
+}
+#sm-library-scope .sm-pk__bento{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+#sm-library-scope .sm-pk__tile{
+  position:relative; display:block; width:100%; height:136px; padding:0; border:0; border-radius:18px; overflow:hidden;
+  background:#1a1a1a; color:#fff; text-align:left; cursor:pointer; transition:transform .15s ease;
+}
+#sm-library-scope .sm-pk__tile.is-lead{ grid-column:span 2; height:196px; }
+@media (min-width:900px){
+  #sm-library-scope .sm-pk__tile{ height:132px; }
+  #sm-library-scope .sm-pk__tile.is-lead{ height:200px; }
+}
+#sm-library-scope .sm-pk__img{
+  position:absolute; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; display:block;
+  opacity:0; transition:opacity .35s ease;
+}
+#sm-library-scope .sm-pk__img.is-in{ opacity:1; }
+#sm-library-scope .sm-pk__tile::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,0) 32%, rgba(0,0,0,0) 46%, rgba(0,0,0,.86));
+}
+#sm-library-scope .sm-pk__num{ position:absolute; z-index:2; left:16px; top:14px; font-size:12.5px; font-weight:500; color:rgba(255,255,255,.92); text-shadow:0 1px 8px rgba(0,0,0,.7); }
+#sm-library-scope .sm-pk__free{ color:#c99a6e; }
+#sm-library-scope .sm-pk__play{
+  position:absolute; z-index:2; right:12px; top:12px; width:32px; height:32px; border-radius:50%;
+  background:rgba(0,0,0,.58); display:grid; place-items:center;
+}
+#sm-library-scope .sm-pk__tile.is-lead .sm-pk__play{ right:14px; width:38px; height:38px; }
+#sm-library-scope .sm-pk__tt{
+  position:absolute; z-index:2; left:16px; right:16px; bottom:14px;
+  font-size:14.5px; font-weight:600; letter-spacing:-.015em; line-height:1.2;
+}
+#sm-library-scope .sm-pk__tile.is-lead .sm-pk__tt{ font-size:18px; }
+#sm-library-scope .sm-pk__tt small{ display:block; margin-top:3px; font-size:12.5px; font-weight:400; color:#d0d0d0; letter-spacing:0; }
+#sm-library-scope .sm-pk__tile:active{ transform:scale(.98); }
+#sm-library-scope .sm-pk__tile:focus-visible,
+#sm-library-scope .sm-pk__chk:focus-visible,
+#sm-library-scope .sm-pk__back:focus-visible{ outline:2px solid #c99a6e; outline-offset:2px; }
+
+/* "In development" slots: static, they show what is still missing from the pack */
+#sm-library-scope .sm-pk__soongrid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
+#sm-library-scope .sm-pk__soon{
+  display:grid; place-items:center; height:80px; padding:0 8px; text-align:center;
+  border-radius:14px; background:#080808; border:1px solid #1f1f1f; color:#8c8c8c;
+  font:600 9.5px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace; letter-spacing:.12em; text-transform:uppercase;
+}
+@media (max-width:899.98px){ #sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(3){ display:none; } }
+@media (min-width:900px){
+  #sm-library-scope .sm-pk__soongrid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  #sm-library-scope .sm-pk__soon{ height:84px; }
+}
+#sm-library-scope .sm-pk__sig{ margin-top:34px !important; text-align:left; }
+
+/* calm entrance: rows rise 10px and fade, staggered; none for reduced motion */
+@keyframes smPkIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:no-preference){
+  #sm-library-scope .sm-pk__info > *,
+  #sm-library-scope .sm-pk__sec,
+  #sm-library-scope .sm-pk__tile,
+  #sm-library-scope .sm-pk__soon,
+  #sm-library-scope .sm-pk__chk--end{
+    animation:smPkIn .32s cubic-bezier(.2,.7,.2,1) backwards;
+    animation-delay:calc(var(--i, 0) * 55ms);
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  #sm-library-scope .sm-pk__img{ transition:none; }
+}

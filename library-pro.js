@@ -3067,7 +3067,125 @@
     safeText(matchCount, String(moves.length + plans.length));
   }
 
+  // Pack screen "Split + Bento": info panel (title, author, lessons/plans/moves, checklist) + lesson tiles +
+  // "In development" slots for what the creator has not delivered. One markup for every width; CSS decides
+  // the layout (split from 900px up). Used while the pack has contentInDev; other packs keep the old screens.
+  function renderPackScreenSplit() {
+    const pack = getActivePackItem();
+    if (!pack) {
+      activeProPackId = null;
+      activeProTab = "packs";
+      setPackDetailPageMode(false);
+      renderProPacksScreen();
+      return;
+    }
+
+    const lessons = Array.isArray(pack.lessons) ? pack.lessons : [];
+    const authorName = String(pack.authorName || pack.creator || "").trim();
+    const igUrl = String(pack.instagram || "").trim();
+    const igHandle = igUrl.replace(/[?#].*$/, "").replace(/\/+$/, "").split("/").pop();
+    const desc = String(pack.description || "").split(/(?<=\.)\s/)[0];
+    const backTab = isProMobilePortrait() ? "packs" : "all";
+
+    const playSvg = `<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18l16-9z" fill="#fff"/></svg>`;
+    const arrowSvg = `<svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const checkSvg = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+    const checklistBtn = (cls) => `
+      <button class="sm-pk__chk ${cls}" type="button" data-pro-open-checklist="1">${checkSvg}<span>Open checklist</span><em aria-hidden="true">›</em></button>`;
+
+    const tiles = lessons.map((l, i) => `
+      <button class="sm-pk__tile${i === 0 ? " is-lead" : ""}" type="button" style="--i:${i}" data-pro-lesson="${escapeHtml(l.title)}" data-pro-lesson-n="${escapeHtml(l.n)}" aria-label="Play ${escapeHtml(l.title)}">
+        <img class="sm-pk__img" src="${escapeHtml(l.thumb || FALLBACK_THUMB)}" alt="" loading="lazy" decoding="async">
+        <span class="sm-pk__num">${escapeHtml(l.n)}${l.free ? ` · <span class="sm-pk__free">Free</span>` : ""}</span>
+        <span class="sm-pk__play" aria-hidden="true">${playSvg}</span>
+        <span class="sm-pk__tt">${escapeHtml(l.title)}${l.duration ? `<small>${escapeHtml(l.duration)}</small>` : ""}</span>
+      </button>`).join("");
+
+    const soon = (count) => Array.from({ length: count }, (_, i) =>
+      `<div class="sm-pk__soon" style="--i:${lessons.length + i}">In development</div>`).join("");
+
+    grid.innerHTML = "";
+    if (resultsHead) resultsHead.style.display = "none";
+    if (moreBtn) moreBtn.style.display = "none";
+    scope.classList.add("sm-pro-subscreen", "sm-pro-pack-detail-active");
+    setPackDetailPageMode(true);
+
+    const wrap = document.createElement("div");
+    wrap.className = "sm-pro-pack-detail-screen sm-pro-tab-screen sm-pk";
+    wrap.innerHTML = `
+      <div class="sm-pk__wrap">
+        <aside class="sm-pk__info">
+          <button class="sm-pk__back" type="button" aria-label="Back" data-pro-go-tab="${backTab}">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h1 class="sm-pk__title">${escapeHtml(pack.title)}</h1>
+          ${desc ? `<p class="sm-pk__desc">${escapeHtml(desc)}</p>` : ""}
+          ${authorName ? `
+          <div class="sm-pk__author">
+            ${pack.authorPhoto
+              ? `<img class="sm-pk__avatar" src="${escapeHtml(pack.authorPhoto)}" alt="">`
+              : `<span class="sm-pk__avatar sm-pk__avatar--letter" aria-hidden="true">${escapeHtml(authorName.charAt(0).toUpperCase())}</span>`}
+            <div>
+              <b>${escapeHtml(authorName)}</b>
+              ${igUrl ? `<a href="${escapeHtml(igUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(authorName)} on Instagram">Instagram @${escapeHtml(igHandle)}${arrowSvg}</a>` : ""}
+            </div>
+          </div>` : ""}
+          <ul class="sm-pk__kv">
+            <li><span>Lessons</span><b>${lessons.length}</b></li>
+            <li><span>Plans</span><b class="is-dim">Soon</b></li>
+            <li><span>Moves</span><b class="is-dim">Soon</b></li>
+          </ul>
+          ${checklistBtn("sm-pk__chk--side")}
+        </aside>
+
+        <main class="sm-pk__main">
+          <h2 class="sm-pk__sec">Lessons</h2>
+          <div class="sm-pk__bento">${tiles}</div>
+
+          <h2 class="sm-pk__sec">Plans</h2>
+          <div class="sm-pk__soongrid">${soon(3)}</div>
+
+          <h2 class="sm-pk__sec">Moves</h2>
+          <div class="sm-pk__soongrid">${soon(3)}</div>
+
+          ${checklistBtn("sm-pk__chk--end")}
+          <footer class="sm-pro-pack-footer sm-pk__sig" aria-label="SkyMotion signature">Learn. Create. Elevate.</footer>
+        </main>
+      </div>
+    `;
+
+    grid.appendChild(wrap);
+    attachImgFallback(wrap);
+
+    // thumbnails fade in when ready (the tile background is the placeholder); never leave one hidden
+    wrap.querySelectorAll("img.sm-pk__img").forEach((img) => {
+      const show = () => img.classList.add("is-in");
+      if (img.complete) show();
+      else { img.addEventListener("load", show, { once: true }); img.addEventListener("error", show, { once: true }); }
+    });
+
+    // author photo failed -> neutral initial instead of a broken image
+    const av = wrap.querySelector("img.sm-pk__avatar");
+    if (av) {
+      av.addEventListener("error", () => {
+        const letter = document.createElement("span");
+        letter.className = "sm-pk__avatar sm-pk__avatar--letter";
+        letter.setAttribute("aria-hidden", "true");
+        letter.textContent = authorName.charAt(0).toUpperCase();
+        av.replaceWith(letter);
+      }, { once: true });
+    }
+
+    safeText(matchCount, String(lessons.length));
+  }
+
   function renderProPackDetailScreen() {
+    const activePack = getActivePackItem();
+    if (activePack && activePack.contentInDev && window.SM_PACK_LEGACY_LAYOUT !== true) {
+      return renderPackScreenSplit();
+    }
+
     if (isProMobilePortrait()) {
       return renderProPackDetailScreenMobileV25();
     }
