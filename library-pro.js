@@ -3144,13 +3144,13 @@
           <div class="sm-pk__bento">${tiles}</div>
 
           <h2 class="sm-pk__sec">Plans</h2>
-          <div class="sm-pk__soongrid">${soon(3)}</div>
+          <div class="sm-pk__soongrid">${soon(4)}</div>
 
           <h2 class="sm-pk__sec">Moves</h2>
-          <div class="sm-pk__soongrid">${soon(3)}</div>
+          <div class="sm-pk__soongrid">${soon(4)}</div>
 
           ${checklistBtn("sm-pk__chk--end")}
-          <footer class="sm-pro-pack-footer sm-pk__sig" aria-label="SkyMotion signature">Learn. Create. Elevate.</footer>
+          <p class="sm-pk__sig">Learn. Create. Elevate.</p>
         </main>
       </div>
     `;

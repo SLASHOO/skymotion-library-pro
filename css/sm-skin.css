@@ -2077,13 +2077,25 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !import
 
 /* "In development" slots: static, they show what is still missing from the pack */
 #sm-library-scope .sm-pk__soongrid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:12px; }
+/* slots are cards, not strips: same 16:10 shape as the small lesson tiles. 2 per row on phones, 3 from 640px, 4 from 1200px */
 #sm-library-scope .sm-pk__soon{
-  display:grid; place-items:center; height:80px; padding:0 8px; text-align:center;
-  border-radius:14px; background:#080808; border:1px solid #1f1f1f; color:#8c8c8c;
+  display:grid; place-items:center; height:auto; aspect-ratio:16/10; min-height:96px; padding:0 8px; text-align:center;
+  border-radius:18px; background:#080808; border:1px solid #1f1f1f; color:#8c8c8c;
   font:600 9.5px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace; letter-spacing:.12em; text-transform:uppercase;
 }
-#sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(3){ display:none; }
-#sm-library-scope .sm-pk__sig{ margin-top:34px !important; text-align:left; }
+#sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(n+3){ display:none; }
+@media (min-width:640px){
+  #sm-library-scope .sm-pk__soongrid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  #sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(3){ display:grid; }
+}
+@media (min-width:1200px){
+  #sm-library-scope .sm-pk__soongrid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  #sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(4){ display:grid; }
+}
+#sm-library-scope .sm-pk__sig{ margin:40px 0 0; padding:0; text-align:left; font-size:13px; line-height:1.4; letter-spacing:.01em; color:#858585; }
+/* the old pack screens forced the page to be at least one screen tall: that left a big hole above the site footer */
+body #sm-library-scope .sm-pk.sm-pro-pack-detail-screen,
+body.sm-pack-detail-open #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{ min-height:0 !important; padding-bottom:0 !important; }
 
 /* WIDE: info panel left, content right */
 @media (min-width:900px){
@@ -2097,9 +2109,6 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !import
   #sm-library-scope .sm-pk__chk--end{ display:none; }
   #sm-library-scope .sm-pk__sec{ margin-top:34px !important; }
   #sm-library-scope .sm-pk__sec:first-child{ margin-top:6px !important; }
-  #sm-library-scope .sm-pk__soongrid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
-  #sm-library-scope .sm-pk__soongrid .sm-pk__soon:nth-child(3){ display:grid; }
-  #sm-library-scope .sm-pk__soon{ height:84px; }
 }
 /* the info panel only sticks when the screen is tall enough to show all of it; otherwise it scrolls with the page */
 @media (min-width:900px) and (min-height:640px){
