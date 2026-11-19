@@ -4850,8 +4850,12 @@
           // plan-intro-* are the 8 plans' own intro videos, resolved separately
           // by Plan Viewer via intro_video — they are not moves and must not
           // show up in the Moves tab.
+          // Raw pack material is never a move either, also files replaced by newer cuts: the creator's
+          // lesson files are named "10.1_A…", our uploads "pack-…" (e.g. the old 1:29 intro left in Bunny).
+          const isPackFile = (title) => /^\d+\.\d+[_\s-]/.test(title) || title.startsWith("pack-");
           const secureVideos = (Array.isArray(payload?.items) ? payload.items : [])
             .filter((v) => !String(v?.title || "").toLowerCase().startsWith("plan-intro-"))
+            .filter((v) => !isPackFile(String(v?.title || "").trim().toLowerCase()))
             .filter((v) => !lessonVideoIds.has(String(v?.bunny_video_id || v?.guid || v?.id || "").toLowerCase()));
           const titleKey = (value) => String(value || "")
             .replace(/\.[a-z0-9]{2,5}$/i, "")

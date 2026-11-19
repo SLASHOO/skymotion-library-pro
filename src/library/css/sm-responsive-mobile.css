@@ -396,7 +396,9 @@
     width:100vw !important;
     max-width:100vw !important;
     margin:0 !important;
-    padding:10px !important;
+    /* keep content out from under the camera cutout / rounded corners of a phone on its side */
+    padding:10px max(10px, env(safe-area-inset-right)) 10px max(10px, env(safe-area-inset-left)) !important;
+    box-sizing:border-box !important;
     overflow:visible !important;
   }
 
@@ -454,4 +456,13 @@
   #sm-library-scope #modal .player__ambient{
     display:none;
   }
+}
+
+/* Phone on its side: compact, even cards and a slim "Assistant" bar. Before this the plan cards forced every
+   card in a row to 240px on a ~290px-tall screen, so one card filled the whole view. */
+@media (max-height:560px) and (orientation:landscape){
+  #sm-library-scope .results__grid{ grid-auto-rows:auto !important; align-items:start !important; gap:10px !important; }
+  #sm-library-scope .card{ min-height:0 !important; height:auto !important; aspect-ratio:16/10; }
+  #sm-library-scope .cardPlan{ min-height:0 !important; height:auto !important; aspect-ratio:4/3.3; }
+  #sm-library-scope .mobile-open{ max-width:none !important; width:100%; margin:0 0 8px !important; padding:8px 12px !important; border-radius:14px !important; }
 }
