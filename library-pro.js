@@ -75,7 +75,11 @@
         setImp(el, "max-height", "none");
         setImp(el, "overflow", "auto");
         setImp(el, "overflow-x", "hidden");
-        setImp(el, "overflow-y", "auto");
+        // <body> must not become a scroll container (it would break position:sticky inside the pack screen);
+        // "clip" hides sideways overflow the same way. Browsers without "clip" keep "hidden".
+        if (el === document.body) setImp(el, "overflow-x", "clip");
+        // the page scrolls on <html>; <body> stays "visible" so it is not a second scroller either
+        setImp(el, "overflow-y", el === document.body ? "visible" : "auto");
         setImp(el, "position", "static");
       });
 
@@ -88,6 +92,7 @@
       if (scope) {
         setImp(scope, "min-height", "100vh");
         setImp(scope, "overflow-x", "hidden");
+        setImp(scope, "overflow-x", "clip");
         setImp(scope, "overflow-y", "visible");
       }
     } else {
@@ -277,9 +282,14 @@
     return map?.[stepKey]?.[label] || String(label).toLowerCase();
   }
 
+  // A phone on its side: short and up to 1000px wide (iPhone Plus/Pro Max, Pixel, Galaxy Ultra are 915–932px).
+  // It uses the phone layout (no side panel, Assistant as a drawer), like a portrait phone.
+  const SM_PHONE_LAND_MQ = "(max-height: 560px) and (max-width: 1000px) and (orientation: landscape)";
+  const smIsPhoneWidth = () => window.matchMedia("(max-width: 900px), " + SM_PHONE_LAND_MQ).matches;
+
   function shakeFiltersButton() {
     if (!openAssistantBtn) return;
-    if (!window.matchMedia("(max-width: 900px)").matches) return;
+    if (!smIsPhoneWidth()) return;
 
     openAssistantBtn.classList.remove("is-attention");
     void openAssistantBtn.offsetWidth;
@@ -699,7 +709,7 @@
   }
 
   function isDrawerMode() {
-    return window.matchMedia("(max-width: 900px)").matches;
+    return smIsPhoneWidth();
   }
 
   function openAssistant() {
@@ -1741,15 +1751,16 @@
     return card;
   }
 
+  // "Phone layout" = a portrait phone/tablet (up to 900px) OR a phone on its side (short and up to 900px wide).
+  // The name is historical: landscape phones use the same Pro screens as portrait (tabs, featured pack, …).
   function isProMobilePortrait() {
-    return window.matchMedia("(max-width: 900px) and (orientation: portrait)").matches;
+    return window.matchMedia("(max-width: 900px) and (orientation: portrait), " + SM_PHONE_LAND_MQ).matches;
   }
 
   function isProDesktopLayout() {
-    return (
-      window.matchMedia("(min-width: 901px)").matches &&
-      !window.matchMedia("(max-height: 560px) and (orientation: landscape)").matches
-    );
+    // Wider than 900px = desktop screens, except a phone on its side (short and up to 1000px: phone layout).
+    // A short window wider than 1000px (a laptop browser) still gets the desktop screens.
+    return window.matchMedia("(min-width: 901px) and (min-height: 561px), (min-width: 1001px)").matches;
   }
 
   function getItemFilteredIndex(item) {

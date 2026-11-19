@@ -1077,7 +1077,7 @@
 
 /* ========================================================= PRO DESKTOP HOME — RECOVERY PATCH Fixes desktop/laptop Pro layout without touching mobile portrait. Uses existing DOM: assistant + sm-pro-mobile-top + sm-pro-mobile-tabs + resultsGrid.
 ========================================================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope{
     --side:340px;
     --desktop-gap:28px;
@@ -1506,7 +1506,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1260px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1260px), (min-width: 1001px) and (max-width:1260px) {
   #sm-library-scope{
     --side:310px;
     --desktop-gap:22px;
@@ -1549,7 +1549,7 @@
 
 /* ========================================================= PRO DESKTOP SUBSCREENS — FIX Fixes Moves/Plans/Packs/Saved desktop pages without touching mobile portrait.
 ========================================================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .results__grid:has(.sm-pro-tab-screen){
     display:block !important;
     grid-template-columns:none !important;
@@ -1988,7 +1988,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1180px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1180px), (min-width: 1001px) and (max-width:1180px) {
   #sm-library-scope .sm-pro-move-list,
   #sm-library-scope .sm-pro-plan-grid,
   #sm-library-scope .sm-pro-pack-list{
@@ -1998,7 +1998,7 @@
 
 /* ========================= PRO DESKTOP POLISH Fixes desktop tabs, pack cards, and lower All layout. Desktop only. Mobile portrait / phone landscape are untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   /* Cleaner top navigation: remove duplicated underline / stripe effect */
   #sm-library-scope .sm-pro-mobile-tabs{
     display:flex !important;
@@ -2388,7 +2388,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-list,
   #sm-library-scope .sm-pro-saved-pack-list,
   #sm-library-scope .sm-pro-plans-screen .sm-pro-move-list{
@@ -2402,7 +2402,7 @@
 
 /* ========================= PRO DESKTOP SCROLL MODEL One unified scroll for the content area. Removes inner scroll from Popular moves and prevents page from dropping below filters. Desktop only. Mobile portrait / phone landscape untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   html:has(#sm-library-scope),
   body:has(#sm-library-scope) {
     height: 100%;
@@ -2504,7 +2504,7 @@
 
 /* ========================= PRO DESKTOP PLANS POLISH Plans tab becomes true horizontal/landscape cards with copy underneath. Also aligns Basic / Intermediate / Advanced labels in Moves and Plans. Desktop only. Mobile portrait / phone landscape untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   /* Difficulty labels: stop floating crooked, align like small professional status chips */
   #sm-library-scope .sm-pro-move-row__meta{
     display:flex !important;
@@ -2687,7 +2687,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-plans-screen .sm-pro-move-list,
   #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-list{
     grid-template-columns:1fr !important;
@@ -2696,7 +2696,7 @@
 
 /* ========================= PRO DESKTOP plan card hierarchy + filter panel first pass Fixes Plans text layout and difficulty chip alignment. Desktop only. Mobile portrait / phone landscape untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   /* ---------- Desktop tabs: keep one clean underline only ---------- */
   #sm-library-scope .sm-pro-mobile-tabs button::before,
   #sm-library-scope .sm-pro-mobile-tabs button::after {
@@ -2981,7 +2981,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-row .sm-pro-move-row__top h3{
     white-space:normal !important;
   }
@@ -3875,7 +3875,7 @@
   }
 }
 
-@media (min-width: 901px) and (max-height: 760px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 760px), (min-width: 1001px) and (max-height: 760px) {
   #sm-library-scope{
     --side:370px;
   }
@@ -4220,7 +4220,7 @@
   display:none;
 }
 
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-list{
     gap:22px !important;
   }
@@ -4376,7 +4376,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__body{
     right:226px !important;
   }
@@ -4396,7 +4396,7 @@
   display:none;
 }
 
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__kit-preview{
     display:none !important;
   }
@@ -4505,7 +4505,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__body{
     right:258px !important;
   }
@@ -4518,7 +4518,7 @@
 /* ========================= PACK CARDS v109 — author badge + clean inside panel
    Desktop Packs tab only. Mobile and Pack Detail keep their existing layout.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__media span{
     max-width:170px !important;
     min-height:30px !important;
@@ -4621,7 +4621,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__body{
     right:238px !important;
   }
@@ -4635,7 +4635,7 @@
 /* ========================= PACK CARDS v110 — cleaner author/inside polish
    Desktop Packs tab only. Mobile and Pack Detail keep existing layout.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__media span{
     max-width:190px !important;
     min-height:28px !important;
@@ -4691,7 +4691,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__body{
     right:212px !important;
   }
@@ -4705,7 +4705,7 @@
 /* ========================= PACK CARDS v111 — uppercase author badge + more glass
    Desktop Packs tab only. Mobile and Pack Detail keep existing layout.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__media span{
     text-transform:uppercase !important;
     letter-spacing:.045em !important;
@@ -4764,7 +4764,7 @@
    Desktop Packs tab only. Mobile and Pack Detail untouched.
    Goal: clearer glass material, soft edge highlights, subtle refraction, no heavy white blob.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__media span{
     isolation:isolate !important;
     overflow:hidden !important;
@@ -4848,7 +4848,7 @@
    Reverts pack cards to the cleaner wide-card direction: author badge, title, inside meta, best-for line.
    Desktop Packs/Saved pack cards only. Mobile and Pack Detail stay untouched.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row{
     min-height:250px !important;
@@ -4936,7 +4936,7 @@
    Same v113 layout, only removes purple/gold accents from pack cards.
    Desktop Packs/Saved pack cards only. Mobile and Pack Detail stay untouched.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row{
     border-color:rgba(255,255,255,.105) !important;
@@ -5002,7 +5002,7 @@
    Keep v113 simple hero-card idea, but match the older wide banner proportions more closely.
    Desktop Packs/Saved pack cards only. Mobile and Pack Detail stay untouched.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row{
     min-height:335px !important;
@@ -5093,7 +5093,7 @@
    Keep black author badge and black/white text. No right INSIDE panel.
    Desktop Packs/Saved pack cards only. Mobile and Pack Detail stay untouched.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row{
     min-height:250px !important;
@@ -5201,7 +5201,7 @@
   }
 }
 
-@media (min-width:901px) and (max-width:1280px){
+@media (min-width: 901px) and (min-height: 561px) and (max-width:1280px), (min-width: 1001px) and (max-width:1280px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row{
     min-height:238px !important;
@@ -5216,7 +5216,7 @@
 /* ========================= DESKTOP PACK CARDS — DELICATE TEXT + AUTHOR ALIGN v118
    Only desktop Packs/Saved pack cards. Mobile and Pack Detail untouched.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-packs-screen .sm-pro-pack-row__media span,
   #sm-library-scope .sm-pro-saved-pack-list .sm-pro-pack-row__media span{
     left:28px !important;
@@ -5273,7 +5273,7 @@
 /* ========================= DESKTOP HOME PROMO REAL ESTATE PACK ONLY
    Replaces the purple featured pack card on desktop home. Mobile untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-desktop-home .sm-pro-pack-card--home-promo-real-estate {
     min-height: 270px !important;
     border-radius: 24px !important;
@@ -5358,7 +5358,7 @@
    Only changes the Featured pack "View all" text color. No pill, no circle, no background.
    Mobile and other View all links untouched.
 ========================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-desktop-home .sm-pro-desktop-panel--pack > .sm-pro-section-head .sm-pro-section-link {
     display: inline-flex !important;
     align-items: center !important;
@@ -5578,7 +5578,7 @@
    pinned beside it. Do not reintroduce max-height/overflow-y:auto on
    .sm-pro-desktop-plan-grid / .sm-pro-desktop-move-stack here.
    ========================================================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-desktop-home-grid{
     padding-right:28px !important;
   }
@@ -5607,7 +5607,7 @@
    .sm-pro-move-row:not(.sm-pro-plan-row) .sm-pro-move-row__meta rule
    (which also sets display:flex !important) so this actually wins.
    ========================================================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-move-row:not(.sm-pro-plan-row) .sm-pro-move-row__headline .sm-pro-move-row__meta{
     display:none !important;
   }

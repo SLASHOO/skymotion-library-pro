@@ -1119,7 +1119,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
 #sm-library-scope .sm-pro-filter-show-bottom{ display:none !important; }
 
 /* ---- mobile drawer (free library): solid bg, FULL-SCREEN (no border-radius), back shown, title hidden ---- */
-@media (max-width:900px){
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .assistant{
     position:fixed !important; inset:0 !important; margin:0 !important;
     width:auto !important; height:100dvh !important;
@@ -1331,7 +1331,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
 
 /* rebalance the columns: the filter no longer needs the wide Shoot-Builder
    sidebar (was 380–420px) — narrow it so the content grid gets the room. */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope{ --side:340px !important; }
 }
 
@@ -1434,7 +1434,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-card{
 #sm-library-scope .sm-pro-moves-screen.sm-saved-locked .sm-pro-move-list{ display:none !important; }
 /* mobile: the sub-screen rule hides the header/tabs/filter — for the locked Saved tab keep them
    visible so it behaves exactly like the PC page (message just sits in the content area) */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope.sm-pro-subscreen.sm-saved-locked .sm-pro-mobile-top{ display:flex !important; }
   #sm-library-scope.sm-pro-subscreen.sm-saved-locked .sm-pro-mobile-tabs{ display:grid !important; }
   #sm-library-scope.sm-pro-subscreen.sm-saved-locked > .library > .mobile-open{ display:flex !important; }
@@ -1536,7 +1536,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
    dark gradient so the text is always readable.
    (The injector lifts .badge out of .meta so it can sit top-left.)
    ============================================================ */
-@media (max-width:900px){
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-card-grid .card .thumb::after{
     content:""; position:absolute; inset:0; pointer-events:none;
     background:linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(0,0,0,.84));
@@ -1606,7 +1606,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 }
 /* desktop: the compact mobile thumb looks tiny on the wide 2-column cards →
    give it a big, full-height thumbnail and a balanced row. */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-move-row{
     grid-template-columns:210px minmax(0,1fr) !important;
     align-items:stretch !important;
@@ -1622,7 +1622,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 }
 /* brand line in header (desktop only) */
 #sm-library-scope .sm-pro-quote{ display:none; }
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-mobile-top{ display:flex !important; flex-direction:row !important; align-items:center; justify-content:space-between; gap:24px; width:100%; }
   #sm-library-scope .sm-pro-quote{
     display:block; max-width:262px; text-align:right; flex:0 0 auto;
@@ -1639,7 +1639,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-pro-quote{ display:none !important; }  /* quote hidden only when a last item exists */
 
 #sm-library-scope .sm-last-watched{ display:none; }   /* hidden by default → mobile + no-history */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   #sm-library-scope .sm-pro-mobile-top.sm-has-last .sm-last-watched{
     display:inline-flex; align-items:center; gap:12px; flex:0 0 auto; text-align:left;
     padding:8px 16px 8px 8px; border-radius:12px;
@@ -1799,7 +1799,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
    text). All moves are 9:16, so in portrait the video always fills the screen (no top/bottom
    bars on any phone height); on taller screens the crop is taken from the right edge, where the
    videos have no on-screen text. Landscape keeps the whole frame. */
-@media (max-width:900px){
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope #modal .player video.is-ready{
     -webkit-mask-image:none !important;
     mask-image:none !important;
@@ -1807,7 +1807,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
     background:#000 !important;
   }
 }
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope #modal .player video,
   #sm-library-scope #modal .player video.is-ready{
     object-fit:cover !important;
@@ -1830,7 +1830,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 
 /* ── Phones (portrait): one consistent layout at every width ─────────────────────────
    Fluid units only (clamp / container units), so the same rules hold from 320 to 900 px. */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Plan cards: the pills scale with the card, always one row, never over the caption. */
   #sm-library-scope .cardPlan{ container-type:inline-size; }
   #sm-library-scope .cardPlan .planPills{
@@ -1921,7 +1921,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-icon{ color:rg
 /* Plan Viewer on phones (portrait): the timeline runs edge to edge, nothing is clipped.
    Same rules at every width: fluid gutter, no side insets on the montage island, and room
    above the clips for the transition badges (sm-skin's 18px side padding above is the old inset). */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-plan-v3-root{ --spv3-gutter:clamp(14px, 4.4vw, 22px); }
   #sm-plan-v3-root .spv3Step__bottom{ padding-left:0 !important; padding-right:0 !important; }
   #sm-plan-v3-root .spv3Montage{ padding-left:0 !important; padding-right:0 !important; }
@@ -2095,10 +2095,10 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !import
 #sm-library-scope .sm-pk__sig{ margin:40px 0 0; padding:0; text-align:left; font-size:13px; line-height:1.4; letter-spacing:.01em; color:#858585; }
 /* the old pack screens forced the page to be at least one screen tall: that left a big hole above the site footer */
 body #sm-library-scope .sm-pk.sm-pro-pack-detail-screen,
-body.sm-pack-detail-open #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{ min-height:0 !important; padding-bottom:0 !important; }
+body.sm-pack-detail-open #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{ min-height:0 !important; padding-bottom:0 !important; overflow-x:clip !important; overflow-y:visible !important; }
 
-/* WIDE: info panel left, content right */
-@media (min-width:900px){
+/* WIDE: info panel left, content right — also on a short screen from 640px (phone on its side) */
+@media (min-width:900px), (min-width:640px) and (max-height:560px){
   #sm-library-scope .sm-pk__wrap{
     grid-template-columns:clamp(220px, 24vw, 320px) minmax(0,1fr);
     gap:clamp(28px, 3.4vw, 52px);
@@ -2226,3 +2226,96 @@ body.sm-pack-detail-open #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{ min
 @media (prefers-reduced-motion:reduce){
   .sm-tips__panel, .sm-tips__backdrop, .sm-tips__seg i{ transition:none; }
 }
+
+/* =============================================================
+   Phone on its side (short, up to 1000px wide): the SAME Pro screens as portrait
+   (tabs, featured pack, moves, plans, packs, saved), rebuilt for a very low screen as
+   a LEFT RAIL (brand, Assistant, vertical tabs) with the whole screen height for the
+   content. Room for the camera cutout / rounded corners (safe-area insets).
+   ============================================================= */
+@media (max-height:560px) and (max-width:1000px) and (orientation:landscape){
+  #sm-library-scope .library{
+    display:grid !important;
+    grid-template-columns:170px minmax(0,1fr) !important;
+    grid-template-rows:auto !important;
+    column-gap:20px !important; row-gap:0 !important; align-items:start !important;
+    padding:12px max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left)) !important;
+  }
+  /* the rail: three items in one column, stacked at known heights (offset by margins); sticky when the screen is tall enough to show all of it */
+  #sm-library-scope .library{ --rh1:34px; --rh2:40px; --rt:34px; --rg:10px; --rtop:12px; }
+  #sm-library-scope .library > .sm-pro-mobile-top,
+  #sm-library-scope .library > .mobile-open,
+  #sm-library-scope .library > .sm-pro-mobile-tabs{
+    grid-column:1 !important; grid-row:1 !important; align-self:start !important;
+    position:static !important; width:170px !important; max-width:170px !important; box-sizing:border-box !important;
+    margin-left:0 !important; margin-right:0 !important; z-index:2;
+  }
+  #sm-library-scope .library > .sm-pro-mobile-top{ height:var(--rh1) !important; margin-top:0 !important; padding:0 !important; align-items:center; }
+  #sm-library-scope:not(.sm-pro-pack-detail-active) .library > .sm-pro-mobile-top{ display:flex !important; }
+  #sm-library-scope .library > .sm-pro-mobile-top .sm-pro-title-wrap{ display:block; }
+  #sm-library-scope .library > .sm-pro-mobile-top .sm-pro-title-row{ display:flex; align-items:center; gap:8px; margin:0; }
+  #sm-library-scope .library > .sm-pro-mobile-top h1{ margin:0 !important; font-size:21px !important; line-height:1.1 !important; }
+  #sm-library-scope .library > .sm-pro-mobile-top p,
+  #sm-library-scope .library > .sm-pro-mobile-top .sm-pro-quote{ display:none !important; }
+  #sm-library-scope .library > .mobile-open{ height:var(--rh2) !important; margin-top:calc(var(--rh1) + var(--rg)) !important; padding:0 12px !important; border-radius:14px !important; }
+  /* a quiet Assistant button (design AA): flat dark fill, thin border, small label/icon/arrow */
+  #sm-library-scope .library > .mobile-open{ gap:10px !important; background:#1a1a1a !important; border:1px solid #2a2a2a !important; box-shadow:none !important; font-size:14px !important; font-weight:600 !important; }
+  #sm-library-scope .library > .mobile-open > span:not(.filterIcon){ font-size:14px !important; font-weight:600 !important; color:rgba(255,255,255,.9) !important; }
+  #sm-library-scope .library > .mobile-open .filterIcon{ width:16px !important; height:16px !important; }
+  #sm-library-scope .library > .mobile-open::after{ font-size:20px !important; line-height:1 !important; color:rgba(160,107,255,.85) !important; }
+  #sm-library-scope .library > .sm-pro-mobile-tabs{
+    margin-top:calc(var(--rh1) + var(--rh2) + 2 * var(--rg)) !important; padding:0 !important; border:0 !important; background:none !important; box-shadow:none !important;
+    grid-template-columns:1fr !important; grid-auto-rows:var(--rt); gap:0 !important; overflow:visible !important;
+  }
+  #sm-library-scope .library > .sm-pro-mobile-tabs button{
+    position:relative; height:var(--rt) !important; min-height:0 !important; width:100% !important; margin:0 !important; padding:0 0 0 14px !important;
+    display:flex !important; align-items:center; justify-content:flex-start !important; text-align:left !important;
+    border:0 !important; background:none !important; box-shadow:none !important; border-radius:0 !important;
+    font-size:14px !important; font-weight:500 !important; color:#9a9a9a !important;
+  }
+  #sm-library-scope .library > .sm-pro-mobile-tabs button::before{ content:none !important; }
+  #sm-library-scope .library > .sm-pro-mobile-tabs button::after{ content:none !important; }
+  #sm-library-scope .library > .sm-pro-mobile-tabs button.is-active{ color:#fff !important; font-weight:600 !important; }
+  #sm-library-scope .library > .sm-pro-mobile-tabs button.is-active::before{
+    content:"" !important; position:absolute; left:0; top:8px; bottom:8px; width:2px; height:auto !important; border-radius:2px; background:#c99a6e !important;
+  }
+  #sm-library-scope .library > .results{ grid-column:2 !important; grid-row:1 !important; min-width:0; }
+  /* the pack screen hides the rail and uses the whole width */
+  #sm-library-scope.sm-pro-pack-detail-active .library{ grid-template-columns:minmax(0,1fr) !important; }
+  #sm-library-scope.sm-pro-pack-detail-active .library > .results{ grid-column:1 !important; }
+  /* more columns, lower cards: the screen is wide and very short */
+  #sm-library-scope .sm-pro-card-grid--moves,
+  #sm-library-scope .sm-pro-card-grid--plans,
+  #sm-library-scope .sm-pro-plan-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:10px !important; }
+  #sm-library-scope .sm-pro-move-list{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
+  #sm-library-scope .sm-pro-plans-screen .cardPlan,
+  #sm-library-scope .sm-pro-card-grid--plans .cardPlan{ min-height:0 !important; height:auto !important; aspect-ratio:4/3.3; }
+  #sm-library-scope .sm-pro-card-grid--moves .card{ min-height:0 !important; height:auto !important; aspect-ratio:16/10; }
+@media (max-height:560px) and (min-height:300px) and (max-width:1000px) and (orientation:landscape){
+  #sm-library-scope .library > .sm-pro-mobile-top,
+  #sm-library-scope .library > .mobile-open,
+  #sm-library-scope .library > .sm-pro-mobile-tabs{ position:sticky !important; }
+  #sm-library-scope .library > .sm-pro-mobile-top{ top:var(--rtop); }
+  #sm-library-scope .library > .mobile-open{ top:calc(var(--rtop) + var(--rh1) + var(--rg)); }
+  #sm-library-scope .library > .sm-pro-mobile-tabs{ top:calc(var(--rtop) + var(--rh1) + var(--rh2) + 2 * var(--rg)); }
+}
+}
+
+/* a very narrow screen on its side (e.g. 568px): fewer columns in the content next to the rail */
+@media (max-height:560px) and (max-width:640px) and (orientation:landscape){
+  #sm-library-scope .sm-pro-card-grid--moves,
+  #sm-library-scope .sm-pro-card-grid--plans,
+  #sm-library-scope .sm-pro-plan-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid,
+  #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  #sm-library-scope .sm-pro-move-list{ grid-template-columns:minmax(0,1fr) !important; }
+}
+
+/* <body> must not be a scroll container, or position:sticky never sticks (the landscape rail, the pack info panel).
+   overflow-x:"clip" hides sideways overflow just like "hidden" but does not make <body> one. Only the x axis is
+   overridden so the modals' scroll lock (inline overflow on <body>) keeps working. Older browsers ignore "clip"
+   and keep the previous "hidden". */
+html body,
+html body.sm-pack-detail-open{ overflow-x:clip !important; }

@@ -24,7 +24,7 @@
    V126 CLEANUP — OLD PACK DETAIL PATCHES SCOPED TO DESKTOP ONLY
    Prevents legacy desktop pack-detail CSS from overriding the restored mobile pack detail.
 ========================= */
-@media (min-width:901px){
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
 /* =========================================================
    SKY MOTION PRO — PACK DETAIL PRODUCTION LAYOUT
    Desktop-first pack page with real vertical scroll.
@@ -803,7 +803,7 @@ body.sm-pack-detail-open{
   #sm-library-scope .sm-pro-pack-move-row{ grid-template-columns:repeat(4, minmax(0, 1fr)) !important; }
 }
 
-@media (max-width:900px){
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-pack-detail-screen{
     --pack-left:18px;
     --pack-right:18px;
@@ -1711,7 +1711,7 @@ body.sm-pack-detail-open{
    Overrides the normal desktop library 100dvh/overflow-hidden model
    only while the pack detail page is active.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   html.sm-pack-detail-open,
   body.sm-pack-detail-open,
   html.sm-pack-detail-open:has(#sm-library-scope),
@@ -1771,7 +1771,7 @@ body.sm-pack-detail-open{
    Final override: pack detail is a real document page, not a locked 100dvh app screen.
    Desktop only. Mobile/landscape UI stays unchanged.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   html.sm-pack-detail-open:has(body #sm-library-scope.sm-pro-pack-detail-active),
   body.sm-pack-detail-open:has(#sm-library-scope.sm-pro-pack-detail-active),
   html.sm-pack-detail-open,
@@ -1830,7 +1830,7 @@ body.sm-pack-detail-open{
    Goals: less vertical bloat, earlier background fade, smaller plans,
    Start videos slightly higher/shorter, moves closer, no footer dead space.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     min-height: 1180px !important;
     padding-bottom: 42px !important;
@@ -1935,7 +1935,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     min-height: 1120px !important;
   }
@@ -1974,7 +1974,7 @@ body.sm-pack-detail-open{
    Desktop only. Matches the reference plan row: lower cards, cleaner type,
    left-aligned small cards, and tighter meta. Mobile untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--plans {
     margin-top: 36px !important;
     width: min(1300px, var(--pack-safe-width)) !important;
@@ -2077,7 +2077,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--plans {
     margin-top: 32px !important;
   }
@@ -2107,7 +2107,7 @@ body.sm-pack-detail-open{
    Desktop only. Makes plan cards lower, cleaner and closer to the target row.
    Mobile untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--plans {
     margin-top: 34px !important;
     width: min(1260px, var(--pack-safe-width)) !important;
@@ -2234,7 +2234,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--plans {
     margin-top: 30px !important;
   }
@@ -2272,7 +2272,7 @@ body.sm-pack-detail-open{
    Desktop only. Do not resize the cards; fix only text placement/type inside.
    Target: featured + compact cards like reference screenshots 4 and 5.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-plan-card__shade {
     background:
       radial-gradient(420px 180px at 24% 10%, rgba(255,255,255,.075), transparent 58%),
@@ -2378,7 +2378,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-plan-card.is-featured h3 {
     font-size: 24px !important;
   }
@@ -2406,7 +2406,7 @@ body.sm-pack-detail-open{
    - Give small plan cards a bit more horizontal room.
    - Make checklist overlay typography thinner, smaller and less blurry/heavy.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     --pack-right: clamp(18px, 1.75vw, 34px) !important;
     --pack-checklist-gap: clamp(34px, 2.45vw, 52px) !important;
@@ -2526,7 +2526,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleText {
     font-size: 21px !important;
   }
@@ -2550,7 +2550,7 @@ body.sm-pack-detail-open{
    Desktop only. Mobile UI untouched.
    Moves checklist inner content slightly to the right, but keeps “Fly safe!” untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups {
     transform: translateX(14px) !important;
@@ -2567,7 +2567,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -2584,7 +2584,7 @@ body.sm-pack-detail-open{
    - Lowers title/groups away from the tape.
    - Keeps “Fly safe!” untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups {
     transform: translate(28px, 20px) !important;
@@ -2605,7 +2605,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -2623,7 +2623,7 @@ body.sm-pack-detail-open{
    - Centers the inner block a little more.
    - Keeps “Fly safe!” untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay {
     left: 7.8% !important;
     right: 7.4% !important;
@@ -2661,7 +2661,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -2693,7 +2693,7 @@ body.sm-pack-detail-open{
    - higher than v82, away from the “big centered UI” look;
    - keeps “Fly safe!” untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay {
     left: 9.2% !important;
     right: 9.8% !important;
@@ -2792,7 +2792,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -2830,7 +2830,7 @@ body.sm-pack-detail-open{
    Goal: closer to the reference checklist — compact, but readable and naturally placed.
    Fly safe position/style is intentionally not touched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay {
     left: 8.1% !important;
     right: 8.2% !important;
@@ -2932,7 +2932,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -2968,7 +2968,7 @@ body.sm-pack-detail-open{
    Paper/checklist PNG size is NOT changed. Fly safe is NOT touched.
    Fix: content was too tiny/high after v84; make it readable and fill the paper naturally.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay {
     left: 7.4% !important;
     right: 7.4% !important;
@@ -3070,7 +3070,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -3106,7 +3106,7 @@ body.sm-pack-detail-open{
    Goal: stop the checklist feeling empty; make inner content larger,
    lower, wider, and more like a real printed checklist on the paper.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-overlay {
     left: 6.9% !important;
     right: 6.7% !important;
@@ -3225,7 +3225,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-titleRow,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-groups,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-checklist-line {
@@ -3275,7 +3275,7 @@ body.sm-pack-detail-open{
    Goal: closer to MetaPack reference: calmer type, lighter controls,
    thinner play buttons, softer cards, less gaming-bold UI.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     -webkit-font-smoothing: antialiased !important;
     text-rendering: geometricPrecision !important;
@@ -3547,7 +3547,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 820px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 820px), (min-width: 1001px) and (max-height: 820px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-lesson__play {
     width: 48px !important;
     height: 48px !important;
@@ -3581,7 +3581,7 @@ body.sm-pack-detail-open{
    Goal: closer to reference composition: lighter controls, less heavy type,
    tighter vertical rhythm so moves/footer come into view sooner.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     min-height: max(1120px, calc(100vh + 260px)) !important;
     padding-bottom: 54px !important;
@@ -3890,7 +3890,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 840px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 840px), (min-width: 1001px) and (max-height: 840px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-main {
     padding-top: 38px !important;
   }
@@ -3955,7 +3955,7 @@ body.sm-pack-detail-open{
    - widen the small plan cards without touching the whole UI
    - drop the moves row a little lower
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     --pack-right: clamp(10px, 1.15vw, 24px) !important;
     --pack-checklist-gap: clamp(26px, 2.0vw, 42px) !important;
@@ -3981,7 +3981,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 840px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 840px), (min-width: 1001px) and (max-height: 840px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves {
     margin-top: 40px !important;
   }
@@ -3995,7 +3995,7 @@ body.sm-pack-detail-open{
    - mini plan cards stay wider than old compact versions, but within safe area
    - moves section is pushed lower for better spacing
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     --pack-checklist-gap: clamp(58px, 4.1vw, 86px) !important;
     --pack-safe-width: calc(100vw - var(--pack-left) - var(--pack-right) - var(--pack-checklist-w) - var(--pack-checklist-gap)) !important;
@@ -4023,7 +4023,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-detail-screen {
     --pack-checklist-gap: clamp(50px, 3.6vw, 74px) !important;
   }
@@ -4034,7 +4034,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 840px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 840px), (min-width: 1001px) and (max-height: 840px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves {
     margin-top: 60px !important;
   }
@@ -4048,7 +4048,7 @@ body.sm-pack-detail-open{
    - push footer text lower in the black lower field
    - match the subtle “— Learn. Create. Elevate.” reference style
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves {
     width: calc(100vw - var(--pack-left) - max(3vw, 46px)) !important;
     max-width: calc(100vw - var(--pack-left) - max(3vw, 46px)) !important;
@@ -4099,7 +4099,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves,
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     width: calc(100vw - var(--pack-left) - max(3vw, 42px)) !important;
@@ -4107,7 +4107,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-height: 840px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-height: 840px), (min-width: 1001px) and (max-height: 840px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-section--moves {
     margin-top: 72px !important;
   }
@@ -4127,7 +4127,7 @@ body.sm-pack-detail-open{
    - move footer text left from the centered position
    - keep lower footer placement from v93
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     justify-content: flex-start !important;
     padding-left: clamp(220px, 30%, 420px) !important;
@@ -4135,7 +4135,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     padding-left: clamp(150px, 27%, 320px) !important;
   }
@@ -4148,7 +4148,7 @@ body.sm-pack-detail-open{
    - move footer text another 30% left
    - add subtle back-to-library arrow beside Test Pack title
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-hero-copy {
     position: relative !important;
   }
@@ -4196,13 +4196,13 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     padding-left: clamp(86px, 18%, 220px) !important;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .sm-pro-pack-back {
     display: none !important;
   }
@@ -4216,7 +4216,7 @@ body.sm-pack-detail-open{
    - make the back button cleaner, more premium, less toy-like
    - move footer another 30% left
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-back {
     left: clamp(-58px, -3.45vw, -42px) !important;
     top: clamp(10px, 1.15vw, 16px) !important;
@@ -4285,7 +4285,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     padding-left: clamp(48px, 12.5%, 154px) !important;
   }
@@ -4297,7 +4297,7 @@ body.sm-pack-detail-open{
    Desktop only. Mobile untouched.
    Requested: normal serious back arrow, footer another 30% left.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-back {
     left: clamp(-56px, -3.3vw, -40px) !important;
     top: clamp(10px, 1.1vw, 16px) !important;
@@ -4354,7 +4354,7 @@ body.sm-pack-detail-open{
   }
 }
 
-@media (min-width: 901px) and (max-width: 1460px) {
+@media (min-width: 901px) and (min-height: 561px) and (max-width: 1460px), (min-width: 1001px) and (max-width: 1460px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     padding-left: clamp(34px, 8.75%, 108px) !important;
   }
@@ -4366,7 +4366,7 @@ body.sm-pack-detail-open{
    Desktop only. Mobile untouched.
    Requested: make the back button like the provided reference image.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-back {
     left: clamp(-66px, -3.85vw, -48px) !important;
     top: clamp(5px, .7vw, 10px) !important;
@@ -4435,7 +4435,7 @@ body.sm-pack-detail-open{
    Desktop only. Removes the hero/background photo while keeping the layout.
    Mobile untouched.
 ========================================================= */
-@media (min-width: 901px) {
+@media (min-width: 901px) and (min-height: 561px), (min-width: 1001px) {
   body.sm-pack-detail-open,
   html.sm-pack-detail-open,
   body.sm-pack-detail-open #sm-library-scope.sm-pro-pack-detail-active,
@@ -4483,7 +4483,7 @@ body.sm-pack-detail-open{
    PRO PACK DETAIL v22 — CLEAN SINGLE MODULE
    Mobile portrait only. Old duplicated pack patches removed.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   html, body{
     overflow-x:hidden !important;
   }
@@ -5207,7 +5207,7 @@ body.sm-pack-detail-open{
    PRO PACK DETAIL v23 — hero visibility + start lessons polish
    Portrait only. Keeps the rest of Pro Library unchanged.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-pack-detail-hero-v2{
     min-height:286px !important;
     margin-bottom:18px !important;
@@ -5339,7 +5339,7 @@ body.sm-pack-detail-open{
    Removes the previous flat footer override and restores the old brand-signature style.
    Mobile pack detail only. Desktop untouched.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-footer {
     display: block !important;
     width: 100% !important;

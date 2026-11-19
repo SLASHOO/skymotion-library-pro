@@ -22,6 +22,9 @@
       h.style.setProperty("overflow-x","hidden","important");
       h.style.setProperty("overflow-y","auto","important");
       b.style.setProperty("overflow-x","hidden","important");
+      // "clip" hides sideways overflow like "hidden" but, unlike it, does not turn <body> into a scroll
+      // container — which silently broke position:sticky everywhere below. Browsers without "clip" keep "hidden".
+      b.style.setProperty("overflow-x","clip","important");
       b.style.setProperty("overflow-y","visible","important");  // body doesn't scroll → no 2nd bar
     }
   }
@@ -1092,7 +1095,7 @@
   var a = document.querySelector("#sm-library-scope .assistant");
   if (!a) return;
   function sync(){
-    if (window.matchMedia("(max-width:900px)").matches && a.classList.contains("active"))
+    if (window.matchMedia("(max-width:900px), (max-height:560px) and (max-width:1000px) and (orientation:landscape)").matches && a.classList.contains("active"))
       a.style.setProperty("transform", "translateX(0)", "important");
     else
       a.style.removeProperty("transform");

@@ -22,7 +22,7 @@
   display: none;
 }
 
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .library {
     padding: 18px 16px 22px;
     gap: 14px;
@@ -267,7 +267,7 @@
   display: none !important;
 }
 
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .library {
     padding-top: 22px;
   }
@@ -347,7 +347,7 @@
 
 /* ========================= PRO MOBILE PORTRAIT — VISUAL FILTER STEP Only affects vertical phones. Desktop + landscape stay Free Library.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .chat.sm-env-visual-mode {
     padding: 22px 16px 110px;
   }
@@ -607,7 +607,7 @@
 
 /* ========================= PRO FILTER SCREEN — MOBILE PORTRAIT ONLY Keeps Free Library logic, changes only vertical mobile presentation.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .assistant.sm-pro-filter-screen {
     background:
       radial-gradient(520px 420px at 14% 0%, rgba(120,59,226,.10), transparent 58%),
@@ -907,7 +907,7 @@
 
 /* ========================= PRO FILTER ENV CARDS — USE REAL LIBRARY THUMBS Portrait only. Keeps Free Library logic.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .opt.sm-env-card {
     min-height: 190px;
     background: #06080a;
@@ -987,7 +987,7 @@
 
 /* ========================= PRO FILTER SCREEN — CLEAN STEP RENDER PATCH Removes old chat leftovers on mobile portrait and makes filter UI calmer.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .assistant.sm-pro-filter-screen .chat {
     padding: 34px 16px 132px !important;
     overflow-y: auto;
@@ -1199,7 +1199,7 @@
 
 /* ========================= PRO MOBILE FILTER — CLEAN STEP LAYOUT Fixes old chat spacing, reduces scroll, improves footer/buttons/warnings. Portrait only. Desktop and landscape stay Free Library.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .assistant.sm-pro-filter-screen{
     overflow:hidden !important;
   }
@@ -1476,7 +1476,7 @@
 
 /* ========================= PRO MOBILE FILTER REAL THUMB CARDS + CLEANER FOOTER Portrait only. Desktop/landscape remain Free Library.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .assistant.sm-pro-filter-screen{
     overflow:hidden !important;
   }
@@ -1639,7 +1639,7 @@
 
 /* ========================= PRO MOBILE FILTER STRICT WARNING + TRACKING FIX Portrait only. Keeps desktop/landscape untouched.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .assistant.sm-pro-filter-screen{
     overflow:hidden !important;
   }
@@ -1764,7 +1764,7 @@
 
 /* ========================= PRO MOBILE FILTER MATCH LIBRARY BACKGROUND Makes the vertical filter screen feel connected to the Pro Library home. Portrait only. Desktop/landscape untouched.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .assistant.sm-pro-filter-screen{
     background:
       radial-gradient(1100px 700px at 25% -10%, rgba(255,255,255,.055), transparent 55%),
@@ -1802,7 +1802,7 @@
 
 /* ========================= PRO FILTER FINAL POLISH — lower content + no old filter flash Portrait only. Does not touch library tabs/screens/landscape.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* (removed) the rule that sr-only-hid the free chat header on drawer open —
      we now use the free-library filter header on mobile. */
 

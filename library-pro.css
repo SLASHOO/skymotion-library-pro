@@ -17,7 +17,7 @@ body {
 
 /* ========================= PRO MOBILE PORTRAIT HOME SECTIONS ONLY Keeps current header untouched. Desktop and landscape stay Free Library.
 ========================= */
-@media (max-width: 900px) and (orientation: portrait) {
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape) {
   #sm-library-scope .results__grid:has(.sm-pro-mobile-home) {
     display: block;
   }
@@ -293,7 +293,7 @@ body {
   pointer-events:none !important;
 }
 
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-section-head{
     margin:0 0 15px;
   }
@@ -496,7 +496,7 @@ body {
 
 /* ========================= PRO MOBILE PORTRAIT — RESTRAINED TYPOGRAPHY OVERRIDE Header stays unchanged. Portrait only.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope{
     -webkit-font-smoothing:antialiased;
     text-rendering:geometricPrecision;
@@ -654,7 +654,7 @@ body {
 
 /* ========================= PRO MOBILE PORTRAIT — CALMER HEADER TYPOGRAPHY Header only. Desktop and landscape unchanged.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-mobile-top{
     padding:0 0 12px;
   }
@@ -708,7 +708,7 @@ body {
 
 /* ========================= PRO MOBILE PORTRAIT — HEADER SIZE + TWO-LINE MOVE TITLES Portrait only. Landscape/Desktop unchanged.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Slightly larger but still restrained header */
   #sm-library-scope .sm-pro-mobile-top{
     padding:0 0 13px !important;
@@ -811,7 +811,7 @@ body {
 
 
 /* Mobile portrait: one premium poster per row */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-poster-grid,
   #sm-library-scope .sm-pro-plans-screen .sm-pro-plan-grid{
     grid-template-columns:1fr !important;
@@ -999,7 +999,7 @@ body {
   margin-top:0 !important;
 }
 
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-move-row__meta{
     margin:2px 0 8px !important;
     min-height:22px !important;

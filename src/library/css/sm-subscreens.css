@@ -18,7 +18,7 @@
 
 /* ========================= PRO MOBILE PORTRAIT — WORKING TABS SCREENS All = dashboard, Moves = tool list, Plans = plan cards, Packs = pack list, Saved = saved moves. Portrait only. Desktop/landscape keep Free Library.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .results__grid:has(.sm-pro-tab-screen){
     display:block !important;
   }
@@ -441,7 +441,7 @@
 
 /* ========================= PRO MOBILE SUBSCREENS Removes main Pro Library header/filter/main tabs on Moves/Plans/Packs/Saved. Adds tool-style header like the reference. Portrait only.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope.sm-pro-subscreen .sm-pro-mobile-top,
   #sm-library-scope.sm-pro-subscreen > .library > .mobile-open,
   #sm-library-scope.sm-pro-subscreen .sm-pro-mobile-tabs{
@@ -725,7 +725,7 @@
 
 /* ========================= PRO MOVES SCREEN search + clearer tabs + useful move cards Portrait only. Desktop / landscape untouched.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-tool-icon{
     position:relative;
   }
@@ -1041,7 +1041,7 @@
 
 /* ========================= PRO MOVES SCREEN cleaner count, stable live search, working save visual Portrait only. Desktop/landscape stay Free Library.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Moves screen should not show the unused top search icon. Search lives in the count row. */
   #sm-library-scope .sm-pro-moves-screen .sm-pro-tool-header .sm-pro-tool-search{
     display:none !important;
@@ -1221,7 +1221,7 @@
 
 /* ========================= PRO MOVES SEARCH title-only, single clear, restrained premium UI Portrait only. Desktop/landscape unchanged.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Search field: calm, expensive, no double native clear. */
   #sm-library-scope .sm-pro-searchbar{
     overflow:hidden !important;
@@ -1401,7 +1401,7 @@
 
 /* ========================= PRO MOVES SEARCH plain icon + title-only search visual polish Portrait only. Keeps the search logic title-only in JS.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Count row search icon: normal single-piece magnifier, no disconnected pseudo-elements. */
   #sm-library-scope .sm-pro-moves-count-row .sm-pro-tool-search,
   #sm-library-scope .sm-pro-tool-icon.sm-pro-tool-search{
@@ -1511,7 +1511,7 @@
 
 /* ========================= PRO MOVES fixed row search icon + cleaner card info Portrait only. Search remains title-only in JS.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   /* Bottom/count-row search icon must stay visible after opening search. */
   #sm-library-scope .sm-pro-moves-count-row .sm-pro-tool-search{
     background-image:none !important;
@@ -1585,7 +1585,7 @@
 
 /* ========================= PRO SUBSCREENS Plans / Packs / Saved match Moves tool UX Portrait only. Keeps desktop/landscape untouched.
 ========================= */
-@media (max-width:900px) and (orientation:portrait){
+@media (max-width: 900px) and (orientation: portrait), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .sm-pro-tab-screen{
     animation:smProScreenIn .22s ease both;
   }

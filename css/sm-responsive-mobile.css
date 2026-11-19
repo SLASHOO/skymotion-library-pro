@@ -20,7 +20,7 @@
   }
 }
 
-@media (max-width:900px){
+@media (max-width: 900px), (max-height: 560px) and (max-width: 1000px) and (orientation: landscape){
   #sm-library-scope .library{
     grid-template-columns:1fr;
     padding:12px;
@@ -251,178 +251,8 @@
 
 
 
-  /* ========================= MOBILE LANDSCAPE LIBRARY FIX
-========================= */
-@media (max-height:560px) and (orientation:landscape){
-  #sm-library-scope .library{
-    grid-template-columns:1fr;
-    padding:10px 14px;
-    gap:12px;
-  }
-
-  #sm-library-scope .mobile-open{
-  display:flex;
-  position:relative;
-  top:auto;
-  z-index:1;
-  max-width:720px;
-  margin:0 auto 14px;
-  padding:10px 14px;
-  border-radius:16px;
-}
-
-  #sm-library-scope .results{
-    max-width:1200px;
-    margin:0 auto;
-  }
-
-  #sm-library-scope .results__grid{
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-    gap:12px;
-    justify-content:stretch;
-    grid-auto-rows:auto;
-  }
-
-  #sm-library-scope .card{
-    min-height:170px;
-    border-radius:18px;
-  }
-
-  #sm-library-scope .cardPlan{
-    grid-row:auto;
-    min-height:260px;
-    border-radius:20px;
-  }
-
-  #sm-library-scope .cardPlan .planMedia{
-    flex-basis:70%;
-    min-height:0;
-  }
-
-  #sm-library-scope .cardPlan .planBubble{
-    margin:10px;
-    padding:10px 12px;
-    border-radius:15px;
-  }
-
-  #sm-library-scope .cardPlan .planType{
-    font-size:13px;
-  }
-
-  #sm-library-scope .cardPlan .planMeta{
-    font-size:10px;
-    line-height:1.25;
-  }
-
-  #sm-library-scope .cardPlan .planCaption{
-    left:12px;
-    right:12px;
-    bottom:12px;
-    font-size:15px;
-  }
-
-  #sm-library-scope .cardPlan .planPills{
-    top:10px;
-    left:10px;
-    gap:6px;
-  }
-
-  #sm-library-scope .cardPlan .pill{
-    padding:5px 8px;
-    font-size:10px;
-    backdrop-filter:none;
-    -webkit-backdrop-filter:none;
-  }
-
-  #sm-library-scope .meta{
-    left:10px;
-    right:10px;
-    bottom:10px;
-  }
-
-  #sm-library-scope .title{
-    font-size:13px;
-  }
-
-  #sm-library-scope .badge{
-    font-size:10px;
-    padding:4px 8px;
-  }
-
-  #sm-library-scope .sm-save{
-    width:34px;
-    height:34px;
-    top:9px;
-    right:9px;
-  }
-
-  #sm-library-scope .assistant{
-    height:100dvh;
-  }
-
-  #sm-library-scope .sm-pro-mobile-tabs{
-    display:grid;
-  }
-}
-
-@media (max-height:560px) and (orientation:landscape) and (max-width:760px){
-  #sm-library-scope .results__grid{
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-  }
-
-  #sm-library-scope .card{
-    min-height:150px;
-  }
-
-  #sm-library-scope .cardPlan{
-    min-height:240px;
-  }
-}
-
-
-/* LIBRARY ONLY — landscape full width */
+/* video player: full screen on any phone on its side */
 @media (orientation: landscape) and (max-height:560px){
-  #sm-library-scope{
-    width:100vw !important;
-    max-width:100vw !important;
-    margin-left:calc(50% - 50vw) !important;
-    margin-right:calc(50% - 50vw) !important;
-    padding:0 !important;
-    overflow-x:hidden !important;
-    background:#000 !important;
-  }
-
-  #sm-library-scope .library{
-    width:100vw !important;
-    max-width:100vw !important;
-    margin:0 !important;
-    /* keep content out from under the camera cutout / rounded corners of a phone on its side */
-    padding:10px max(10px, env(safe-area-inset-right)) 10px max(10px, env(safe-area-inset-left)) !important;
-    box-sizing:border-box !important;
-    overflow:visible !important;
-  }
-
-  #sm-library-scope .results{
-    width:100% !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-
-  #sm-library-scope .results__grid{
-    width:100% !important;
-    max-width:none !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
-    justify-content:stretch !important;
-    gap:10px !important;
-  }
-
-  #sm-library-scope .card,
-  #sm-library-scope .cardPlan{
-    width:100% !important;
-    max-width:none !important;
-  }
-
   #sm-library-scope #modal.sm-modal[aria-hidden="false"]{
     position:fixed !important;
     inset:0 !important;
@@ -456,13 +286,4 @@
   #sm-library-scope #modal .player__ambient{
     display:none;
   }
-}
-
-/* Phone on its side: compact, even cards and a slim "Assistant" bar. Before this the plan cards forced every
-   card in a row to 240px on a ~290px-tall screen, so one card filled the whole view. */
-@media (max-height:560px) and (orientation:landscape){
-  #sm-library-scope .results__grid{ grid-auto-rows:auto !important; align-items:start !important; gap:10px !important; }
-  #sm-library-scope .card{ min-height:0 !important; height:auto !important; aspect-ratio:16/10; }
-  #sm-library-scope .cardPlan{ min-height:0 !important; height:auto !important; aspect-ratio:4/3.3; }
-  #sm-library-scope .mobile-open{ max-width:none !important; width:100%; margin:0 0 8px !important; padding:8px 12px !important; border-radius:14px !important; }
 }
