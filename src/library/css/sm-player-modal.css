@@ -21,7 +21,7 @@
   inset:0;
   z-index:var(--z-modal);
   display:none;
-  width:100vw !important;
+  width:auto !important; /* inset:0 = the visible width (100vw can be wider than the visible page on a phone on its side) */
   height:100dvh !important;
   min-height:100svh !important;
   margin:0 !important;
@@ -49,7 +49,7 @@
 #sm-library-scope #modal .sm-modal__content{
   position:absolute;
   inset:0;
-  width:100vw !important;
+  width:auto !important;
   height:100dvh !important;
   min-height:100svh !important;
   overflow:hidden;

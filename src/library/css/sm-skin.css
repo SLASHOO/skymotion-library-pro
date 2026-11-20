@@ -2423,3 +2423,18 @@ html body.sm-pack-detail-open{ overflow-x:clip !important; }
   }
   #sm-plan-v3-root .spv3.is-on-result .spv3__dots{ display:flex !important; }
 }
+
+/* Phone on its side: 100vw can be WIDER than the visible page (the page starts after the camera cutout and ends before the
+   browser's side toolbar), which pushed the right part of the pack screen out of view. Use the real available width. */
+@media (max-height:560px) and (max-width:1000px) and (orientation:landscape){
+  #sm-library-scope.sm-pro-pack-detail-active,
+  body.sm-pack-detail-open #sm-library-scope.sm-pro-pack-detail-active,
+  #sm-library-scope.sm-pro-pack-detail-active .library,
+  #sm-library-scope.sm-pro-pack-detail-active .results,
+  #sm-library-scope.sm-pro-pack-detail-active .results__grid,
+  body.sm-pack-detail-open #sm-library-scope.sm-pro-pack-detail-active .results,
+  #sm-library-scope .sm-pk.sm-pro-pack-detail-screen,
+  body #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{
+    width:100% !important; max-width:100% !important;
+  }
+}

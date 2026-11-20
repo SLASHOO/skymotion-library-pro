@@ -30,7 +30,7 @@
 #sm-plan-v3-root .spv3{
   position:fixed;
   inset:0;
-  width:100vw;
+  width:auto;
   height:calc(var(--sm-plan-vh, 1vh) * 100);
   min-height:100svh;
   min-height:100dvh;
@@ -54,7 +54,7 @@
 #sm-plan-v3-root .spv3__dialog{
   position:absolute;
   inset:0;
-  width:100vw;
+  width:100%;
   height:calc(var(--sm-plan-vh, 1vh) * 100);
   min-height:100svh;
   min-height:100dvh;

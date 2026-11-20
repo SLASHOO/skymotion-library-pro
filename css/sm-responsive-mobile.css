@@ -256,9 +256,9 @@
   #sm-library-scope #modal.sm-modal[aria-hidden="false"]{
     position:fixed !important;
     inset:0 !important;
-    width:100vw !important;
+    width:auto !important;
     height:100dvh !important;
-    max-width:100vw !important;
+    max-width:none !important;
     margin:0 !important;
     padding:0 !important;
     overflow:hidden !important;
@@ -268,9 +268,9 @@
   #sm-library-scope #modal .sm-modal__content,
   #sm-library-scope #modal .player,
   #sm-library-scope #modal .player__videoWrap{
-    width:100vw !important;
+    width:100% !important;
     height:100dvh !important;
-    max-width:100vw !important;
+    max-width:100% !important;
     margin:0 !important;
     padding:0 !important;
     overflow:hidden !important;
@@ -278,7 +278,7 @@
   }
 
   #sm-library-scope #modal .player video{
-    width:100vw !important;
+    width:100% !important;
     height:100dvh !important;
     object-fit:cover !important;
   }
