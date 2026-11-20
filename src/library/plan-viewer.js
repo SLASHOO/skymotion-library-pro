@@ -559,6 +559,7 @@ const root = document.getElementById("sm-plan-v3-root");
     slides.forEach((slide, index) => {
       slide.classList.toggle("is-active", index === activeSlide);
     });
+    modal.classList.toggle("is-on-result", activeSlide === 0);
     buildDots();
     bindDotsOnly();
     syncPlanMedia();
@@ -736,6 +737,29 @@ const root = document.getElementById("sm-plan-v3-root");
     `;
   }
 
+  // Low landscape phones: a slim bar instead of the timeline panel and the dots —
+  // "02 Push In · 2.3s" + the cut that follows, and one segment per shot (tap = go to that shot).
+  function buildSegBar(plan, activeStepIndex) {
+    const shots = getTimelineShots(plan, currentAllItems);
+    if (!shots.length) return "";
+    const shot = shots[activeStepIndex] || shots[0];
+    const endTransition = String(plan?.edit?.end_transition || "").trim();
+    const nextLabel = activeStepIndex < shots.length - 1
+      ? getTransitionBadgeLabel(shots[activeStepIndex + 1]?.transition || shot.transition || "Hard Cut")
+      : (endTransition ? getTransitionBadgeLabel(endTransition) : "");
+    const segs = shots.map((s, i) => `
+        <button class="spv3Seg__b${i < activeStepIndex ? " is-done" : ""}${i === activeStepIndex ? " is-active" : ""}" type="button" data-spv3-seg="${i + 1}" aria-label="Shot ${i + 1}: ${escapeHtml(s.shortName)}"${i === activeStepIndex ? ' aria-current="true"' : ""}></button>`).join("");
+    return `
+      <div class="spv3Seg">
+        <div class="spv3Seg__info">
+          <span class="spv3Seg__now"><b>${String(activeStepIndex + 1).padStart(2, "0")}</b> ${escapeHtml(shot.shortName)}${shot.dur ? ` <i>· ${escapeHtml(formatSec(shot.dur))}</i>` : ""}</span>
+          ${nextLabel ? `<span class="spv3Seg__next">${escapeHtml(nextLabel)} ›</span>` : ""}
+        </div>
+        <div class="spv3Seg__bar">${segs}</div>
+      </div>
+    `;
+  }
+
   function buildResultSlide(plan) {
     const title = firstFilled(
       plan?.title,
@@ -831,10 +855,7 @@ const root = document.getElementById("sm-plan-v3-root");
           </div>
 
           <div class="spv3Step__bottom">
-            <button class="spv3TlToggle" type="button" data-spv3-tl-toggle aria-expanded="false">
-              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              <span>Timeline</span><i class="spv3TlToggle__chev" aria-hidden="true">›</i>
-            </button>
+            ${buildSegBar(plan, stepIndex)}
             ${buildTimeline(plan, stepIndex)}
           </div>
         </div>
@@ -1005,7 +1026,6 @@ const root = document.getElementById("sm-plan-v3-root");
   document.body.appendChild(root);
 }
     clearCleanup();
-    modal.classList.remove("is-tl-open"); // low landscape: the timeline starts collapsed
 
     currentPlan = plan;
     currentAllItems = Array.isArray(allItems) ? allItems : [];
@@ -1113,14 +1133,11 @@ const root = document.getElementById("sm-plan-v3-root");
     cleanupFns.push(() => viewport.removeEventListener("touchcancel", onTouchEnd));
   }
 
-  // Low landscape phones: the timeline is collapsed into a "Timeline" button; a tap opens/closes it
-  // (the button is hidden by CSS everywhere else, where the timeline is always visible).
+  // Low landscape phones: the segment bar (one segment per shot) jumps to that shot. The bar is hidden by CSS elsewhere.
   modal.addEventListener("click", (e) => {
-    const btn = e.target.closest && e.target.closest("[data-spv3-tl-toggle]");
-    if (!btn) return;
-    const open = modal.classList.toggle("is-tl-open");
-    modal.querySelectorAll("[data-spv3-tl-toggle]").forEach((b) => b.setAttribute("aria-expanded", open ? "true" : "false"));
-    if (open) centerActiveTimelineClip(track.querySelectorAll(".spv3__slide")[activeSlide]);
+    const seg = e.target.closest && e.target.closest("[data-spv3-seg]");
+    if (!seg) return;
+    goTo(Number(seg.getAttribute("data-spv3-seg")), true);
   });
 
   window.addEventListener("resize", setPlanViewportHeight);

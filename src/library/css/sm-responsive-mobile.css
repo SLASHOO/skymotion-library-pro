@@ -286,4 +286,15 @@
   #sm-library-scope #modal .player__ambient{
     display:none;
   }
+  /* the page is drawn under the camera cutout (viewport-fit=cover): keep the top buttons (speed, loop, close)
+     and the bottom controls clear of it on whichever side it is */
+  #sm-library-scope #modal .player__top{
+    padding-top:calc(10px + env(safe-area-inset-top, 0px)) !important;
+    padding-left:max(16px, calc(env(safe-area-inset-left, 0px) + 8px)) !important;
+    padding-right:max(16px, calc(env(safe-area-inset-right, 0px) + 8px)) !important;
+  }
+  #sm-library-scope #modal .player__controls{
+    padding-left:max(18px, calc(env(safe-area-inset-left, 0px) + 8px)) !important;
+    padding-right:max(18px, calc(env(safe-area-inset-right, 0px) + 8px)) !important;
+  }
 }
