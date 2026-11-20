@@ -3153,7 +3153,7 @@
     const routeSvg = `<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="18" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 6H14a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h5.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
 
     const checklistBtn = (cls) => `
-      <button class="sm-pk__chk ${cls}" type="button" data-pro-open-checklist="1">${routeSvg}<span>${escapeHtml(authorName ? `Tips from ${authorName}` : "Shoot tips")}</span><em aria-hidden="true">›</em></button>`;
+      <button class="sm-pk__chk ${cls}" type="button" data-pro-open-checklist="1">${routeSvg}<span class="sm-pk__chk-l">${escapeHtml(authorName ? `Tips from ${authorName}` : "Shoot tips")}</span><span class="sm-pk__chk-s">Tips</span><em aria-hidden="true">›</em></button>`;
 
     const tiles = lessons.map((l, i) => `
       <button class="sm-pk__tile${i === 0 ? " is-lead" : ""}" type="button" style="--i:${i}" data-pro-lesson="${escapeHtml(l.title)}" data-pro-lesson-n="${escapeHtml(l.n)}" aria-label="Play ${escapeHtml(l.title)}">

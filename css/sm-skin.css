@@ -2023,6 +2023,7 @@ body.sm-pack-detail-open #sm-library-scope .sm-pro-pack-bg{ display:none !import
 #sm-library-scope .sm-pk__chk:active{ transform:scale(.98); }
 /* one checklist button in the side panel (wide) and one at the end of the content (narrow) */
 #sm-library-scope .sm-pk__chk--side{ display:none; }
+#sm-library-scope .sm-pk__chk-s{ display:none; }
 
 /* content */
 #sm-library-scope .sm-pk__main{ min-width:0; }
@@ -2319,3 +2320,52 @@ body.sm-pack-detail-open #sm-library-scope .sm-pk.sm-pro-pack-detail-screen{ min
    and keep the previous "hidden". */
 html body,
 html body.sm-pack-detail-open{ overflow-x:clip !important; }
+
+/* =============================================================
+   Pack screen on a phone on its side (short, up to 1000px wide) — design PL12-B:
+   lean left column (back, "PACK", title, author, Tips) + the three lessons as ONE big card and
+   two smaller ones. Nothing else: no description, counts, Instagram line or "In development"
+   slots (they stay in portrait and on desktop). The lead card keeps a fixed shape (5:4), so the
+   cards scale with the WIDTH and never get squashed by the low height.
+   ============================================================= */
+@media (max-height:560px) and (max-width:1000px) and (orientation:landscape){
+  #sm-library-scope .sm-pk__wrap{
+    grid-template-columns:clamp(150px, 21vw, 172px) minmax(0,1fr);
+    gap:20px; align-items:start; max-width:none; margin:0;
+    padding:16px max(16px, env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left));
+  }
+  /* the left column: short enough for ~280px of height; it scrolls away with the page when the screen is lower */
+  #sm-library-scope .sm-pk__info{ position:static; align-self:start; }
+  #sm-library-scope .sm-pk__back{ width:34px; height:34px; border:1px solid #2a2a2a; background:#1a1a1a; }
+  #sm-library-scope .sm-pk__back svg{ width:14px; height:14px; }
+  #sm-library-scope .sm-pk__title{ margin:18px 0 0 !important; font-size:20px !important; line-height:1.1 !important; }
+  #sm-library-scope .sm-pk__title::before{
+    content:"Pack"; display:block; margin:0 0 6px;
+    font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:#b88a5e;
+  }
+  #sm-library-scope .sm-pk__desc,
+  #sm-library-scope .sm-pk__kv,
+  #sm-library-scope .sm-pk__author a{ display:none !important; }
+  #sm-library-scope .sm-pk__author{ margin-top:12px; gap:8px; }
+  #sm-library-scope .sm-pk__avatar{ flex-basis:28px; width:28px; height:28px; }
+  #sm-library-scope .sm-pk__author b{ font-size:13px; }
+  #sm-library-scope .sm-pk__chk--side{ display:flex; min-height:40px; margin-top:14px; padding:0 12px; gap:10px; border:1px solid #2a2a2a; border-radius:14px; font-size:14px; font-weight:600; }
+  #sm-library-scope .sm-pk__chk--side svg{ width:16px; height:16px; color:#c99a6e; }
+  #sm-library-scope .sm-pk__chk--end{ display:none; }
+  /* a short label: the long one does not fit the narrow column */
+  #sm-library-scope .sm-pk__chk-l{ display:none; }
+  #sm-library-scope .sm-pk__chk-s{ display:inline; }
+
+  /* the lessons */
+  #sm-library-scope .sm-pk__sec{ margin:0 !important; font-size:11px !important; letter-spacing:.2em !important; color:#b88a5e !important; }
+  #sm-library-scope .sm-pk__main > .sm-pk__sec:not(:first-child),
+  #sm-library-scope .sm-pk__soongrid,
+  #sm-library-scope .sm-pk__sig{ display:none !important; }
+  #sm-library-scope .sm-pk__bento{ grid-template-columns:minmax(0,1.9fr) minmax(0,1fr); grid-template-rows:1fr 1fr; gap:8px; margin-top:10px; }
+  #sm-library-scope .sm-pk__tile{ border:1px solid #262626; }
+  /* 5:4, but never taller than the screen allows (svh = visible height, so the browser's address bar is not counted twice) */
+  #sm-library-scope .sm-pk__tile.is-lead{ aspect-ratio:5/4; max-height:calc(100vh - 80px); max-height:calc(100svh - 80px); }
+  #sm-library-scope .sm-pk__tile:not(.is-lead){ min-height:0; }
+  #sm-library-scope .sm-pk__tile:not(.is-lead) .sm-pk__tt{ font-size:13px; left:12px; right:12px; bottom:10px; }
+  #sm-library-scope .sm-pk__tile:not(.is-lead) .sm-pk__num{ left:12px; top:10px; }
+}
