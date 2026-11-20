@@ -831,6 +831,10 @@ const root = document.getElementById("sm-plan-v3-root");
           </div>
 
           <div class="spv3Step__bottom">
+            <button class="spv3TlToggle" type="button" data-spv3-tl-toggle aria-expanded="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Timeline</span><i class="spv3TlToggle__chev" aria-hidden="true">›</i>
+            </button>
             ${buildTimeline(plan, stepIndex)}
           </div>
         </div>
@@ -1001,6 +1005,7 @@ const root = document.getElementById("sm-plan-v3-root");
   document.body.appendChild(root);
 }
     clearCleanup();
+    modal.classList.remove("is-tl-open"); // low landscape: the timeline starts collapsed
 
     currentPlan = plan;
     currentAllItems = Array.isArray(allItems) ? allItems : [];
@@ -1107,6 +1112,16 @@ const root = document.getElementById("sm-plan-v3-root");
     cleanupFns.push(() => viewport.removeEventListener("touchend", onTouchEnd));
     cleanupFns.push(() => viewport.removeEventListener("touchcancel", onTouchEnd));
   }
+
+  // Low landscape phones: the timeline is collapsed into a "Timeline" button; a tap opens/closes it
+  // (the button is hidden by CSS everywhere else, where the timeline is always visible).
+  modal.addEventListener("click", (e) => {
+    const btn = e.target.closest && e.target.closest("[data-spv3-tl-toggle]");
+    if (!btn) return;
+    const open = modal.classList.toggle("is-tl-open");
+    modal.querySelectorAll("[data-spv3-tl-toggle]").forEach((b) => b.setAttribute("aria-expanded", open ? "true" : "false"));
+    if (open) centerActiveTimelineClip(track.querySelectorAll(".spv3__slide")[activeSlide]);
+  });
 
   window.addEventListener("resize", setPlanViewportHeight);
   window.addEventListener("orientationchange", setPlanViewportHeight);
