@@ -3600,6 +3600,16 @@
     return plans.filter((p) => p?.free === true).concat(pickTeasers(plans.filter((p) => p?.free !== true), lockedN));
   }
 
+  // Home preview rows end with a quiet "See all" card, so nobody takes the few cards shown for everything there is.
+  function renderSeeMoreCard(kind, total) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `sm-pro-seemore sm-pro-seemore--${kind}`;
+    btn.setAttribute("data-pro-go-tab", kind);
+    btn.innerHTML = `<b>See all ${kind}</b><span>${total} in the library</span>`;
+    return btn;
+  }
+
   function renderProMobileHome() {
     grid.innerHTML = "";
 
@@ -3622,8 +3632,12 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-mobile-home";
 
-    const popularMoves = homeMovePreview(moves, 3, 1);   // mobile: 3 free + 1 locked
-    const cinematicPlans = homePlanPreview(plans, HOME_LOCKED_PLANS);    // free plans + 2 locked teasers
+    // mobile: 3 free moves + a "See all" card; free plans + locked teasers, the last of which becomes the "See all" card
+    const popularMoves = homeMovePreview(moves, 3, 0);
+    const moreMoves = moves.length > popularMoves.length;
+    let cinematicPlans = homePlanPreview(plans, HOME_LOCKED_PLANS);
+    const morePlans = plans.length > cinematicPlans.length;   // the preview is a part of the list
+    if (morePlans && cinematicPlans.length > 1) cinematicPlans = cinematicPlans.slice(0, -1);
     const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
@@ -3657,6 +3671,9 @@
       const idx = getItemFilteredIndex(item);
       plansGrid.appendChild(renderPlanCard(item, idx));
     });
+
+    if (moreMoves) { movesGrid.appendChild(renderSeeMoreCard("moves", moves.length)); movesGrid.classList.add("has-seemore"); }
+    if (morePlans) { plansGrid.appendChild(renderSeeMoreCard("plans", plans.length)); plansGrid.classList.add("has-seemore"); }
 
     frag.appendChild(wrap);
     grid.appendChild(frag);
