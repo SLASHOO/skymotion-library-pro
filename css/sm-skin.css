@@ -2466,3 +2466,9 @@ html body.sm-pack-detail-open{ overflow-x:clip !important; }
 @media (min-width:641px) and (max-height:560px) and (max-width:1000px) and (orientation:landscape){
   #sm-library-scope .sm-pro-card-grid.has-seemore > :nth-child(3):not(.sm-pro-seemore){ display:none !important; }
 }
+
+/* desktop Home: the "See all" cards take the exact shape of the cards beside them (178px move cards, 20px / 22px corners) */
+@media (min-width:901px) and (min-height:561px), (min-width:1001px){
+  #sm-library-scope .sm-pro-desktop-move-stack .sm-pro-seemore{ width:100% !important; min-height:178px !important; border-radius:20px !important; }
+  #sm-library-scope .sm-pro-desktop-plan-grid .sm-pro-seemore{ border-radius:22px !important; }
+}

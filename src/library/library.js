@@ -3704,11 +3704,15 @@
     const wrap = document.createElement("div");
     wrap.className = "sm-pro-desktop-home";
 
-    const planCards = homePlanPreview(plans, HOME_LOCKED_PLANS).map((item) => {   // free plans + 2 locked teasers
+    // free plans + locked teasers; when the list is longer than the preview, its last card becomes the "See all" card
+    let previewPlans = homePlanPreview(plans, HOME_LOCKED_PLANS);
+    const morePlans = plans.length > previewPlans.length;
+    if (morePlans && previewPlans.length > 1) previewPlans = previewPlans.slice(0, -1);
+    const planCards = previewPlans.map((item) => {
       const idx = getItemFilteredIndex(item);
       const card = renderPlanCard(item, idx);
       return card.outerHTML;
-    }).join("");
+    }).join("") + (morePlans ? renderSeeMoreCard("plans", plans.length).outerHTML : "");
     const featuredPackCard = renderFeaturedPackCard(plans, moves);
 
     wrap.innerHTML = `
@@ -3735,10 +3739,12 @@
     `;
 
     const moveStack = wrap.querySelector('[data-pro-desktop-section="moves"]');
-    homeMovePreview(moves, 5, 1).forEach((item) => {   // desktop: 5 free + 1 locked
+    const previewMoves = homeMovePreview(moves, 5, 0);   // desktop: 5 free moves + the "See all" card
+    previewMoves.forEach((item) => {
       const idx = getItemFilteredIndex(item);
       moveStack.appendChild(renderMoveCard(item, idx));
     });
+    if (moves.length > previewMoves.length) moveStack.appendChild(renderSeeMoreCard("moves", moves.length));
 
     grid.appendChild(wrap);
     attachImgFallback(grid);
